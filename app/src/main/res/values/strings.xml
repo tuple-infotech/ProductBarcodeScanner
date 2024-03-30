@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">CTS Demo</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="positivebtntext">"YES"</string>
+    <string name="negetivebtntext">"NO"</string>
+    <string name="singlebtntext">"OK"</string>
+    <string name="removebtntext">"REMOVE"</string>
+</resources>

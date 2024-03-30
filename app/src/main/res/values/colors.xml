@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+
+    <color name="image_bg_color">#FFF9F5</color>
+    <color name="orange">#FD7D26</color>
+    <color name="bottom_nav_color">#464755</color>
+    <color name="orange_low_opacity">#7A3E1B</color>
+    <color name="dark_text_color">#1D160D</color>
+    <color name="text_color">#52535F</color>
+    <color name="graph_color">#F9A530</color>
+    <color name="btn_green">#2AB26E</color>
+    <color name="btn_green_low_opacity">#185638</color>
+    <color name="btn_red">#FF6161</color>
+    <color name="btn_light_green">#EEFEF6</color>
+    <color name="btn_border">#B1C5C1</color>
+
+    <color name="background">#EFEFF7</color>
+    <color name="app_white">#EFEFF7</color>
+    <color name="blue">#5CA0FF</color>
+    <color name="blue_edittext">#E7F1FF</color>
+    <color name="blue_sky">#18A0FB</color>
+    <color name="blue_dark">#01467C</color>
+
+    <color name="blue_color">#3AA4EA</color>
+    <color name="light_blue_1">#E7F1FF</color>
+    <color name="light_blue_2">#D9E9FF</color>
+    <!--card background color-->
+    <color name="transparent">#00000000</color>
+    <color name="dim_orange">#F6A78D</color>
+    <color name="bar_graph_color">#EAF2FB</color>
+    <color name="green">#30C454</color>
+    <color name="yellow">#F9AE1D</color>
+    <color name="red">#F1416C</color>
+    <color name="dark_red">#FF0000</color>
+    <color name="purple">#8E35FF</color>
+
+    <color name="blackcolor">#101010</color>
+    <color name="gray">#A6A6A6</color>
+    <color name="blackopacity">#50000000</color>
+    <color name="lowopacity">#20000000</color>
+    <color name="gray_light">#D3D3D3</color>
+    <color name="icon_color">#989898</color>
+    <color name="edittext_border">#DFDFE6</color>
+    <color name="payment_row">#334779CC</color>
+    <color name="odd_row">#554779CC</color>
+
+    <color name="pending_color">#E9AB56</color>
+    <color name="inprogress_color">#3c8dbc</color>
+    <color name="assigned_color">#FD7D26</color>
+    <color name="accepted_color">#FD7D26</color>
+    <color name="on_way_color">#FD7D26</color>
+    <color name="delivered_color">#2AB26E</color>
+    <color name="cancelled_color">#FF6161</color>
+
+
+    <color name="black_color">#101010</color>
+    <color name="black_opacity">#50000000</color>
+    <color name="low_opacity">#20000000</color>
+    <color name="view_color">#4DFFFFFF</color>
+    <color name="view_color_lowopacity">#73FFFFFF</color>
+    <color name="view_color_low_opacity">#1AFFFFFF</color>
+
+    <color name="orange_text_color">#FF6C23</color>
+    <color name="light_red">#F1416C</color>
+
+
+    <color name="in_progress_color">#3c8dbc</color>
+
+</resources>
