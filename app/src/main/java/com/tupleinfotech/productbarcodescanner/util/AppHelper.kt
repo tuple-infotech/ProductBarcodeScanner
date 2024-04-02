@@ -4,13 +4,17 @@ package com.tupleinfotech.productbarcodescanner.util
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.util.Log
 import android.view.View
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
+import com.tupleinfotech.productbarcodescanner.R
 import java.io.IOException
 import java.net.Inet4Address
 import java.net.NetworkInterface
@@ -551,6 +555,22 @@ class AppHelper {
         }
 
         //endregion Distance Calculators
+
+        fun setSelectedRowColor(convertView: View) {
+            convertView.setBackgroundColor(ContextCompat.getColor(convertView.context,R.color.selected_row))
+        }
+
+        fun setSelectedRowTextViewColor(textView: TextView, colorType: TEXT_COLOR) {
+            when (colorType) {
+                TEXT_COLOR.DEFAULT -> textView.setTextColor(Color.BLACK)
+                TEXT_COLOR.SELECTED -> textView.setTextColor(ContextCompat.getColor(textView.context,R.color.white))
+                TEXT_COLOR.BLUE -> textView.setTextColor(Color.BLUE)
+                TEXT_COLOR.PURPLE -> textView.setTextColor(ContextCompat.getColor(textView.context,R.color.dark_red))
+                else ->{
+
+                }
+            }
+        }
 
         //region Menu Item Selections
 

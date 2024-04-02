@@ -2,8 +2,12 @@ package com.tupleinfotech.productbarcodescanner.ui.activity
 
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
+import android.view.Menu
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -44,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         setSupportActionBar(findViewById(R.id.my_toolbar))
+        supportActionBar?.title = "CTS (Powered by Tuple Infotech)"
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navigation_host_fragments) as NavHostFragment
         navController = navHostFragment.navController // Initialize navController
@@ -58,6 +63,69 @@ class MainActivity : AppCompatActivity() {
     //endregion BUTTON FUNCTIONALITY
 
     //region ALL FUNCTIONS
+    //Custom Bottom Navigation Functionality
+
+    fun initBottomNavigation(isVisible: Boolean, bottomMenuItemCount: Int, bottomNavigationItemName : ArrayList<String>, bottomNavSelectedImageItemList : ArrayList<Int>) {
+
+        if (isVisible) binding.bottomNavigationView.visibility = View.VISIBLE else binding.bottomNavigationView.visibility = View.GONE
+
+        binding.bottomNavigationView.itemIconTintList = null
+        binding.bottomNavigationView.menu.clear() // Clear existing menu items
+
+        if (bottomMenuItemCount in 1..4) {
+            for (i in 0 until bottomMenuItemCount) {
+                when (i) {
+                    0 -> {
+                        binding.bottomNavigationView.menu.add(Menu.NONE, i, Menu.NONE, bottomNavigationItemName[i]).setIcon(
+                            ResourcesCompat.getDrawable(this.resources, bottomNavSelectedImageItemList[i], this.theme))
+                    }
+                    1 -> {
+                        binding.bottomNavigationView.menu.add(Menu.NONE, i, Menu.NONE, bottomNavigationItemName[i]).setIcon(
+                            ResourcesCompat.getDrawable(this.resources, bottomNavSelectedImageItemList[i], this.theme))
+                    }
+                    2 -> {
+                        binding.bottomNavigationView.menu.add(Menu.NONE, i, Menu.NONE, bottomNavigationItemName[i]).setIcon(
+                            ResourcesCompat.getDrawable(this.resources, bottomNavSelectedImageItemList[i], this.theme))
+                    }
+                    3 -> {
+                        binding.bottomNavigationView.menu.add(Menu.NONE, i, Menu.NONE, bottomNavigationItemName[i]).setIcon(
+                            ResourcesCompat.getDrawable(this.resources, bottomNavSelectedImageItemList[i], this.theme))
+                    }
+                }
+            }
+        }
+        else {
+            Log.e("initBottomNavigation", "Cannot add more than 4 items to BottomNavigationView")
+            return
+        }
+
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                0 -> {
+                    navController.navigate(R.id.quickInfoFragment)
+                    item.setIcon(ResourcesCompat.getDrawable(this.resources,bottomNavSelectedImageItemList[item.itemId],this.theme))
+                }
+                1 -> {
+                    //TODO: Product Screen
+//                    navController.navigate(R.id.orderHistoryFragment)
+                    item.setIcon(ResourcesCompat.getDrawable(this.resources,bottomNavSelectedImageItemList[item.itemId],this.theme))
+                }
+                2 -> {
+                    //TODO: Warehouse Screen
+//                    navController.navigate(R.id.salesReportFragment)
+                    item.setIcon(ResourcesCompat.getDrawable(this.resources,bottomNavSelectedImageItemList[item.itemId],this.theme))
+                }
+                3 -> {
+                    navController.navigate(R.id.profileFragment)
+                    item.setIcon(ResourcesCompat.getDrawable(this.resources,bottomNavSelectedImageItemList[item.itemId],this.theme))
+                }
+                else -> {
+                }
+            }
+            true
+        }
+    }
+
     //endregion ALL FUNCTIONS
 
     //region BACK EVENT FUNCTIONS

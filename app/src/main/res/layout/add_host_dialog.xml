@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     style="@style/Dialog_Box_Style"
     android:backgroundTint="@color/background"
-    android:padding="16dp">
+    android:padding="6dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -34,6 +34,7 @@
             android:id="@+id/btnClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@drawable/ic_close_square"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:backgroundTint="@color/white"
@@ -41,11 +42,12 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
-
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/host_name"
             style="@style/EditTextStyle"
             android:layout_width="0dp"
+            android:layout_marginStart="@dimen/dp_2"
+            android:layout_marginEnd="@dimen/dp_2"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="Name"
@@ -63,6 +65,8 @@
             style="@style/EditTextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_2"
+            android:layout_marginEnd="@dimen/dp_2"
             android:digits="0123456789."
             android:hint="ip addess"
             android:imeOptions="actionNext"
@@ -77,6 +81,8 @@
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/host_port"
             style="@style/EditTextStyle"
+            android:layout_marginStart="@dimen/dp_2"
+            android:layout_marginEnd="@dimen/dp_2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:digits="0123456789"
@@ -90,27 +96,25 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/host_ip" />
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_adhost"
             android:layout_width="0dp"
             android:layout_height="200dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="4dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline47"
             app:layout_constraintStart_toStartOf="@+id/guideline46"
-            app:layout_constraintTop_toBottomOf="@+id/host_name" />
-
+            app:layout_constraintTop_toBottomOf="@+id/host_ip" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_delete"
             style="@style/ButtonStyle.Details"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="4dp"
             android:backgroundTint="@color/red"
             android:text="Delete"
             app:layout_constraintEnd_toStartOf="@+id/btn_add"
@@ -124,7 +128,7 @@
             style="@style/ButtonStyle.Details"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="4dp"
             android:backgroundTint="@color/green"
             android:text="Add"
             app:layout_constraintBaseline_toBaselineOf="@+id/btn_delete"
@@ -137,7 +141,8 @@
             style="@style/ButtonStyle.Details"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/purple"
+            android:layout_marginEnd="4dp"
             android:text="Modify"
             app:layout_constraintBaseline_toBaselineOf="@+id/btn_add"
             app:layout_constraintEnd_toStartOf="@+id/btn_select"
@@ -149,7 +154,7 @@
             style="@style/ButtonStyle.Details"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="4dp"
             android:backgroundTint="@color/blue_dark"
             android:text="Select"
             app:layout_constraintBaseline_toBaselineOf="@+id/btn_modify"
@@ -162,14 +167,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="16dp" />
+            app:layout_constraintGuide_begin="8dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline47"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_end="16dp" />
+            app:layout_constraintGuide_end="8dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline48"
@@ -177,6 +182,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="16dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

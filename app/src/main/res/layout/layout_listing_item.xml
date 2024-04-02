@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/field_name"
+        style="@style/TextView.TextView_14_SP"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="@dimen/dp_0"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:gravity="center"
+        android:paddingStart="@dimen/dp_8"
+        android:paddingEnd="@dimen/dp_8"
+        android:text="Category name"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toStartOf="@+id/field_qty"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlCompat" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/field_qty"
+        style="@style/TextView.TextView_14_SP"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:paddingStart="@dimen/dp_8"
+        android:paddingEnd="@dimen/dp_8"
+        android:text="Category Qty"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/field_name"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlCompat" />
+
+    <View
+        android:id="@+id/view_underline"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_1"
+        android:layout_marginStart="@dimen/dp_8"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:background="@color/gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/field_name"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/field_name" />
+
+    <View
+        android:id="@+id/view_underline_1"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_1"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:background="@color/gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/field_qty"
+        app:layout_constraintTop_toBottomOf="@+id/field_name" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

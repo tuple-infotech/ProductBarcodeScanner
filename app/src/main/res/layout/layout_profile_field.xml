@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginVertical="@dimen/dp_4"
+    android:background="@drawable/style_bg_edit_text"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/field_img"
+        android:layout_width="@dimen/dp_24"
+        android:layout_height="@dimen/dp_24"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/user_icon_orange"
+        app:layout_constraintBottom_toBottomOf="@+id/field_title_txt"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/field_title_txt"
+        tools:ignore="ContentDescription" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/field_title_txt"
+        style="@style/TextView.TextView_14_SP"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_8"
+        android:text="@string/label"
+        android:textColor="@color/orange_text_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/field_img"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/field_name"
+        style="@style/TextView.TextView_16_SP"
+        android:layout_width="0dp"
+        android:text="@string/label"
+        android:layout_marginTop="@dimen/dp_8"
+        android:layout_marginStart="@dimen/dp_0"
+        android:layout_marginEnd="0dp"
+        android:maxLines="4"
+        android:singleLine="false"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="@color/dark_text_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/field_title_txt"
+        app:layout_constraintStart_toStartOf="@+id/field_title_txt"
+        app:layout_constraintTop_toBottomOf="@+id/field_title_txt" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

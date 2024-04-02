@@ -25,5 +25,20 @@
         android:name="com.tupleinfotech.productbarcodescanner.ui.fragment.QuickInfoFragment"
         android:label="fragment_quick_info"
         tools:layout="@layout/fragment_quick_info" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.tupleinfotech.productbarcodescanner.ui.fragment.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.tupleinfotech.productbarcodescanner.ui.fragment.ChangePasswordFragment"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password" />
+    <fragment
+        android:id="@+id/productManufactureFragment"
+        android:name="com.tupleinfotech.productbarcodescanner.ui.fragment.ProductManufactureFragment"
+        android:label="fragment_product_manufacture"
+        tools:layout="@layout/fragment_product_manufacture" />
 
 </navigation>

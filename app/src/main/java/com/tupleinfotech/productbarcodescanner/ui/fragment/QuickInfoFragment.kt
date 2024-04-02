@@ -1,23 +1,29 @@
 package com.tupleinfotech.productbarcodescanner.ui.fragment
 
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.databinding.FragmentQuickInfoBinding
-import com.tupleinfotech.productbarcodescanner.model.AccessRights
+import com.tupleinfotech.productbarcodescanner.model.QuickInfoDataResponse
+import com.tupleinfotech.productbarcodescanner.ui.activity.MainActivity
 import com.tupleinfotech.productbarcodescanner.ui.adapter.QuickInfoAdapter
+import com.tupleinfotech.productbarcodescanner.ui.viewmodel.SharedViewModel
 import com.tupleinfotech.productbarcodescanner.util.AlertMsgs
 import com.tupleinfotech.productbarcodescanner.util.AppHelper
+import com.tupleinfotech.productbarcodescanner.util.Constants
 import com.tupleinfotech.productbarcodescanner.util.DialogHelper
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.host
+import com.tupleinfotech.productbarcodescanner.util.UrlEndPoints
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,10 +33,13 @@ class QuickInfoFragment : Fragment() {
 
     private var _binding                                    : FragmentQuickInfoBinding?             =  null
     private val binding                                     get()                                   =  _binding!!
+    private lateinit var prefs                              : SharedPreferences
     private var quickInfoAdapter                            : QuickInfoAdapter?                     = QuickInfoAdapter()
-    private var accessid                                    : String                                = ""
-    private val sortedList                                  : ArrayList<AccessRights.Access>        = arrayListOf()
     private var dialogShown                                 : Boolean                               = false
+    private val sharedViewModel                             : SharedViewModel                       by viewModels()
+    private var quickInfoDataCount                          : QuickInfoDataResponse.QuickInfo       = QuickInfoDataResponse.QuickInfo()
+    private val bottomNavigationUnselectedItemImageList     : ArrayList<Int>                        = arrayListOf()
+    private val bottomNavigationItemName                    : ArrayList<String>                     = arrayListOf()
 
     //endregion VARIABLES
 
@@ -45,6 +54,7 @@ class QuickInfoFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View {
         _binding = FragmentQuickInfoBinding.inflate(inflater, container, false)
         val view = binding.root
+        prefs = PreferenceHelper.customPreference(requireContext(), Constants.CUSTOM_PREF_NAME)
 
         init()
 
@@ -57,7 +67,9 @@ class QuickInfoFragment : Fragment() {
 
     private fun init(){
         onBackPressed()
-        initDashboardRights()
+//        initQuickInfoMenu()
+        serviceApiQuickInfoData()
+        //initBottomNavigation()
     }
 
     //endregion INIT METHOD
@@ -67,37 +79,36 @@ class QuickInfoFragment : Fragment() {
 
     //region ALL FUNCTIONS
 
+    /*    private fun initDashboardRights(){
 
-    private fun initDashboardRights(){
+            val jsonFileString = AppHelper.getJsonDataFromAsset(requireContext(), "dashboardAccessrights.json")
+            if (jsonFileString != null) {
+                Log.i("data", jsonFileString)
+            }
 
-        val jsonFileString = AppHelper.getJsonDataFromAsset(requireContext(), "dashboardAccessrights.json")
-        if (jsonFileString != null) {
-            Log.i("data", jsonFileString)
+            val gson = Gson()
+            val response = gson.fromJson(jsonFileString, AccessRights::class.java)
+
+            println(findChildRights(response.accessrightsArray,"Quick Info"))
+            initQuickInfoMenu()
+
         }
 
-        val gson = Gson()
-        val response = gson.fromJson(jsonFileString, AccessRights::class.java)
+        private fun findChildRights(rights: ArrayList<AccessRights.Access>, parentName : String) : ArrayList<AccessRights.Access> {
 
-        println(findChildRights(response.accessrightsArray,"Quick Info"))
-        initQuickInfoMenu()
-
-    }
-
-    private fun findChildRights(rights: ArrayList<AccessRights.Access>, parentName : String) : ArrayList<AccessRights.Access> {
-
-        for (access in rights){
-            if (access.accessname.equals(parentName)){
-                accessid = access.accessid.toString()
+            for (access in rights){
+                if (access.accessname.equals(parentName)){
+                    accessid = access.accessid.toString()
+                }
+                if (access.parentid == accessid && access.accessrights.equals("Y")){
+                    sortedList.addAll(rights.filter { item -> item == access })
+                }
             }
-            if (access.parentid == accessid && access.accessrights.equals("Y")){
-                sortedList.addAll(rights.filter { item -> item == access })
-            }
-        }
 
-        return sortedList
-    }
+            return sortedList
+        }*/
 
-    private fun initQuickInfoMenu(){
+    private fun initQuickInfoMenu(quickInfoListData : ArrayList<Pair<String,Int>>, QuickInfoDataCount : QuickInfoDataResponse.QuickInfo){
 
         val gridLayoutManager : RecyclerView.LayoutManager      = GridLayoutManager(requireActivity(),2)
         val recyclerViewItemList                                = binding.quickInfoMenuRv
@@ -105,27 +116,8 @@ class QuickInfoFragment : Fragment() {
         recyclerViewItemList.itemAnimator                       = DefaultItemAnimator()
         quickInfoAdapter                                        = QuickInfoAdapter()
 
-        for (imageItem in sortedList){
-            when(imageItem.accessname){
-                "Categories"            -> imageItem.staticimage = R.drawable.ic_action_settings
-                "Items"                 -> imageItem.staticimage = R.drawable.ic_action_settings
-                "Customers"             -> imageItem.staticimage = R.drawable.ic_action_settings
-                "Total Users"           -> imageItem.staticimage = R.drawable.ic_action_settings
-                "Delivery Boy"          -> imageItem.staticimage = R.drawable.ic_action_settings
-                "Total Orders"          -> imageItem.staticimage = R.drawable.ic_action_settings
-                "Total Sales"           -> imageItem.staticimage = R.drawable.ic_action_settings
-                "Low Stock Items"       -> imageItem.staticimage = R.drawable.ic_action_settings
-                "Delivery Boy Wallet"   -> imageItem.staticimage = R.drawable.ic_action_settings
-                "New Arrival Items"     -> imageItem.staticimage = R.drawable.ic_action_settings
-                "Total Size"            -> imageItem.staticimage = R.drawable.ic_action_settings
-                "Category Pending"      -> imageItem.staticimage = R.drawable.ic_action_settings
-                "Item Pending"          -> imageItem.staticimage = R.drawable.ic_action_settings
-                "Size Pending"          -> imageItem.staticimage = R.drawable.ic_action_settings
-            }
-        }
-        
         quickInfoAdapter?.apply {
-            updateList(sortedList)
+            updateList(quickInfoListData,QuickInfoDataCount)
         }
 
         recyclerViewItemList.adapter                            = quickInfoAdapter
@@ -150,6 +142,22 @@ class QuickInfoFragment : Fragment() {
             }
         )
     }
+
+    private fun initBottomNavigation(){
+
+        bottomNavigationUnselectedItemImageList.add(R.drawable.style_bottom_nav_home)
+        bottomNavigationUnselectedItemImageList.add(R.drawable.style_bottom_nav_inventory)
+        bottomNavigationUnselectedItemImageList.add(R.drawable.style_bottom_nav_warehouse)
+        bottomNavigationUnselectedItemImageList.add(R.drawable.style_bottom_nav_profile)
+
+        bottomNavigationItemName.add("Quick Info")
+        bottomNavigationItemName.add("Product")
+        bottomNavigationItemName.add("Warehouse")
+        bottomNavigationItemName.add("Profile")
+
+        (requireActivity() as MainActivity).initBottomNavigation(true,4,bottomNavigationItemName,bottomNavigationUnselectedItemImageList)
+
+    }
     //endregion ALL FUNCTIONS
 
     //region BACK EVENT FUNCTIONS
@@ -170,6 +178,58 @@ class QuickInfoFragment : Fragment() {
 
     //region API SERVICE
 
+    private fun serviceApiQuickInfoData(){
+        val requestMap = mutableMapOf<String, Any>() // Empty mutable map
+
+        val quickInfoDataUrl = prefs.host + UrlEndPoints.DASHBOARD_QUICK_INFO
+        sharedViewModel.api_service(requireContext(),quickInfoDataUrl,requestMap,{ quickInfoDataResponse ->
+            println(quickInfoDataResponse)
+
+            val quickInfoData: QuickInfoDataResponse? = AppHelper.convertJsonToModel(quickInfoDataResponse)
+
+            quickInfoData?.let { response ->
+
+                if (response.Status.equals("Success",true)){
+
+//                    quickResponseAdapterData.QuickInfoDetails   = response.QuickInfoDetails
+                    quickInfoDataCount = response.QuickInfoDetails!!
+
+                    val quickResponseAdapterData : ArrayList<Pair<String,Int>> = arrayListOf()
+                    quickResponseAdapterData.add(Pair("Total Barcode"   ,R.drawable.icon_quick_info_category))
+                    quickResponseAdapterData.add(Pair("Total Production",R.drawable.icon_quick_info_category))
+                    quickResponseAdapterData.add(Pair("Inward"          ,R.drawable.icon_quick_info_items))
+                    quickResponseAdapterData.add(Pair("Outward"         ,R.drawable.icon_quick_info_customers))
+                    quickResponseAdapterData.add(Pair("Total Users"     ,R.drawable.icon_quick_info_totalusers))
+                    quickResponseAdapterData.add(Pair("Warehouse"       ,R.drawable.icon_quick_info_deliveryboy))
+                    quickResponseAdapterData.add(Pair("Workshop"        ,R.drawable.icon_quick_info_deliveryboy))
+
+                    println(quickResponseAdapterData)
+                    println(quickInfoDataCount)
+                    //quickInfoAdapter?.updateList(quickResponseAdapterData,quickInfoDataCount)
+
+                    initQuickInfoMenu(quickResponseAdapterData,quickInfoDataCount)
+/*                    response.QuickInfoDetails?.TotalWarehouse
+                    response.QuickInfoDetails?.ActiveUsers
+                    response.QuickInfoDetails?.InActiveUsers
+                    response.QuickInfoDetails?.TotalBarcodePrint
+                    response.QuickInfoDetails?.TotalFactory
+                    response.QuickInfoDetails?.TotalInWard
+                    response.QuickInfoDetails?.TotalOutWard
+                    response.QuickInfoDetails?.TotalProduction*/
+
+                }
+                else{
+                    DialogHelper.Alert_Selection(requireContext(),response.ErrorMessage.toString(),resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
+                }
+
+            }
+
+        },
+            {
+                DialogHelper.Alert_Selection(requireContext(),it.toString(),resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
+            }
+        )
+    }
     //endregion API SERVICE
 
 }

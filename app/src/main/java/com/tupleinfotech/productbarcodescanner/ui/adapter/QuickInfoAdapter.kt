@@ -2,16 +2,19 @@ package com.tupleinfotech.productbarcodescanner.ui.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tupleinfotech.productbarcodescanner.databinding.LayoutQuickInfoItemViewBinding
-import com.tupleinfotech.productbarcodescanner.model.AccessRights
+import com.tupleinfotech.productbarcodescanner.model.QuickInfoDataResponse
 
 @SuppressLint("NotifyDataSetChanged")
 class QuickInfoAdapter : RecyclerView.Adapter<QuickInfoAdapter.ViewHolder>() {
 
     //region VARIABLES
-    var hostList            :   List<AccessRights.Access>          =       mutableListOf()
+    var hostList            :   List<Pair<String,Int>>          =       mutableListOf()
+    var quickInfoDataCount = QuickInfoDataResponse.QuickInfo()
 
     //endregion VARIABLES
 
@@ -27,8 +30,62 @@ class QuickInfoAdapter : RecyclerView.Adapter<QuickInfoAdapter.ViewHolder>() {
 
         with(holder) {
             with(hostList[position]) {
-                binding.quickInfoLabelTv.text = curuntitem.accessname
-                curuntitem.staticimage?.let { binding.quickInfoIv.setImageResource(it) }
+                binding.quickInfoLabelTv.text = curuntitem.first.toString()
+                binding.quickInfoIv.setImageResource(curuntitem.second)
+
+                when(binding.quickInfoLabelTv.text.toString()){
+                    "Total Barcode"     -> {
+                        binding.quickInfoFirstCountTv.visibility = GONE
+                        binding.quickInfoSecondCountTv.visibility = VISIBLE
+                        binding.quickInfoSecondCountTv.text = quickInfoDataCount.TotalBarcodePrint
+                        binding.quickInfoThirdCountTv.visibility = GONE
+                    }
+                    "Total Production"  -> {
+                        binding.quickInfoFirstCountTv.visibility = GONE
+                        binding.quickInfoSecondCountTv.visibility = VISIBLE
+                        binding.quickInfoSecondCountTv.text = quickInfoDataCount.TotalProduction
+                        binding.quickInfoThirdCountTv.visibility = GONE
+
+                    }
+                    "Inward"            -> {
+                        binding.quickInfoFirstCountTv.visibility = GONE
+                        binding.quickInfoSecondCountTv.visibility = VISIBLE
+                        binding.quickInfoSecondCountTv.text = quickInfoDataCount.TotalInWard
+                        binding.quickInfoThirdCountTv.visibility = GONE
+
+                    }
+                    "Outward"           -> {
+                        binding.quickInfoFirstCountTv.visibility = GONE
+                        binding.quickInfoSecondCountTv.visibility = VISIBLE
+                        binding.quickInfoSecondCountTv.text = quickInfoDataCount.TotalOutWard
+                        binding.quickInfoThirdCountTv.visibility = GONE
+
+                    }
+                    "Total Users"       -> {
+                        binding.quickInfoFirstCountTv.visibility = VISIBLE
+                        binding.quickInfoFirstCountTv.text = quickInfoDataCount.ActiveUsers
+                        binding.quickInfoSecondCountTv.visibility = GONE
+                        binding.quickInfoThirdCountTv.visibility = VISIBLE
+                        binding.quickInfoThirdCountTv.text = quickInfoDataCount.InActiveUsers
+
+                    }
+                    "Warehouse"         -> {
+                        binding.quickInfoFirstCountTv.visibility = GONE
+                        binding.quickInfoSecondCountTv.visibility = VISIBLE
+                        binding.quickInfoSecondCountTv.text = quickInfoDataCount.TotalWarehouse
+                        binding.quickInfoThirdCountTv.visibility = GONE
+
+                    }
+                    "Workshop"          -> {
+                        binding.quickInfoFirstCountTv.visibility = GONE
+                        binding.quickInfoSecondCountTv.visibility = VISIBLE
+                        binding.quickInfoSecondCountTv.text = quickInfoDataCount.TotalFactory
+                        binding.quickInfoThirdCountTv.visibility = GONE
+
+                    }
+                }
+
+                println(quickInfoDataCount)
             }
         }
     }
@@ -41,8 +98,9 @@ class QuickInfoAdapter : RecyclerView.Adapter<QuickInfoAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding : LayoutQuickInfoItemViewBinding) : RecyclerView.ViewHolder(binding.root)
 
-    fun updateList(list: List<AccessRights.Access>?) {
-        hostList = list ?: emptyList()
+    fun updateList(list: List<Pair<String,Int>>,quickInfoData : QuickInfoDataResponse.QuickInfo) {
+        hostList            = list ?: emptyList()
+        quickInfoDataCount  = quickInfoData ?: QuickInfoDataResponse.QuickInfo()
         notifyDataSetChanged()
     }
 

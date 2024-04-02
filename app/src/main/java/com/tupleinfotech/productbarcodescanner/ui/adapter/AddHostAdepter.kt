@@ -34,7 +34,12 @@ class AddHostAdepter (var hostList: List<AddHost>,) : RecyclerView.Adapter<AddHo
         with(holder){
             with(hostList[position]){
                 binding.tvHostName.text=this.host_name
-                binding.tvHostAddress.text=this.host_ip+":"+this.host_port
+
+                if (this.host_port.isEmpty()){
+                    binding.tvHostAddress.text=this.host_ip
+                }else{
+                    binding.tvHostAddress.text=this.host_ip+":"+this.host_port
+                }
 
                 if(position%2==0){
                     binding.hostRow.setBackgroundResource(R.color.odd_row)

@@ -11,12 +11,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.databinding.FragmentHomeBinding
 import com.tupleinfotech.productbarcodescanner.model.GetDataByBarcodeResponse
 import com.tupleinfotech.productbarcodescanner.ui.adapter.ComponentDataAdapter
 import com.tupleinfotech.productbarcodescanner.ui.viewmodel.SharedViewModel
+import com.tupleinfotech.productbarcodescanner.util.AppHelper.Companion.convertJsonToModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -29,8 +29,8 @@ class HomeFragment : Fragment() {
     private var observerExecuted            : Boolean                                               = false
     private var barcodetext                 : String?                                               = null
     private val sharedViewModel             : SharedViewModel by viewModels()
-    private var componentDataAdapter        : ComponentDataAdapter?                           = ComponentDataAdapter()
-    private var componentData = ArrayList<GetDataByBarcodeResponse.Components>()
+    private var componentDataAdapter        : ComponentDataAdapter?                                 = ComponentDataAdapter()
+    private var componentData               = ArrayList<GetDataByBarcodeResponse.Components>()
 
     //endregion VARIABLES
 
@@ -129,18 +129,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    companion object Apphelper {
-
-        //region CONVERT STRING INTO JSON
-        inline fun <reified T> convertJsonToModel(jsonString: String): T? {
-            return try {
-                Gson().fromJson(jsonString, T::class.java)
-            } catch (e: Exception) {
-                Log.i("==>", "ERROR: Unable to parse JSON into model")
-                null
-            }
-        }
-    }
     //endregion ALL FUNCTIONS
 
     //region BACK EVENT FUNCTIONS

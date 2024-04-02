@@ -35,8 +35,6 @@
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="0dp"
-                android:background="@drawable/style_bg_edit_text"
-                android:backgroundTint="#FEB47E"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -46,7 +44,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginStart="8dp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/alert_title"
                     app:layout_constraintStart_toStartOf="parent"
@@ -57,13 +55,13 @@
 
                 <TextView
                     android:id="@+id/alert_title"
-                    style="@style/EditTextStyle.alert"
+                    style="@style/EditTextStyle.alert.blue"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="0dp"
-                    android:background="@drawable/style_bg_edit_text"
-                    android:backgroundTint="#FEB47E"
-                    android:hint="Madira"
+                    android:hint="@string/app_name"
+                    android:textAlignment="center"
+                    android:paddingEnd="@dimen/dp_0"
                     android:paddingStart="@dimen/dp_10"
                     android:textSize="@dimen/dp_20"
                     android:textStyle="bold"
@@ -73,7 +71,6 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
 
             <TextView
                 android:id="@+id/alert_text"
@@ -108,7 +105,7 @@
                 android:layout_marginTop="@dimen/dp_8"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/style_bg_edit_text"
-                android:backgroundTint="@color/orange"
+                android:backgroundTint="@color/btn_green"
                 android:padding="@dimen/dp_0"
                 android:text="Ok"
                 android:textAllCaps="false"

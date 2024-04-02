@@ -7,4 +7,28 @@
     <string name="negetivebtntext">"NO"</string>
     <string name="singlebtntext">"OK"</string>
     <string name="removebtntext">"REMOVE"</string>
+
+    <string name="login_text">Login</string>
+    <string name="enteremailorphone">Enter email or phone number</string>
+    <string name="enterpassword">"Enter password"</string>
+    <string name="forgot_pass_label">"Forgot Password"</string>
+    <string name="forgot_pass">"Forgot Password?"</string>
+    <string name="login_with_otp_text">Login With OTP</string>
+    <string name="continue_with_otp_text">Continue With OTP</string>
+    <string name="verification_text">Verification</string>
+    <string name="verify_otp_text">Verify OTP</string>
+    <string name="generate_otp_text">Generate OTP</string>
+    <string name="resend_otp_text">Resend OTP</string>
+    <string name="change_pass_text">Change Password</string>
+    <string name="old_pass_text">Old Password</string>
+    <string name="new_pass_text">New Password</string>
+    <string name="confirm_new_pass_text">Confirm New Password</string>
+    <string name="timer_text">00:00</string>
+    <string name="label">Label</string>
+
+    <string name="dashboard_label">"Dashboard"</string>
+    <string name="quick_info_label">"Quick Info"</string>
+    <string name="order_history_label">"Order History"</string>
+    <string name="sales_report_label">"Sales Report"</string>
+    <string name="profile_label">"Profile"</string>
 </resources>

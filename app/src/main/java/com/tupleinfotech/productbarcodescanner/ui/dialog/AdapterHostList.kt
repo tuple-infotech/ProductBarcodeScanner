@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jmsc.postab.db.AddHost
 import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.databinding.LayoutSearchHostRowBinding
+import com.tupleinfotech.productbarcodescanner.util.AppHelper
+import com.tupleinfotech.productbarcodescanner.util.TEXT_COLOR
 
 class AdapterHostList (var hostList: List<AddHost>,
 ) : RecyclerView.Adapter<AdapterHostList.ViewHolder>(), Filterable {
@@ -53,7 +55,7 @@ class AdapterHostList (var hostList: List<AddHost>,
                     onItemClick?.invoke(hostFilterList[position],position)
                 }
 
-/*                if(position == selectedPosition){
+                if(position == selectedPosition){
                     val colorType = TEXT_COLOR.SELECTED
                     AppHelper.setSelectedRowTextViewColor(binding.tvHostLeft,colorType)
                     AppHelper.setSelectedRowTextViewColor(binding.tvHostRight,colorType)
@@ -62,7 +64,7 @@ class AdapterHostList (var hostList: List<AddHost>,
                     val colorType = TEXT_COLOR.DEFAULT
                     AppHelper.setSelectedRowTextViewColor(binding.tvHostLeft,colorType)
                     AppHelper.setSelectedRowTextViewColor(binding.tvHostRight,colorType)
-                }*/
+                }
             }
         }
     }
@@ -80,16 +82,16 @@ class AdapterHostList (var hostList: List<AddHost>,
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val charSearch = constraint.toString()
-                if (charSearch.isEmpty()) {
-                    hostFilterList = hostList as ArrayList<AddHost>
+                hostFilterList = if (charSearch.isEmpty()) {
+                    hostList as ArrayList<AddHost>
                 } else {
                     val resultList = ArrayList<AddHost>()
                     for (row in hostList) {
-                        if (row.host_name?.lowercase()?.contains(charSearch.lowercase()) == true) {
+                        if (row.host_name.lowercase().contains(charSearch.lowercase())) {
                             resultList.add(row)
                         }
                     }
-                    hostFilterList = resultList
+                    resultList
                 }
                 val filterResults = FilterResults()
                 filterResults.values = hostFilterList

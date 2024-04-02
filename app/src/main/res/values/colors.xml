@@ -74,4 +74,7 @@
 
     <color name="in_progress_color">#3c8dbc</color>
 
+    <color name="even_row">#E7F1FF</color>
+    <color name="selected_row">#5CA0FF</color>
+
 </resources>

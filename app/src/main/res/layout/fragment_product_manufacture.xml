@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragment.ProductManufactureFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/main_nsv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TableLayout
+            android:id="@+id/main_tbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_layout_barcode"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:hint="Barcode"
+                    android:visibility="visible"
+                    app:boxBackgroundMode="filled"
+                    app:boxStrokeWidth="2dp"
+                    app:helperTextEnabled="false"
+                    app:hintTextColor="@color/text_color"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/input_layout_design_name"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:startIconTint="@color/text_color">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etBox_barcode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:clickable="false"
+                        android:editable="false"
+                        android:enabled="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:inputType="text"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:singleLine="true" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_layout_design_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:hint="Enter Design Name"
+                    android:visibility="visible"
+                    app:boxBackgroundMode="filled"
+                    app:boxStrokeWidth="2dp"
+                    app:helperTextEnabled="false"
+                    app:hintTextColor="@color/text_color"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/input_layout_barcode"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:startIconTint="@color/text_color">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etBox_design_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:clickable="false"
+                        android:editable="false"
+                        android:enabled="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:inputType="text"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:singleLine="true" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/input_layout_workshop"
+                    android:background="@drawable/style_bg_edit_text"
+                    android:padding="@dimen/dp_16"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:hint="Workshop"
+                    android:drawableEnd="@drawable/ic_arrow_down"
+                    android:visibility="visible"
+                    app:boxBackgroundMode="filled"
+                    app:boxStrokeWidth="2dp"
+                    app:helperTextEnabled="false"
+                    app:hintTextColor="@color/text_color"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/input_layout_component"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:startIconTint="@color/text_color"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/input_layout_component"
+                    android:background="@drawable/style_bg_edit_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/dp_16"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:hint="Components"
+                    android:drawableEnd="@drawable/ic_arrow_down"
+                    android:visibility="visible"
+                    app:boxBackgroundMode="filled"
+                    app:boxStrokeWidth="2dp"
+                    app:helperTextEnabled="false"
+                    app:hintTextColor="@color/text_color"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/input_layout_workshop"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:startIconTint="@color/text_color"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/input_layout_component_qty"
+                    android:background="@drawable/style_bg_edit_text"
+                    android:padding="@dimen/dp_16"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:hint="Component Qty"
+                    android:drawableEnd="@drawable/ic_arrow_down"
+                    android:visibility="visible"
+                    app:boxBackgroundMode="filled"
+                    app:boxStrokeWidth="2dp"
+                    app:helperTextEnabled="false"
+                    app:hintTextColor="@color/text_color"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/add_btn"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:startIconTint="@color/text_color"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/add_btn"
+                    style="@style/ButtonStyle.Green"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:text="Add"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/input_layout_component_qty"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TableRow
+                android:id="@+id/component_name_row"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/component_name_text"
+                    style="@style/TextView.TextView_16_SP"
+                    android:background="@drawable/style_bg_edit_text"
+                    android:backgroundTint="@color/orange"
+                    android:padding="4dp"
+                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:textAlignment="center"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Components Name"
+                    android:layout_margin="4dp"
+                    android:textColor="@color/black"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/component_name_qty"
+                    style="@style/TextView.TextView_16_SP"
+                    android:background="@drawable/style_bg_edit_text"
+                    android:backgroundTint="@color/orange"
+                    android:padding="4dp"
+                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:textAlignment="center"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Components Qty"
+                    android:layout_margin="4dp"
+                    android:textColor="@color/black"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/Action"
+                    style="@style/TextView.TextView_20_SP"
+                    android:background="@drawable/style_bg_edit_text"
+                    android:backgroundTint="@color/orange"
+                    android:padding="4dp"
+                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:textAlignment="center"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Action"
+                    android:layout_margin="4dp"
+                    android:textColor="@color/black"/>
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/component_item_row"
+                android:visibility="visible"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/item_list_rv"
+                    android:layout_weight="1"
+                    android:splitMotionEvents="false"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"/>
+
+            </TableRow>
+
+        </TableLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,6 +36,13 @@
         <item name="backgroundTint">#FEB47E</item>
     </style>
 
+    //EditText alert Style Blue
+
+    <style name="EditTextStyle.alert.blue">
+        <item name="android:background">@drawable/style_bg_edit_text</item>
+        <item name="backgroundTint">#805CA0FF</item>
+    </style>
+
     <!--endregion EditText Styles-->
 
     //Button Style
@@ -43,7 +50,7 @@
     //Button Orange BG
     <style name="ButtonStyle.Orange">
         <item name="android:background">@drawable/style_bg_edit_text</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:layout_marginStart">@dimen/dp_20</item>
         <item name="android:layout_marginEnd">@dimen/dp_20</item>
     </style>
@@ -51,7 +58,7 @@
     //Button Orange BG
     <style name="ButtonStyle.DimOrange">
         <item name="android:background">@drawable/style_bg_edit_text</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:layout_marginStart">@dimen/dp_20</item>
         <item name="android:layout_marginEnd">@dimen/dp_20</item>
     </style>
@@ -68,14 +75,14 @@
     //Button Simple Style
     <style name="ButtonStyle.Details">
         <item name="android:background">@drawable/style_bg_edit_text</item>
-        <item name="android:textColor">@color/orange</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     //Button Segment Corner
     <style name="ButtonStyle.segmentCorner">
         <item name="android:padding">@dimen/dp_2</item>
         <item name="android:background">@drawable/style_bg_edit_text</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="ButtonStyle">

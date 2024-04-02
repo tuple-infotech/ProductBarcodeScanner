@@ -13,11 +13,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jmsc.postab.db.AddHost
+import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.databinding.AddHostDialogBinding
 import com.tupleinfotech.productbarcodescanner.ui.adapter.AddHostAdepter
 import com.tupleinfotech.productbarcodescanner.util.AppHelper
 import com.tupleinfotech.productbarcodescanner.util.Constants
 import com.tupleinfotech.productbarcodescanner.util.DialogHelper
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.host_id
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -79,8 +81,6 @@ class AddHostDialog : DialogFragment() {
             binding.hostName.setText(host.host_name)
             binding.hostIp.setText(host.host_ip)
             binding.hostPort.setText(host.host_port)
-
-
         }
 
         // attach adapter to the recycler view
@@ -102,10 +102,8 @@ class AddHostDialog : DialogFragment() {
                 lifecycleScope.launch(Dispatchers.IO){
                     if(isHostExists(hostName,hostIP,hostPort)){
                         withContext(Dispatchers.Main) {
-                            DialogHelper.showErrorDialog(requireContext(),"Host Already exits.")
+                            DialogHelper.Alert_Selection(requireContext(),"Host Already exits.",resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
                         }
-
-
                     }else{
                         viewModel.addHost(hostName,hostIP,hostPort)
                         withContext(Dispatchers.Main) {
@@ -127,10 +125,7 @@ class AddHostDialog : DialogFragment() {
                 selectedHost.host_name = hostName
                 selectedHost.host_ip = hostIP
                 selectedHost.host_port = hostPort
-
-
                 viewModel.updateHost(selectedHost)
-
                 clearFragment()
             }
         }
@@ -144,9 +139,7 @@ class AddHostDialog : DialogFragment() {
                 selectedHost.host_name = hostName
                 selectedHost.host_ip = hostIP
                 selectedHost.host_port = hostPort
-
                 viewModel.deleteHost(selectedHost)
-
                 clearFragment()
             }
 
@@ -155,10 +148,10 @@ class AddHostDialog : DialogFragment() {
 
         binding.btnSelect.setOnClickListener {
             if(this::selectedHost.isInitialized){
-//                prefs.host_id = selectedHost.id
+                prefs.host_id = selectedHost.id
                 onSelect?.invoke(selectedHost)
             }else{
-                DialogHelper.showErrorDialog(requireContext(),"Please Select Host First !")
+                DialogHelper.Alert_Selection(requireContext(),"Please Select Host First !",resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
             }
 
         }
@@ -183,25 +176,25 @@ class AddHostDialog : DialogFragment() {
 
     private fun validateFields(hostName: String, hostIP: String, hostPort: String): Boolean{
         if(hostName.isEmpty()){
-            DialogHelper.showErrorDialog(requireContext(),"Enter Host Name !!")
+            DialogHelper.Alert_Selection(requireContext(),"Enter Host Name !!",resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
             binding.hostName.requestFocus()
             return false
         }
         if(hostIP.isEmpty()){
-            DialogHelper.showErrorDialog(requireContext(),"Enter Ip Address !!")
+            DialogHelper.Alert_Selection(requireContext(),"Enter Ip Address !!",resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
             binding.hostIp.requestFocus()
             return false
         }
         if(!AppHelper.isValidIPAddress(hostIP)){
-            DialogHelper.showErrorDialog(requireContext(),"Enter Valid Ip Address !!")
+            DialogHelper.Alert_Selection(requireContext(),"Enter Valid Ip Address !!",resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
             binding.hostIp.requestFocus()
             return false
         }
-        if(hostPort.isEmpty()){
-            DialogHelper.showErrorDialog(requireContext(),"Enter Port !!")
-            binding.hostPort.requestFocus()
-            return false
-        }
+//        if(hostPort.isEmpty()){
+//            DialogHelper.showErrorDialog(requireContext(),"Enter Port !!")
+//            binding.hostPort.requestFocus()
+//            return false
+//        }
 
         return true
     }
