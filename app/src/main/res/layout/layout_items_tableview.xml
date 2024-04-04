@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/style_bg_border"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_4"
+        android:background="@drawable/style_bg_edit_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TableRow>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/sr_no"
+                style="@style/TextView.TextView_14_SP"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_1"
+                android:layout_marginEnd="@dimen/dp_2"
+                android:layout_weight="0.5"
+                android:background="@drawable/style_bg_top_left_curved"
+                android:backgroundTint="@color/orange"
+                android:gravity="center"
+                android:text="Sr. No" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/compo_name"
+                style="@style/TextView.TextView_14_SP"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_1"
+                android:layout_marginEnd="@dimen/dp_2"
+                android:layout_weight="1"
+                android:background="@color/orange"
+                android:gravity="center"
+                android:text="Comp. Name" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/compo_qty"
+                style="@style/TextView.TextView_14_SP"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_1"
+                android:layout_marginEnd="@dimen/dp_2"
+                android:layout_weight="0.5"
+                android:background="@color/orange"
+                android:gravity="center"
+                android:text="Qty" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/action"
+                style="@style/TextView.TextView_14_SP"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_1"
+                android:layout_weight="1"
+                android:background="@drawable/style_bg_top_right_curved"
+                android:backgroundTint="@color/orange"
+                android:gravity="center"
+                android:text="Action" />
+
+        </TableRow>
+
+    </TableLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/item_list_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dp_4"
+        android:splitMotionEvents="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

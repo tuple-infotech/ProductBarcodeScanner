@@ -40,8 +40,12 @@ data class LoginResponse(
         @SerializedName("ProfileImagePath"      ) var ProfileImagePath      : String?           = null,
         @SerializedName("CompanyId"             ) var CompanyId             : String?           = null,
         @SerializedName("LocationId"            ) var LocationId            : String?           = null,
+        @SerializedName("Address"               ) var Address               : String?                 = null,
+        @SerializedName("Dob"                   ) var Dob                   : String?                 = null,
+        @SerializedName("Gender"                ) var Gender                : String?                 = null,
         @SerializedName("menu"                  ) var menu                  : ArrayList<Menu>   = arrayListOf(),
-        @SerializedName("accessRights"          ) var accessRights          : ArrayList<String> = arrayListOf()
+        @SerializedName("accessRights"          ) var accessRights          : ArrayList<String> = arrayListOf(),
+
 
     )
 }

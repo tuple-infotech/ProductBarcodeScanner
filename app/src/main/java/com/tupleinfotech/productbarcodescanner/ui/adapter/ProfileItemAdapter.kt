@@ -1,17 +1,28 @@
 package com.tupleinfotech.productbarcodescanner.ui.adapter
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.databinding.LayoutProfileFieldBinding
+import com.tupleinfotech.productbarcodescanner.util.AppHelper
+import com.tupleinfotech.productbarcodescanner.util.Constants
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.useraddress
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userdob
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.useremail
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userfullname
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.usergender
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userphone
 
 @SuppressLint("NotifyDataSetChanged")
 class ProfileItemAdapter: RecyclerView.Adapter<ProfileItemAdapter.ViewHolder>() {
 
     //region VARIABLES
     var fieldLabelList            :   List<String>          =       mutableListOf()
+    private lateinit var prefs                              : SharedPreferences
 
     //endregion VARIABLES
 
@@ -27,33 +38,34 @@ class ProfileItemAdapter: RecyclerView.Adapter<ProfileItemAdapter.ViewHolder>() 
 
         with(holder){
             with(fieldLabelList[position]) {
+                prefs = PreferenceHelper.customPreference(itemView.context, Constants.CUSTOM_PREF_NAME)
 
                 binding.apply {
 
                     fieldTitleTxt.text = currentitem
                     when(currentitem.toString()){
                         "Full Name" -> {
-                            fieldName.text = "VAIBHAV JOSHI"
+                            fieldName.text = prefs.userfullname
                             fieldImg.setImageResource(R.drawable.icon_user)
                         }
                         "Email"     -> {
-                            fieldName.text = "vaibhavjoshi25098@gmail.com"
+                            fieldName.text = prefs.useremail
                             fieldImg.setImageResource(R.drawable.icon_email_profile)
                         }
                         "Phone"     -> {
-                            fieldName.text = "6353229708"
+                            fieldName.text = prefs.userphone
                             fieldImg.setImageResource(R.drawable.icon_mobile_profile)
                         }
                         "Address"   -> {
-                            fieldName.text = "48-49. Eath Alpha, Near Fire Station, Vasna-Bhayli, Vadodara, Gujarat - 390021"
+                            fieldName.text = prefs.useraddress
                             fieldImg.setImageResource(R.drawable.icon_address_profile)
                         }
                         "DOB"       -> {
-                            fieldName.text = "11/20/2002"
+                            fieldName.text = AppHelper.convertIso8601ToReadable(prefs.userdob.toString())
                             fieldImg.setImageResource(R.drawable.icon_calendar_profile)
                         }
                         "Gender"    -> {
-                            fieldName.text = "Male"
+                            fieldName.text = prefs.usergender
                             fieldImg.setImageResource(R.drawable.icon_user)
                         }
                     }

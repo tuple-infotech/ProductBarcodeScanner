@@ -6,10 +6,10 @@
     app:startDestination="@id/loginFragment">
 
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.tupleinfotech.productbarcodescanner.ui.fragment.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/BarcodeProductDetailsFragment"
+        android:name="com.tupleinfotech.productbarcodescanner.ui.fragment.BarcodeProductDetailsFragment"
+        android:label="fragment_barcode_product_details"
+        tools:layout="@layout/fragment_barcode_product_details" />
     <fragment
         android:id="@+id/scannerFragment"
         android:name="com.tupleinfotech.productbarcodescanner.ui.fragment.ScannerFragment"
@@ -40,5 +40,10 @@
         android:name="com.tupleinfotech.productbarcodescanner.ui.fragment.ProductManufactureFragment"
         android:label="fragment_product_manufacture"
         tools:layout="@layout/fragment_product_manufacture" />
+    <fragment
+        android:id="@+id/productionReportFragment"
+        android:name="com.tupleinfotech.productbarcodescanner.ui.fragment.ProductionReportFragment"
+        android:label="fragment_production_report"
+        tools:layout="@layout/fragment_production_report" />
 
 </navigation>

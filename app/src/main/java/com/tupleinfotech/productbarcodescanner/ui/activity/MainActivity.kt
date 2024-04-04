@@ -106,13 +106,12 @@ class MainActivity : AppCompatActivity() {
                     item.setIcon(ResourcesCompat.getDrawable(this.resources,bottomNavSelectedImageItemList[item.itemId],this.theme))
                 }
                 1 -> {
-                    //TODO: Product Screen
-//                    navController.navigate(R.id.orderHistoryFragment)
+                    navController.navigate(R.id.productManufactureFragment)
                     item.setIcon(ResourcesCompat.getDrawable(this.resources,bottomNavSelectedImageItemList[item.itemId],this.theme))
                 }
                 2 -> {
                     //TODO: Warehouse Screen
-//                    navController.navigate(R.id.salesReportFragment)
+                    navController.navigate(R.id.productionReportFragment)
                     item.setIcon(ResourcesCompat.getDrawable(this.resources,bottomNavSelectedImageItemList[item.itemId],this.theme))
                 }
                 3 -> {

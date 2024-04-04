@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragment.HomeFragment">
+    tools:context=".ui.fragment.BarcodeProductDetailsFragment">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/main_nsv"
@@ -434,59 +434,16 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TableRow
-                android:id="@+id/component_name_row"
-                android:layout_marginTop="4dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="4dp">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/component_name_text"
-                    style="@style/TextView.TextView_20_SP"
-                    android:background="@drawable/style_bg_edit_text"
-                    android:backgroundTint="@color/orange"
-                    android:padding="4dp"
-                    android:layout_width="0dp"
-                    android:textAlignment="center"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="Components Name"
-                    android:layout_margin="4dp"
-                    android:textColor="@color/black"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/component_name_qty"
-                    style="@style/TextView.TextView_20_SP"
-                    android:background="@drawable/style_bg_edit_text"
-                    android:backgroundTint="@color/orange"
-                    android:padding="4dp"
-                    android:layout_width="0dp"
-                    android:textAlignment="center"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="Components Qty"
-                    android:layout_margin="4dp"
-                    android:textColor="@color/black"/>
-
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/component_item_row"
-                android:visibility="visible"
-                android:layout_marginTop="4dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="4dp">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/item_list_rv"
-                    android:layout_weight="1"
-                    android:splitMotionEvents="false"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"/>
-
-            </TableRow>
+            <include
+                android:id="@+id/recyclerview_details"
+                layout="@layout/layout_items_tableview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dp_8"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/input_layout_component_qty" />
 
         </TableLayout>
 

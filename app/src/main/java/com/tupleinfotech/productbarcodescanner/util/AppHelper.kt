@@ -22,6 +22,7 @@ import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
@@ -362,11 +363,18 @@ class AppHelper {
             return "$sign${String.format("%02d", hours)}:${String.format("%02d", minutes)}"
         }
 
-        fun formatDate(inputDate: String): String {
+        fun formatDate(inputDateFormat : Pattern,inputDate: String): String {
             val inputFormat     = DateTimeFormatter.ofPattern("MM/dd/yyyy")
             val outputFormat    = DateTimeFormatter.ofPattern("yyyy-MM-dd")
             val date            = LocalDate.parse(inputDate, inputFormat)
             return outputFormat.format(date)
+        }
+        fun convertIso8601ToReadable(iso8601Date: String): String {
+            val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+            val outputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val dateTime: LocalDateTime = LocalDateTime.parse(iso8601Date, inputFormat)
+
+            return outputFormat.format(dateTime)
         }
 
         fun formatDate1(inputDate: String): String {

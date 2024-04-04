@@ -253,6 +253,25 @@
         <item name="boxBackgroundMode">filled</item>
     </style>
 
+    <style name="TextInputLayout.blackcolor">
+        <item name="android:textStyle">normal</item>
+        <item name="singleLine">true</item>
+        <item name="android:layout_marginTop">@dimen/dp_30</item>
+        <item name="android:layout_marginBottom">@dimen/dp_20</item>
+        <item name="android:layout_marginStart">@dimen/dp_20</item>
+        <item name="android:layout_marginEnd">@dimen/dp_20</item>
+        <item name="startIconMinSize">@dimen/dp_8</item>
+        <item name="hintTextColor">@color/text_color</item>
+        <item name="startIconTint">@color/text_color</item>
+        <item name="boxStrokeColor">@color/text_color</item>
+        <item name="cursorColor">@color/text_color</item>
+        <item name="android:textColorHint">@color/text_color</item>
+        <item name="helperText">""</item>
+        <item name="helperTextTextColor">@color/red</item>
+        <item name="helperTextEnabled">true</item>
+        <item name="boxBackgroundMode">filled</item>
+    </style>
+
     <style name="TextInputEditText">
         <item name="android:background">@color/transparent</item>
         <item name="android:textColor">@color/orange_low_opacity</item>

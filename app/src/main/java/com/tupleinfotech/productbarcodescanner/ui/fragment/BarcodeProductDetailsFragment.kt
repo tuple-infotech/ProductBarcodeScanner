@@ -1,31 +1,39 @@
 package com.tupleinfotech.productbarcodescanner.ui.fragment
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tupleinfotech.productbarcodescanner.R
-import com.tupleinfotech.productbarcodescanner.databinding.FragmentHomeBinding
+import com.tupleinfotech.productbarcodescanner.databinding.FragmentBarcodeProductDetailsBinding
 import com.tupleinfotech.productbarcodescanner.model.GetDataByBarcodeResponse
 import com.tupleinfotech.productbarcodescanner.ui.adapter.ComponentDataAdapter
 import com.tupleinfotech.productbarcodescanner.ui.viewmodel.SharedViewModel
 import com.tupleinfotech.productbarcodescanner.util.AppHelper.Companion.convertJsonToModel
+import com.tupleinfotech.productbarcodescanner.util.Constants
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.host
+import com.tupleinfotech.productbarcodescanner.util.UrlEndPoints
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class BarcodeProductDetailsFragment : Fragment() {
 
     //region VARIABLES
-    private var _binding                    : FragmentHomeBinding?                                  = null
+    private var _binding                    : FragmentBarcodeProductDetailsBinding?                                  = null
     private val binding                     get()                                                   = _binding!!
+    lateinit var prefs : SharedPreferences
     private var observerExecuted            : Boolean                                               = false
     private var barcodetext                 : String?                                               = null
     private val sharedViewModel             : SharedViewModel by viewModels()
@@ -43,7 +51,8 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentBarcodeProductDetailsBinding.inflate(inflater, container, false)
+        prefs = PreferenceHelper.customPreference(requireContext(), Constants.CUSTOM_PREF_NAME)
 
         init()
         return binding.root
@@ -59,6 +68,7 @@ class HomeFragment : Fragment() {
         getScannedBarcodeData()
 //        getDataByBarcode("4154545")
         initorderlist()
+        onBackPressed()
     }
     //endregion INIT METHOD
 
@@ -105,8 +115,11 @@ class HomeFragment : Fragment() {
 
     private fun initorderlist() {
 
+        binding.recyclerviewDetails.action.visibility = GONE
+        binding.recyclerviewDetails.srNo.visibility = GONE
+
         val layoutManager : RecyclerView.LayoutManager = LinearLayoutManager(requireActivity())
-        val recycleviewOrderlist            = binding.itemListRv
+        val recycleviewOrderlist            = binding.recyclerviewDetails.itemListRv
         componentDataAdapter                = ComponentDataAdapter()
         componentDataAdapter?.updateList(componentData)
 
@@ -132,6 +145,16 @@ class HomeFragment : Fragment() {
     //endregion ALL FUNCTIONS
 
     //region BACK EVENT FUNCTIONS
+
+    private fun onBackPressed() {
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,onBackPressedCallback)
+
+    }
     //endregion BACK EVENT FUNCTIONS
 
     //region API SERVICE
@@ -144,63 +167,53 @@ class HomeFragment : Fragment() {
             "Barcode"            to          barcodeText.trim().replace("\n",""),
         )
 
-        sharedViewModel.api_service(requireContext(),"product/getdatabybarcode",map,{ getDataByBarcoderesponse ->
+        val getDataByBarcodeUrl = prefs.host + UrlEndPoints.GET_DATA_BY_BARCODE
+        sharedViewModel.api_service(requireContext(),getDataByBarcodeUrl,map,{ getDataByBarcoderesponse ->
             println(getDataByBarcoderesponse)
             val getDataByBarcodeResponse: GetDataByBarcodeResponse? = convertJsonToModel(getDataByBarcoderesponse)
 
             if (getDataByBarcodeResponse != null) {
                 println(getDataByBarcodeResponse)
 
-/*
-                if (getDataByBarcodeResponse.ErrorMessage.toString().isEmpty()) {
-*/
-                    if (getDataByBarcodeResponse.products != null && getDataByBarcodeResponse.products.toString().isNotEmpty()) {
+                if (getDataByBarcodeResponse.products != null && getDataByBarcodeResponse.products.toString().isNotEmpty()) {
 
-                        if (getDataByBarcodeResponse.products?.Barcode.toString().isNotEmpty()){
-                            getDataByBarcodeResponse.products?.let {
-                                binding.etBoxBarcodeScanned.setText(it.Barcode.toString())
-                                binding.etBoxBarcode.setText(it.Barcode.toString())
-                                binding.etBoxDesignName.setText(it.DesignName.toString())
-                                binding.etBoxWhName.setText(it.WarehouseName.toString())
-                                binding.etBoxFtName.setText(it.FactoryName.toString())
-                                binding.etBoxWhInTime.setText(it.WarehouseInTime.toString())
-                                binding.etBoxWhOutTime.setText(it.WarehouseOutTime.toString())
-                                binding.etBoxWhInNotes.setText(it.WarehouseInNotes.toString())
-                                binding.etBoxWhOutNotes.setText(it.WarehouseOutNotes.toString())
-                            }
-
-                            getDataByBarcodeResponse.products?.components.let {
-                                componentDataAdapter?.updateList(it)
-                            }
-                        }
-                        else{
-                            Toast.makeText(requireContext(), getDataByBarcodeResponse.ErrorMessage.toString(), Toast.LENGTH_SHORT).show()
-                            binding.etBoxBarcodeScanned.text?.clear()
-                            binding.etBoxBarcode.text?.clear()
-                            binding.etBoxDesignName.text?.clear()
-                            binding.etBoxFtName.text?.clear()
-                            binding.etBoxWhInNotes.text?.clear()
-                            binding.etBoxWhInTime.text?.clear()
-                            binding.etBoxWhName.text?.clear()
-                            binding.etBoxWhOutNotes.text?.clear()
-                            binding.etBoxWhOutTime.text?.clear()
-                            val hostList = ArrayList<GetDataByBarcodeResponse.Components>()
-                            componentDataAdapter?.updateList(hostList)
+                    if (getDataByBarcodeResponse.products?.Barcode.toString().isNotEmpty()){
+                        getDataByBarcodeResponse.products?.let {
+                            binding.etBoxBarcodeScanned.setText(it.Barcode.toString())
+                            binding.etBoxBarcode.setText(it.Barcode.toString())
+                            binding.etBoxDesignName.setText(it.DesignName.toString())
+                            binding.etBoxWhName.setText(it.WarehouseName.toString())
+                            binding.etBoxFtName.setText(it.FactoryName.toString())
+                            binding.etBoxWhInTime.setText(it.WarehouseInTime.toString())
+                            binding.etBoxWhOutTime.setText(it.WarehouseOutTime.toString())
+                            binding.etBoxWhInNotes.setText(it.WarehouseInNotes.toString())
+                            binding.etBoxWhOutNotes.setText(it.WarehouseOutNotes.toString())
                         }
 
+                        getDataByBarcodeResponse.products?.components.let {
+                            componentDataAdapter?.updateList(it)
+                        }
+                    }
+                    else{
+                        Toast.makeText(requireContext(), getDataByBarcodeResponse.ErrorMessage.toString(), Toast.LENGTH_SHORT).show()
+                        binding.etBoxBarcodeScanned.text?.clear()
+                        binding.etBoxBarcode.text?.clear()
+                        binding.etBoxDesignName.text?.clear()
+                        binding.etBoxFtName.text?.clear()
+                        binding.etBoxWhInNotes.text?.clear()
+                        binding.etBoxWhInTime.text?.clear()
+                        binding.etBoxWhName.text?.clear()
+                        binding.etBoxWhOutNotes.text?.clear()
+                        binding.etBoxWhOutTime.text?.clear()
+                        val hostList = ArrayList<GetDataByBarcodeResponse.Components>()
+                        componentDataAdapter?.updateList(hostList)
+                    }
 
-                    }
-                    else {
-                        Toast.makeText(requireContext(), "Details Not Found", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-/*
+
                 }
-*/
-/*                else {
-                    Toast.makeText(requireContext(), getDataByBarcodeResponse.ErrorMessage.toString(), Toast.LENGTH_SHORT).show()
-                }*/
-
+                else {
+                    Toast.makeText(requireContext(), "Details Not Found", Toast.LENGTH_SHORT).show()
+                }
 
             }
             else {

@@ -31,4 +31,6 @@
     <string name="order_history_label">"Order History"</string>
     <string name="sales_report_label">"Sales Report"</string>
     <string name="profile_label">"Profile"</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>

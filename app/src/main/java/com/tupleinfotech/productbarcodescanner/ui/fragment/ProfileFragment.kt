@@ -1,5 +1,7 @@
 package com.tupleinfotech.productbarcodescanner.ui.fragment
 
+import android.content.SharedPreferences
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +12,19 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.databinding.FragmentProfileBinding
 import com.tupleinfotech.productbarcodescanner.ui.adapter.ProfileItemAdapter
+import com.tupleinfotech.productbarcodescanner.util.Constants
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.host
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userfullname
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userprofileimage
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,6 +35,7 @@ class ProfileFragment : Fragment() {
     private val binding                                     get()                                   =  _binding!!
     private var profileItemAdapter                          : ProfileItemAdapter                    = ProfileItemAdapter()
     private val profileItemData                             : ArrayList<String>                     = arrayListOf()
+    private lateinit var prefs                              : SharedPreferences
 
     //endregion VARIABLES
 
@@ -37,6 +50,7 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val view = binding.root
+        prefs = PreferenceHelper.customPreference(requireContext(), Constants.CUSTOM_PREF_NAME)
 
         init()
 
@@ -47,6 +61,7 @@ class ProfileFragment : Fragment() {
 
     //region INIT METHOD
     private fun init() {
+        loadImage()
         onBackPressed()
         initProfileFields()
         initChangePassword()
@@ -67,6 +82,39 @@ class ProfileFragment : Fragment() {
 
     //region ALL FUNCTIONS
 
+    private fun loadImage(){
+        if (prefs.userfullname.toString()[0].uppercaseChar().toString().trim().isEmpty() && prefs.userfullname.toString()[0].uppercaseChar().toString().trim().isBlank()){
+            binding.profileLayout.shapeableImageViewtext.text = prefs.userfullname.toString()[0].uppercaseChar().toString().trim()
+        }
+
+        Glide.with(binding.root)
+            .load(prefs.host+"v1/"+prefs.userprofileimage)
+            .fitCenter()
+            .listener(object : RequestListener<Drawable?> {
+
+                override fun onResourceReady(
+                    resource: Drawable,
+                    model: Any,
+                    target: Target<Drawable?>?,
+                    dataSource: DataSource,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    binding.profileLayout.shapeableImageViewtext.visibility = View.GONE
+                    return false
+                }
+
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable?>,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    binding.profileLayout.shapeableImageViewtext.visibility = View.VISIBLE
+                    return false
+                }
+            })
+            .into(binding.profileLayout.shapeableImageView)
+    }
     private fun initProfileFields(){
 
         profileItemData.add("Full Name")
@@ -99,7 +147,6 @@ class ProfileFragment : Fragment() {
             override fun handleOnBackPressed() {
                 findNavController().popBackStack()
                 profileItemData.clear()
-
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,onBackPressedCallback)

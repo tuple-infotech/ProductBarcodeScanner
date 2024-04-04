@@ -32,7 +32,15 @@ import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.host_id
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.ipAddress
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.password
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.port
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userId
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.useraddress
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userdob
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.useremail
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userfullname
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.usergender
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.username
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userphone
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userprofileimage
 import com.tupleinfotech.productbarcodescanner.util.UrlEndPoints
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -233,6 +241,16 @@ class LoginFragment : Fragment() {
                     }
                     prefs.username = userId
                     prefs.password = password
+                    prefs.userId   = loginResponse.USER?.UserId.toString()
+
+                    prefs.userfullname          = loginResponse.USER?.FirstName + loginResponse.USER?.MiddleName + loginResponse.USER?.LastName
+                    prefs.useremail             = loginResponse.USER?.Email
+                    prefs.userphone             = loginResponse.USER?.MobileNumber
+                    prefs.userprofileimage      = loginResponse.USER?.ProfileImagePath
+                    prefs.useraddress           = loginResponse.USER?.Address
+                    prefs.userdob               = loginResponse.USER?.Dob
+                    prefs.usergender            = loginResponse.USER?.Gender
+                    prefs.userprofileimage      = loginResponse.USER?.ProfileImagePath + loginResponse.USER?.ProfileImage
 
                     loginResponse.USER?.menu?.forEach { item ->
                         println(item.MenuName)
