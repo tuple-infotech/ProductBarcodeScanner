@@ -62,6 +62,8 @@ dependencies {
     implementation libs.androidx.core.splashscreen
 
     implementation libs.gson
+    implementation project(':treeview')
+
 
     //Camera Dependencies
     implementation "androidx.camera:camera-core:1.2.2"
@@ -119,6 +121,7 @@ dependencies {
     implementation "androidx.room:room-common:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+
 
 /*
     implementation project(':ScanManager')

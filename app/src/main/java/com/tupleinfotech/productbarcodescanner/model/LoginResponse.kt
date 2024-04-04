@@ -46,6 +46,5 @@ data class LoginResponse(
         @SerializedName("menu"                  ) var menu                  : ArrayList<Menu>   = arrayListOf(),
         @SerializedName("accessRights"          ) var accessRights          : ArrayList<String> = arrayListOf(),
 
-
     )
 }

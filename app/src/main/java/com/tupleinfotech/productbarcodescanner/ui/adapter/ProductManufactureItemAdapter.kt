@@ -1,6 +1,8 @@
 package com.tupleinfotech.productbarcodescanner.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tupleinfotech.productbarcodescanner.databinding.LayoutProductManufactureItemviewBinding
@@ -31,6 +33,10 @@ class ProductManufactureItemAdapter : RecyclerView.Adapter<ProductManufactureIte
 
                 binding.fieldName.text = currentitem.ComponentsName
                 binding.fieldQty.text = currentitem.ComponentsQty
+                binding.lastCl.visibility = VISIBLE
+                binding.fieldOthers.visibility = GONE
+                binding.editbtn.visibility = VISIBLE
+                binding.deletebtn.visibility = VISIBLE
 
                 binding.editbtn.setOnClickListener {
                     onEditItemClick?.invoke(hostlist[position])

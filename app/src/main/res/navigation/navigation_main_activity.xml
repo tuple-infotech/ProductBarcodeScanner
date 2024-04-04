@@ -45,5 +45,10 @@
         android:name="com.tupleinfotech.productbarcodescanner.ui.fragment.ProductionReportFragment"
         android:label="fragment_production_report"
         tools:layout="@layout/fragment_production_report" />
+    <fragment
+        android:id="@+id/warehouseEntryFragment"
+        android:name="com.tupleinfotech.productbarcodescanner.ui.fragment.WarehouseEntryFragment"
+        android:label="fragment_warehouse_entry"
+        tools:layout="@layout/fragment_warehouse_entry" />
 
 </navigation>

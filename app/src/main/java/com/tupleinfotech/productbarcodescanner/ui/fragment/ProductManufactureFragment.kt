@@ -1,9 +1,6 @@
 package com.tupleinfotech.productbarcodescanner.ui.fragment
 
-import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,13 +19,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.tupleinfotech.productbarcodescanner.R
-import com.tupleinfotech.productbarcodescanner.databinding.DialogSelectListItemBinding
 import com.tupleinfotech.productbarcodescanner.databinding.FragmentProductManufactureBinding
 import com.tupleinfotech.productbarcodescanner.model.GetDataByBarcodeResponse
 import com.tupleinfotech.productbarcodescanner.model.WorkshopListResponse
-import com.tupleinfotech.productbarcodescanner.ui.adapter.ComponentsListingAdapter
+import com.tupleinfotech.productbarcodescanner.ui.activity.MainActivity
 import com.tupleinfotech.productbarcodescanner.ui.adapter.ProductManufactureItemAdapter
-import com.tupleinfotech.productbarcodescanner.ui.adapter.WorkshopListingAdapter
 import com.tupleinfotech.productbarcodescanner.ui.viewmodel.SharedViewModel
 import com.tupleinfotech.productbarcodescanner.util.AppHelper
 import com.tupleinfotech.productbarcodescanner.util.Constants
@@ -79,21 +74,31 @@ class ProductManufactureFragment : Fragment() {
     //region INIT METHOD
 
     private fun init(){
+
+        sharedViewModel.initActionbarWithSideMenu(requireActivity() as MainActivity)
+
         initProductManufactureItem()
         scanButton()
         getScannedBarcodeData()
         getBarcodeDetails()
         getWorkshopList()
         addButtonFunctionality()
+        initShowDetails()
     }
 
     //endregion INIT METHOD
 
     //region BUTTON FUNCTIONALITY
 
+    private fun initShowDetails(){
+        binding.showWarehouseDataBtn.setOnClickListener {
+            findNavController().navigate(R.id.productionReportFragment)
+        }
+    }
+
     private fun initWorkshopDropDown(itemList: ArrayList<WorkshopListResponse.List>){
         binding.inputLayoutWorkshop.setOnClickListener {
-            showWorkshopListingDialog(requireContext(),itemList,false) {
+            sharedViewModel.showWorkshopListingDialog(requireContext(),itemList,false) {
                 binding.inputLayoutWorkshop.text = it.FactoryName.toString()
                 factoryID = it.FactoryId.toString()
             }
@@ -108,7 +113,7 @@ class ProductManufactureFragment : Fragment() {
         componentList.add("Flame")
 
         binding.inputLayoutComponent.setOnClickListener {
-            showComponentsListingDialog(requireContext(),componentList,false){
+            sharedViewModel.showComponentsListingDialog(requireContext(),componentList,false){
                 binding.inputLayoutComponent.text = it.toString()
             }
         }
@@ -249,105 +254,6 @@ class ProductManufactureFragment : Fragment() {
 
     }
 
-    fun showWorkshopListingDialog(
-        context: Context,
-        itemList: ArrayList<WorkshopListResponse.List>,
-        isSearchVisible : Boolean = false,
-        onListItemClick         : ((WorkshopListResponse.List) -> Unit)? =    {}
-    ) {
-        //region Dialog Creation
-
-        val _binding = DialogSelectListItemBinding.inflate(LayoutInflater.from(context))
-        val builder = android.app.AlertDialog.Builder(context)
-        builder.setView(_binding.root)
-
-        val alertDialog = builder.create()
-        /*
-                    val onListItemClick         : ((Pair<String,String>) -> Unit)? =    null
-        */
-
-        // Create and show the dialog
-        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        alertDialog.setCanceledOnTouchOutside(false)
-        //endregion Dialog Creation
-
-        if (isSearchVisible) _binding.searchbox.visibility = VISIBLE else _binding.searchbox.visibility = GONE
-
-        _binding.customActionBar.notificationBtn.setImageResource(R.drawable.ic_close_square)
-        _binding.customActionBar.notificationBtn.imageTintList = context.resources.getColorStateList(R.color.orange)
-        _binding.customActionBar.arrowBnt.visibility = GONE
-        _binding.customActionBar.setOurText.text = "Select"
-        _binding.customActionBar.notificationBtn.setOnClickListener {
-            alertDialog.dismiss()
-        }
-
-        val layoutManager : RecyclerView.LayoutManager  = LinearLayoutManager(context)
-        val recyclerViewPaymentList                     = _binding.itemListingRv
-        recyclerViewPaymentList.layoutManager           = layoutManager
-        recyclerViewPaymentList.itemAnimator            = DefaultItemAnimator()
-        val listingAdapter                     : WorkshopListingAdapter = WorkshopListingAdapter()
-        listingAdapter.updateItems(itemList)
-        listingAdapter.onItemClick = {
-            onListItemClick?.invoke(it)
-            alertDialog.dismiss()
-        }
-
-        recyclerViewPaymentList.adapter                 = listingAdapter
-
-        //region Dialog Show
-        alertDialog.show()
-        //endregion Dialog Show
-    }
-
-    fun showComponentsListingDialog(
-        context: Context,
-        itemList: ArrayList<String>,
-        isSearchVisible : Boolean = false,
-        onListItemClick         : ((String) -> Unit)? =    {}
-    ) {
-        //region Dialog Creation
-
-        val _binding = DialogSelectListItemBinding.inflate(LayoutInflater.from(context))
-        val builder = android.app.AlertDialog.Builder(context)
-        builder.setView(_binding.root)
-
-        val alertDialog = builder.create()
-        /*
-                    val onListItemClick         : ((Pair<String,String>) -> Unit)? =    null
-        */
-
-        // Create and show the dialog
-        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        alertDialog.setCanceledOnTouchOutside(false)
-        //endregion Dialog Creation
-
-        if (isSearchVisible) _binding.searchbox.visibility = VISIBLE else _binding.searchbox.visibility = GONE
-
-        _binding.customActionBar.notificationBtn.setImageResource(R.drawable.ic_close_square)
-        _binding.customActionBar.notificationBtn.imageTintList = context.resources.getColorStateList(R.color.orange)
-        _binding.customActionBar.arrowBnt.visibility = GONE
-        _binding.customActionBar.setOurText.text = "Select"
-        _binding.customActionBar.notificationBtn.setOnClickListener {
-            alertDialog.dismiss()
-        }
-
-        val layoutManager : RecyclerView.LayoutManager  = LinearLayoutManager(context)
-        val recyclerViewPaymentList                     = _binding.itemListingRv
-        recyclerViewPaymentList.layoutManager           = layoutManager
-        recyclerViewPaymentList.itemAnimator            = DefaultItemAnimator()
-        val listingAdapter                     : ComponentsListingAdapter = ComponentsListingAdapter()
-        listingAdapter.updateItems(itemList)
-        listingAdapter.onItemClick = {
-            onListItemClick?.invoke(it)
-            alertDialog.dismiss()
-        }
-
-        recyclerViewPaymentList.adapter                 = listingAdapter
-
-        //region Dialog Show
-        alertDialog.show()
-        //endregion Dialog Show
-    }
 
     //endregion ALL FUNCTIONS
 

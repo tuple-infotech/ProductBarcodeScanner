@@ -9,8 +9,9 @@ data class GetDataByBarcodeResponse(
     @SerializedName("StatusCode"        ) var StatusCode        : String?           = null,
     @SerializedName("RedirectUrl"       ) var RedirectUrl       : String?           = null,
     @SerializedName("ValidationMessage" ) var ValidationMessage : ArrayList<String> = arrayListOf(),
-    @SerializedName("pipes"             ) var pipes             : ArrayList<Pipes>  = arrayListOf()
-){
+    @SerializedName("pipes"             ) var pipes             : ArrayList<Pipes>  = arrayListOf(),
+
+    ){
 
     data class Pipes (
 
@@ -34,6 +35,9 @@ data class GetDataByBarcodeResponse(
 
     data class Products (
 
+        @SerializedName("Isdispatched"      ) var Isdispatched      : Int?                  = null,
+        @SerializedName("VendorName"        ) var VendorName        : String?               = null,
+        @SerializedName("VendorId"          ) var VendorId          : Int?                  = null,
         @SerializedName("LocationId"        ) var LocationId        : Int?                  = null,
         @SerializedName("PipeId"            ) var PipeId            : Int?                  = null,
         @SerializedName("Barcode"           ) var Barcode           : String?               = null,

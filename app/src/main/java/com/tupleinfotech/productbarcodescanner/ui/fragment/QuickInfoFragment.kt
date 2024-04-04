@@ -66,6 +66,9 @@ class QuickInfoFragment : Fragment() {
     //region INIT METHOD
 
     private fun init(){
+
+        sharedViewModel.initActionbarWithSideMenu(requireActivity() as MainActivity)
+
         onBackPressed()
 //        initQuickInfoMenu()
         serviceApiQuickInfoData()

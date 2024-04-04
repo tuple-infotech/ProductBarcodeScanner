@@ -19,6 +19,7 @@ import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
@@ -26,6 +27,8 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.tupleinfotech.productbarcodescanner.databinding.FragmentScannerBinding
+import com.tupleinfotech.productbarcodescanner.ui.activity.MainActivity
+import com.tupleinfotech.productbarcodescanner.ui.viewmodel.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
@@ -43,6 +46,7 @@ class ScannerFragment : Fragment() {
     private var cameraProvider          : ProcessCameraProvider?                    = null
     private var previewView             : PreviewView?                              = null
     private var barcodeText             : String?                                   = null
+    private val sharedViewModel             : SharedViewModel by viewModels()
 
     //endregion VARIABLES
 
@@ -67,6 +71,9 @@ class ScannerFragment : Fragment() {
     //region INIT METHOD
 
     private fun init(){
+
+        sharedViewModel.initActionbarWithoutSideMenu(requireActivity() as MainActivity)
+
         cameraPermission()
         onBackPressed()
     }

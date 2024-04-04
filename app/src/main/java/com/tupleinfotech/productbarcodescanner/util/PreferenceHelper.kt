@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 object PreferenceHelper {
 
     val HOST = "HOST"
+    val IMAGEURL = "IMAGE"
 
     val IP_ADDRESS = "IPADDRESS"
     val PORT = "PORT"
@@ -42,6 +43,13 @@ object PreferenceHelper {
         set(value) {
             editMe {
                 it.putString(HOST, value)
+            }
+        }
+    var SharedPreferences.imageurl
+        get() = getString(IMAGEURL, "")
+        set(value) {
+            editMe {
+                it.putString(IMAGEURL, value)
             }
         }
 

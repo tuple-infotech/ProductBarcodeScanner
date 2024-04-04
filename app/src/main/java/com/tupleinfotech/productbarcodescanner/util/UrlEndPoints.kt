@@ -12,5 +12,8 @@ class UrlEndPoints {
         const val GET_PRODUCTION_DETAILS    = "v1/productionreportrequest/getproductiondetails"
         const val UPDATE_PIPE_ENTRY    = "v1/productmanufacture/updatePipeEntry"
         const val UPDATE_ADD_ENTRY    = "v1/productmanufacture/addPipeEntry"
+        const val SAVE_WAREHOUSE_IN_DATA    = "v1/warehouseApi/saveWarehouseInData"
+        const val UPDATE_WAREHOUSE_IN_DATA    = "v1/warehouseApi/updateWarehouseOutData"
+        const val GET_PRODUCT_WAREHOUSE_DATA    = "v1/warehouseApi/getProductWarehouseData"
     }
 }

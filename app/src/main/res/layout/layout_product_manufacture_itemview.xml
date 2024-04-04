@@ -25,6 +25,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="@dimen/dp_2"
                 android:layout_weight="0.5"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:gravity="center"
                 android:paddingStart="@dimen/dp_8"
                 android:paddingEnd="@dimen/dp_8"
@@ -45,6 +47,8 @@
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_marginTop="0dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:layout_marginEnd="@dimen/dp_2"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -66,6 +70,8 @@
                 style="@style/TextView.TextView_14_SP"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="@dimen/dp_2"
                 android:layout_weight="0.5"
@@ -84,16 +90,41 @@
                 tools:ignore="RtlCompat" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/last_cl"
                 android:layout_width="0dp"
+                android:visibility="visible"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="@dimen/dp_2"
                 android:layout_weight="1">
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/field_others"
+                    style="@style/TextView.TextView_14_SP"
+                    android:layout_width="0dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:layout_height="30dp"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:paddingStart="@dimen/dp_8"
+                    android:paddingEnd="@dimen/dp_8"
+                    android:text="Qty"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textStyle="normal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/editbtn"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlCompat" />
+
                 <ImageButton
                     android:id="@+id/editbtn"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
+                    android:visibility="gone"
                     android:layout_weight="0.5"
                     android:background="@color/transparent"
                     android:src="@drawable/icon_edit"
@@ -106,6 +137,7 @@
                 <ImageButton
                     android:id="@+id/deletebtn"
                     android:layout_width="0dp"
+                    android:visibility="gone"
                     android:layout_height="30dp"
                     android:layout_weight="0.5"
                     android:background="@color/transparent"

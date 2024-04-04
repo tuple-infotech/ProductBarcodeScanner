@@ -6,7 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
@@ -17,10 +19,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.databinding.FragmentBarcodeProductDetailsBinding
 import com.tupleinfotech.productbarcodescanner.model.GetDataByBarcodeResponse
+import com.tupleinfotech.productbarcodescanner.ui.activity.MainActivity
 import com.tupleinfotech.productbarcodescanner.ui.adapter.ComponentDataAdapter
 import com.tupleinfotech.productbarcodescanner.ui.viewmodel.SharedViewModel
 import com.tupleinfotech.productbarcodescanner.util.AppHelper.Companion.convertJsonToModel
 import com.tupleinfotech.productbarcodescanner.util.Constants
+import com.tupleinfotech.productbarcodescanner.util.DialogHelper
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.host
 import com.tupleinfotech.productbarcodescanner.util.UrlEndPoints
@@ -39,7 +43,8 @@ class BarcodeProductDetailsFragment : Fragment() {
     private val sharedViewModel             : SharedViewModel by viewModels()
     private var componentDataAdapter        : ComponentDataAdapter?                                 = ComponentDataAdapter()
     private var componentData               = ArrayList<GetDataByBarcodeResponse.Components>()
-
+    private var isEditable                  : Boolean = true
+    private var barcode                     : String = ""
     //endregion VARIABLES
 
     //region OVERRIDE METHODS (LIFECYCLE)
@@ -47,6 +52,8 @@ class BarcodeProductDetailsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
+            isEditable = it.getBoolean("isEditable")
+            barcode = it.getString("barcode",barcode)
         }
     }
 
@@ -63,12 +70,26 @@ class BarcodeProductDetailsFragment : Fragment() {
     //region INIT METHOD
 
     private fun init(){
+
+        if (!isEditable){
+            binding.etBoxBarcode.setText(barcode.toString())
+            binding.etBoxBarcodeScanned.setText(barcode.toString())
+            getDataByBarcode(barcode)
+            binding.scanBtn.visibility = GONE
+            binding.clearBtn.visibility = GONE
+        }else{
+            binding.scanBtn.visibility = VISIBLE
+            binding.clearBtn.visibility = VISIBLE
+        }
+        sharedViewModel.initActionbarWithSideMenu(requireActivity() as MainActivity)
+
         scanButton()
+
         clearButton()
         getScannedBarcodeData()
-//        getDataByBarcode("4154545")
         initorderlist()
         onBackPressed()
+        getBarcodeDetails()
     }
     //endregion INIT METHOD
 
@@ -108,6 +129,21 @@ class BarcodeProductDetailsFragment : Fragment() {
                 componentDataAdapter?.updateList(hostList)
             }
         }
+    }
+
+    private fun getBarcodeDetails(){
+        binding.etBoxBarcode.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (binding.etBoxBarcode.text.toString().isNotEmpty()) {
+                    getDataByBarcode(binding.etBoxBarcode.text.toString())
+                }
+                else{
+                    DialogHelper.Alert_Selection(requireContext(),"Enter Barcode !!",resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
+                }
+            }
+            false
+        }
+
     }
     //endregion BUTTON FUNCTIONALITY
 

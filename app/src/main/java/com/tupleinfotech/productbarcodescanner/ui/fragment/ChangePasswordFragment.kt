@@ -7,8 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.tupleinfotech.productbarcodescanner.databinding.FragmentChangePasswordBinding
+import com.tupleinfotech.productbarcodescanner.ui.activity.MainActivity
+import com.tupleinfotech.productbarcodescanner.ui.viewmodel.SharedViewModel
 import com.tupleinfotech.productbarcodescanner.util.AlertMsgs.conPassMissing
 import com.tupleinfotech.productbarcodescanner.util.AlertMsgs.oldPassMissing
 import com.tupleinfotech.productbarcodescanner.util.AlertMsgs.oldPassNotMatch
@@ -32,6 +35,7 @@ class ChangePasswordFragment : Fragment() {
     private var _binding                    : FragmentChangePasswordBinding?                        =  null
     private val binding                     get()                                                   =  _binding!!
     private var isfromProfile               : Boolean?                                              = false
+    private val sharedViewModel             : SharedViewModel by viewModels()
 
     //endregion VARIABLES
 
@@ -58,6 +62,9 @@ class ChangePasswordFragment : Fragment() {
     //region INIT METHOD
 
     private fun init(){
+
+        sharedViewModel.initActionbarWithoutSideMenu(requireActivity() as MainActivity)
+
         screenWiseFunctionality()
         onBackPressed()
         initBack()

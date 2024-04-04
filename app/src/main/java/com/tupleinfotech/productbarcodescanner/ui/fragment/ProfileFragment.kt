@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +20,9 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.databinding.FragmentProfileBinding
+import com.tupleinfotech.productbarcodescanner.ui.activity.MainActivity
 import com.tupleinfotech.productbarcodescanner.ui.adapter.ProfileItemAdapter
+import com.tupleinfotech.productbarcodescanner.ui.viewmodel.SharedViewModel
 import com.tupleinfotech.productbarcodescanner.util.Constants
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.host
@@ -36,6 +39,7 @@ class ProfileFragment : Fragment() {
     private var profileItemAdapter                          : ProfileItemAdapter                    = ProfileItemAdapter()
     private val profileItemData                             : ArrayList<String>                     = arrayListOf()
     private lateinit var prefs                              : SharedPreferences
+    private val sharedViewModel             : SharedViewModel by viewModels()
 
     //endregion VARIABLES
 
@@ -61,6 +65,9 @@ class ProfileFragment : Fragment() {
 
     //region INIT METHOD
     private fun init() {
+
+        sharedViewModel.initActionbarWithSideMenu(requireActivity() as MainActivity)
+
         loadImage()
         onBackPressed()
         initProfileFields()

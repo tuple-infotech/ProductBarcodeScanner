@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:elevation="@dimen/dp_25"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:elevation="@dimen/dp_25"
+        app:layout_constraintBottom_toTopOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/imageconstraint"
+            android:layout_width="100dp"
+            android:layout_height="@dimen/dp_100"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/side_menu_image"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_margin="10dp"
+                android:padding="5dp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/circlefullImageView"
+                app:strokeColor="@color/black"
+                app:strokeWidth="3dp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/side_menu_text"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/style_bg_round"
+                android:backgroundTint="@color/gray"
+                android:gravity="center"
+                android:padding="5dp"
+                android:paddingBottom="@dimen/dp_5"
+                android:text="JV"
+                android:textColor="@color/white"
+                android:textSize="40sp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/black"
+                app:strokeWidth="3dp" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/side_nav_menu_lastName_txt"
+            style="@style/TextView.TextView_24_SP"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:singleLine="true"
+            android:text="Joshi"
+            android:textColor="@color/orange"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/imageconstraint"
+            app:layout_constraintStart_toEndOf="@+id/imageconstraint" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/side_nav_menu_firstName_txt"
+            style="@style/TextView.TextView_24_SP"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:singleLine="true"
+            android:text="Vaibhav"
+            android:textColor="@color/orange"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/side_nav_menu_lastName_txt"
+            app:layout_constraintStart_toEndOf="@+id/imageconstraint"
+            app:layout_constraintTop_toTopOf="@+id/imageconstraint" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_2"
+        android:layout_marginBottom="8dp"
+        android:background="@color/dim_orange"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

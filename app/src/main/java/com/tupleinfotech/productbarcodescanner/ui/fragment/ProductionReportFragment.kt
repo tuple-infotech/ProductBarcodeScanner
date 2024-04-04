@@ -1,14 +1,13 @@
 package com.tupleinfotech.productbarcodescanner.ui.fragment
 
 import android.app.DatePickerDialog
-import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
@@ -18,13 +17,13 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tupleinfotech.productbarcodescanner.R
-import com.tupleinfotech.productbarcodescanner.databinding.DialogSelectListItemBinding
 import com.tupleinfotech.productbarcodescanner.databinding.FragmentProductionReportBinding
 import com.tupleinfotech.productbarcodescanner.model.ProductionDetailsResponse
 import com.tupleinfotech.productbarcodescanner.model.WorkshopListResponse
+import com.tupleinfotech.productbarcodescanner.model.getProductWarehouseDataResponse
+import com.tupleinfotech.productbarcodescanner.ui.activity.MainActivity
 import com.tupleinfotech.productbarcodescanner.ui.adapter.ProductionReportAdapter
-import com.tupleinfotech.productbarcodescanner.ui.adapter.WarehouseListingAdapter
-import com.tupleinfotech.productbarcodescanner.ui.adapter.WorkshopListingAdapter
+import com.tupleinfotech.productbarcodescanner.ui.adapter.ProductionWarehouseListingAdapter
 import com.tupleinfotech.productbarcodescanner.ui.viewmodel.SharedViewModel
 import com.tupleinfotech.productbarcodescanner.util.AppHelper
 import com.tupleinfotech.productbarcodescanner.util.Constants
@@ -49,7 +48,10 @@ class ProductionReportFragment : Fragment() {
     private var toDate = "0"
     private val sharedViewModel             : SharedViewModel by viewModels()
     private var productionReportAdapter               : ProductionReportAdapter?        = null
+    private var productionWarehouseListingAdapter               : ProductionWarehouseListingAdapter?        = null
     private var productsData                :   ArrayList<ProductionDetailsResponse.Products>          =       arrayListOf()
+    private var productWarehouseData                :   ArrayList<getProductWarehouseDataResponse.Products>          =       arrayListOf()
+    private var isFromWarehouse             : Boolean  = false
 
     //endregion VARIABLES
 
@@ -58,6 +60,7 @@ class ProductionReportFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
+            isFromWarehouse = it.getBoolean("isfromwarehouse")
         }
     }
 
@@ -69,18 +72,40 @@ class ProductionReportFragment : Fragment() {
         init()
         return binding.root
     }
+
     //endregion OVERRIDE METHODS (LIFECYCLE)
 
     //region INIT METHOD
 
     private fun init(){
+
+        sharedViewModel.initActionbarWithSideMenu(requireActivity() as MainActivity)
+
+        if (isFromWarehouse){
+            binding.selectWorkshopTv.visibility = GONE
+            binding.recyclerviewDetails.srNo.text        = "Ds. Name"
+            binding.recyclerviewDetails.compoName.text   = "Barcode"
+            binding.recyclerviewDetails.compoQty.text    = "F. Name"
+            binding.recyclerviewDetails.action.visibility = GONE
+            initProductWarehouseItem()
+
+        }else{
+            binding.selectWorkshopTv.visibility = VISIBLE
+            binding.recyclerviewDetails.srNo.text        = "Ds. Name"
+            binding.recyclerviewDetails.compoName.text   = "Barcode"
+            binding.recyclerviewDetails.compoQty.text    = "F. Name"
+            binding.recyclerviewDetails.action.text      = "Wh. Name"
+            binding.recyclerviewDetails.action.visibility = VISIBLE
+            initProductManufactureItem()
+
+        }
+
         onBackPressed()
         openFromDatePicker()
         openToDatePicker()
         getWorkshopList()
         getWarehouseList()
         filterList()
-        initProductManufactureItem()
     }
     //endregion INIT METHOD
 
@@ -98,20 +123,27 @@ class ProductionReportFragment : Fragment() {
             else if (binding.selectWarehouseTv.text.toString().equals("Warehouse",true)){
                 DialogHelper.Alert_Selection(requireContext(),"Please select warehouse !!",resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
             }
-            else if (binding.selectWorkshopTv.text.toString().equals("Workshop",true)){
-                DialogHelper.Alert_Selection(requireContext(),"Please select workshop !!",resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
-            }
             else {
-                getProductionReportDetails()
+                if (isFromWarehouse){
+                    getProductWarehouseData()
+                }else{
+                    if (binding.selectWorkshopTv.text.toString().equals("Workshop",true)){
+                        DialogHelper.Alert_Selection(requireContext(),"Please select workshop !!",resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
+                    }else {
+                        getProductionReportDetails()
+                    }
+                }
             }
         }
     }
+
     //endregion BUTTON FUNCTIONALITY
 
     //region ALL FUNCTIONS
+
     private fun initWorkshopDropDown(itemList: ArrayList<WorkshopListResponse.List>){
         binding.selectWorkshopTv.setOnClickListener {
-            showWorkshopListingDialog(requireContext(),itemList,false) {
+            sharedViewModel.showWorkshopListingDialog(requireContext(),itemList,false) {
                 binding.selectWorkshopTv.text = it.FactoryName.toString()
                 factoryID = it.FactoryId.toString()
             }
@@ -121,116 +153,12 @@ class ProductionReportFragment : Fragment() {
 
     private fun initWarehouseDropDown(itemList: ArrayList<WorkshopListResponse.List>){
         binding.selectWarehouseTv.setOnClickListener {
-            showWarehouseListingDialog(requireContext(),itemList,false) {
+            sharedViewModel.showWarehouseListingDialog(requireContext(),itemList,false) {
                 binding.selectWarehouseTv.text = it.WarehouseName.toString()
                 warehouseID = it.WarehouseId.toString()
             }
         }
 
-    }
-
-    fun showWorkshopListingDialog(
-        context: Context,
-        itemList: ArrayList<WorkshopListResponse.List>,
-        isSearchVisible : Boolean = false,
-        onListItemClick         : ((WorkshopListResponse.List) -> Unit)? =    {}
-    ) {
-        //region Dialog Creation
-
-        val _binding = DialogSelectListItemBinding.inflate(LayoutInflater.from(context))
-        val builder = android.app.AlertDialog.Builder(context)
-        builder.setView(_binding.root)
-
-        val alertDialog = builder.create()
-        /*
-                    val onListItemClick         : ((Pair<String,String>) -> Unit)? =    null
-        */
-
-        // Create and show the dialog
-        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        alertDialog.setCanceledOnTouchOutside(false)
-        //endregion Dialog Creation
-
-        if (isSearchVisible) _binding.searchbox.visibility = View.VISIBLE else _binding.searchbox.visibility =
-            View.GONE
-
-        _binding.customActionBar.notificationBtn.setImageResource(R.drawable.ic_close_square)
-        _binding.customActionBar.notificationBtn.imageTintList = context.resources.getColorStateList(
-            R.color.orange)
-        _binding.customActionBar.arrowBnt.visibility = View.GONE
-        _binding.customActionBar.setOurText.text = "Select"
-        _binding.customActionBar.notificationBtn.setOnClickListener {
-            alertDialog.dismiss()
-        }
-
-        val layoutManager : RecyclerView.LayoutManager  = LinearLayoutManager(context)
-        val recyclerViewPaymentList                     = _binding.itemListingRv
-        recyclerViewPaymentList.layoutManager           = layoutManager
-        recyclerViewPaymentList.itemAnimator            = DefaultItemAnimator()
-        val listingAdapter                     : WorkshopListingAdapter = WorkshopListingAdapter()
-        listingAdapter.updateItems(itemList)
-        listingAdapter.onItemClick = {
-            onListItemClick?.invoke(it)
-            alertDialog.dismiss()
-        }
-
-        recyclerViewPaymentList.adapter                 = listingAdapter
-
-        //region Dialog Show
-        alertDialog.show()
-        //endregion Dialog Show
-    }
-
-    fun showWarehouseListingDialog(
-        context: Context,
-        itemList: ArrayList<WorkshopListResponse.List>,
-        isSearchVisible : Boolean = false,
-        onListItemClick         : ((WorkshopListResponse.List) -> Unit)? =    {}
-    ) {
-        //region Dialog Creation
-
-        val _binding = DialogSelectListItemBinding.inflate(LayoutInflater.from(context))
-        val builder = android.app.AlertDialog.Builder(context)
-        builder.setView(_binding.root)
-
-        val alertDialog = builder.create()
-        /*
-                    val onListItemClick         : ((Pair<String,String>) -> Unit)? =    null
-        */
-
-        // Create and show the dialog
-        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        alertDialog.setCanceledOnTouchOutside(false)
-        //endregion Dialog Creation
-
-        if (isSearchVisible) _binding.searchbox.visibility = View.VISIBLE else _binding.searchbox.visibility =
-            View.GONE
-
-        _binding.customActionBar.notificationBtn.setImageResource(R.drawable.ic_close_square)
-        _binding.customActionBar.notificationBtn.imageTintList = context.resources.getColorStateList(
-            R.color.orange)
-        _binding.customActionBar.arrowBnt.visibility = View.GONE
-        _binding.customActionBar.setOurText.text = "Select"
-        _binding.customActionBar.notificationBtn.setOnClickListener {
-            alertDialog.dismiss()
-        }
-
-        val layoutManager : RecyclerView.LayoutManager  = LinearLayoutManager(context)
-        val recyclerViewPaymentList                     = _binding.itemListingRv
-        recyclerViewPaymentList.layoutManager           = layoutManager
-        recyclerViewPaymentList.itemAnimator            = DefaultItemAnimator()
-        val listingAdapter                     : WarehouseListingAdapter = WarehouseListingAdapter()
-        listingAdapter.updateItems(itemList)
-        listingAdapter.onItemClick = {
-            onListItemClick?.invoke(it)
-            alertDialog.dismiss()
-        }
-
-        recyclerViewPaymentList.adapter                 = listingAdapter
-
-        //region Dialog Show
-        alertDialog.show()
-        //endregion Dialog Show
     }
 
     private fun openFromDatePicker(){
@@ -279,9 +207,13 @@ class ProductionReportFragment : Fragment() {
     }
 
     private fun initProductManufactureItem(){
-
+        if (productsData.isEmpty()){
+            binding.recyclerviewDetails.root.visibility = GONE
+        }else{
+            binding.recyclerviewDetails.root.visibility = VISIBLE
+        }
         val linearLayoutManager : RecyclerView.LayoutManager    = LinearLayoutManager(requireActivity())
-        val recyclerviewItemList                                = binding.itemListRv
+        val recyclerviewItemList                                = binding.recyclerviewDetails.itemListRv
         recyclerviewItemList.layoutManager                      = linearLayoutManager
         recyclerviewItemList.itemAnimator                       = DefaultItemAnimator()
 
@@ -289,11 +221,44 @@ class ProductionReportFragment : Fragment() {
 
         productionReportAdapter?.apply {
             updateList(productsData)
-
+            onItemClick = {
+                val args = Bundle()
+                args.getString("barcode",it.Barcode)
+                args.getBoolean("isEditable",false)
+                findNavController().navigate(R.id.BarcodeProductDetailsFragment,args)
+            }
         }
         recyclerviewItemList.adapter                            = productionReportAdapter
 
     }
+
+    private fun initProductWarehouseItem(){
+        if (productWarehouseData.isEmpty()){
+            binding.recyclerviewDetails.root.visibility = GONE
+        }else{
+            binding.recyclerviewDetails.root.visibility = VISIBLE
+        }
+        val linearLayoutManager : RecyclerView.LayoutManager    = LinearLayoutManager(requireActivity())
+        val recyclerviewItemList                                = binding.recyclerviewDetails.itemListRv
+        recyclerviewItemList.layoutManager                      = linearLayoutManager
+        recyclerviewItemList.itemAnimator                       = DefaultItemAnimator()
+
+        productionWarehouseListingAdapter                           = ProductionWarehouseListingAdapter()
+
+        productionWarehouseListingAdapter?.apply {
+            updateList(productWarehouseData)
+            onItemClick = {
+                val args = Bundle()
+                args.getString("barcode",it.Barcode)
+                args.getBoolean("isEditable",false)
+                findNavController().navigate(R.id.BarcodeProductDetailsFragment,args)
+            }
+
+        }
+        recyclerviewItemList.adapter                            = productionWarehouseListingAdapter
+
+    }
+
     //endregion ALL FUNCTIONS
 
     //region BACK EVENT FUNCTIONS
@@ -325,7 +290,7 @@ class ProductionReportFragment : Fragment() {
                 initWorkshopDropDown(workshopListResponse.Factorylist)
             }
             else {
-                binding.itemListRv.visibility = View.GONE
+                binding.recyclerviewDetails.itemListRv.visibility = View.GONE
 
                 Log.i("==>", "ERROR: Unable to parse JSON into model")
             }
@@ -351,7 +316,7 @@ class ProductionReportFragment : Fragment() {
                 initWarehouseDropDown(workshopListResponse.WarehouseList)
             }
             else {
-                binding.itemListRv.visibility = View.GONE
+                binding.recyclerviewDetails.itemListRv.visibility = View.GONE
 
                 Log.i("==>", "ERROR: Unable to parse JSON into model")
             }
@@ -382,9 +347,49 @@ class ProductionReportFragment : Fragment() {
 
                 productsData = productionDettailsResponse.products
                 productionReportAdapter?.updateList(productsData)
+
+                if (productsData.isEmpty()){
+                    binding.recyclerviewDetails.root.visibility = GONE
+                }else{
+                    binding.recyclerviewDetails.root.visibility = VISIBLE
+                }
             }
             else {
-                binding.itemListRv.visibility = View.GONE
+                binding.recyclerviewDetails.itemListRv.visibility = View.GONE
+
+                Log.i("==>", "ERROR: Unable to parse JSON into model")
+            }
+
+        },
+            {
+                println(it)
+            })
+    }
+
+    //http://150.129.105.34/api/v1/warehouseApi/getProductWarehouseData
+    private fun getProductWarehouseData(){
+        val requestMap = mapOf<String, Any>(
+            "WarehouseId"   to   warehouseID,
+            "StartDate"     to   fromDate,
+            "EndDate"       to   toDate
+        )
+        val getProductionDetailsurl = prefs.host + UrlEndPoints.GET_PRODUCT_WAREHOUSE_DATA
+        sharedViewModel.api_service(requireContext(),getProductionDetailsurl,requestMap,{ getProductionDetailsResponse ->
+            println(getProductionDetailsResponse)
+            val productionDettailsResponse: getProductWarehouseDataResponse? = AppHelper.convertJsonToModel(getProductionDetailsResponse)
+
+            if (productionDettailsResponse != null) {
+                println(productionDettailsResponse.products)
+                productWarehouseData = productionDettailsResponse.products
+                productionWarehouseListingAdapter?.updateList(productWarehouseData)
+                if (productWarehouseData.isEmpty()){
+                    binding.recyclerviewDetails.root.visibility = GONE
+                }else{
+                    binding.recyclerviewDetails.root.visibility = VISIBLE
+                }
+            }
+            else {
+                binding.recyclerviewDetails.itemListRv.visibility = View.GONE
 
                 Log.i("==>", "ERROR: Unable to parse JSON into model")
             }
