@@ -74,12 +74,23 @@ class BarcodeProductDetailsFragment : Fragment() {
         if (!isEditable){
             binding.etBoxBarcode.setText(barcode.toString())
             binding.etBoxBarcodeScanned.setText(barcode.toString())
+            binding.inputLayoutBarcode.hint = "Vendor Name"
             getDataByBarcode(barcode)
             binding.scanBtn.visibility = GONE
             binding.clearBtn.visibility = GONE
-        }else{
+            binding.whCell.visibility = VISIBLE
+            binding.etBoxWhRowNo.visibility = VISIBLE
+            binding.etBoxWhCellNo.visibility = VISIBLE
+
+        }
+        else{
+            binding.inputLayoutBarcode.hint = "Barcode"
             binding.scanBtn.visibility = VISIBLE
             binding.clearBtn.visibility = VISIBLE
+            binding.whCell.visibility = GONE
+            binding.etBoxWhRowNo.visibility = GONE
+            binding.etBoxWhCellNo.visibility = GONE
+
         }
         sharedViewModel.initActionbarWithSideMenu(requireActivity() as MainActivity)
 
@@ -107,6 +118,8 @@ class BarcodeProductDetailsFragment : Fragment() {
             binding.etBoxWhName.text?.clear()
             binding.etBoxWhOutNotes.text?.clear()
             binding.etBoxWhOutTime.text?.clear()
+            binding.etBoxWhRowNo.text?.clear()
+            binding.etBoxWhCellNo.text?.clear()
             val hostList = ArrayList<GetDataByBarcodeResponse.Components>()
             componentDataAdapter?.updateList(hostList)
             findNavController().navigate(R.id.scannerFragment)
@@ -125,6 +138,8 @@ class BarcodeProductDetailsFragment : Fragment() {
                 etBoxWhName.text?.clear()
                 etBoxWhOutNotes.text?.clear()
                 etBoxWhOutTime.text?.clear()
+                binding.etBoxWhRowNo.text?.clear()
+                binding.etBoxWhCellNo.text?.clear()
                 val hostList = ArrayList<GetDataByBarcodeResponse.Components>()
                 componentDataAdapter?.updateList(hostList)
             }
@@ -132,10 +147,10 @@ class BarcodeProductDetailsFragment : Fragment() {
     }
 
     private fun getBarcodeDetails(){
-        binding.etBoxBarcode.setOnEditorActionListener { _, actionId, _ ->
+        binding.etBoxBarcodeScanned.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (binding.etBoxBarcode.text.toString().isNotEmpty()) {
-                    getDataByBarcode(binding.etBoxBarcode.text.toString())
+                if (binding.etBoxBarcodeScanned.text.toString().isNotEmpty()) {
+                    getDataByBarcode(binding.etBoxBarcodeScanned.text.toString())
                 }
                 else{
                     DialogHelper.Alert_Selection(requireContext(),"Enter Barcode !!",resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
@@ -216,7 +231,12 @@ class BarcodeProductDetailsFragment : Fragment() {
                     if (getDataByBarcodeResponse.products?.Barcode.toString().isNotEmpty()){
                         getDataByBarcodeResponse.products?.let {
                             binding.etBoxBarcodeScanned.setText(it.Barcode.toString())
-                            binding.etBoxBarcode.setText(it.Barcode.toString())
+
+                            if (!isEditable){
+                                binding.etBoxBarcode.setText(it.VendorName.toString())
+                            }else{
+                                binding.etBoxBarcode.setText(it.Barcode.toString())
+                            }
                             binding.etBoxDesignName.setText(it.DesignName.toString())
                             binding.etBoxWhName.setText(it.WarehouseName.toString())
                             binding.etBoxFtName.setText(it.FactoryName.toString())
@@ -224,6 +244,8 @@ class BarcodeProductDetailsFragment : Fragment() {
                             binding.etBoxWhOutTime.setText(it.WarehouseOutTime.toString())
                             binding.etBoxWhInNotes.setText(it.WarehouseInNotes.toString())
                             binding.etBoxWhOutNotes.setText(it.WarehouseOutNotes.toString())
+                            binding.etBoxWhRowNo.setText(it.WarehouseRowNo.toString())
+                            binding.etBoxWhCellNo.setText(it.WarehouseCellNo.toString())
                         }
 
                         getDataByBarcodeResponse.products?.components.let {
@@ -241,10 +263,11 @@ class BarcodeProductDetailsFragment : Fragment() {
                         binding.etBoxWhName.text?.clear()
                         binding.etBoxWhOutNotes.text?.clear()
                         binding.etBoxWhOutTime.text?.clear()
+                        binding.etBoxWhRowNo.text?.clear()
+                        binding.etBoxWhCellNo.text?.clear()
                         val hostList = ArrayList<GetDataByBarcodeResponse.Components>()
                         componentDataAdapter?.updateList(hostList)
                     }
-
 
                 }
                 else {

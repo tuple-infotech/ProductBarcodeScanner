@@ -2,6 +2,7 @@ package com.tupleinfotech.productbarcodescanner.ui.fragment
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -11,12 +12,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.activity.OnBackPressedCallback
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.textview.MaterialTextView
 import com.jmsc.postab.ui.dialogfragment.addhost.AddHostDialog
 import com.jmsc.postab.ui.dialogfragment.addhost.AddHostViewModel
 import com.tupleinfotech.productbarcodescanner.R
@@ -207,6 +216,7 @@ class LoginFragment : Fragment() {
     }
 
     fun setSideMenuItems(){
+        val drawerLayout = (requireActivity() as MainActivity).findViewById<DrawerLayout>(R.id.drawer_layout)
 
         val recyclerView = (requireActivity() as MainActivity).findViewById<RecyclerView>(R.id.menu_rv)
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
@@ -225,6 +235,63 @@ class LoginFragment : Fragment() {
                 //TODO: Set Navigation Click on the basis of Menu Id
                 menuid = menu.MenuId ?:"0"
                 println(menuid)
+                println(menu.MenuName)
+
+                when (menu.MenuName.toString()){
+                    "Dashboard" -> {
+                        drawerLayout.closeDrawers()
+                        findNavController().navigate(R.id.quickInfoFragment)
+                    }
+                    "Barcode" -> {
+
+                    }
+                    "Print Barcode" -> {
+
+                    }
+                    "Print Barcode Report" -> {
+
+                    }
+                    "Production" -> {
+
+                    }
+                    "Product Manufacture" -> {
+                        drawerLayout.closeDrawers()
+                        findNavController().navigate(R.id.productManufactureFragment)
+                    }
+                    "Warehouse Entry" -> {
+                        drawerLayout.closeDrawers()
+                        findNavController().navigate(R.id.warehouseEntryFragment)
+                    }
+                    "Product Details" -> {
+                        drawerLayout.closeDrawers()
+                        findNavController().navigate(R.id.BarcodeProductDetailsFragment)
+                    }
+                    "Production Report" -> {
+                        drawerLayout.closeDrawers()
+                        findNavController().navigate(R.id.productionReportFragment)
+                    }
+                    "User Utility" -> {
+
+                    }
+                    "Manage User" -> {
+
+                    }
+                    "Master" -> {
+
+                    }
+                    "State Master" -> {
+
+                    }
+                    "City Master" -> {
+
+                    }
+                    "Logout" -> {
+
+                    }
+                    else -> {
+
+                    }
+                }
 
             }
         }
@@ -271,6 +338,47 @@ class LoginFragment : Fragment() {
         }
     }
 
+    private fun sideMenuSetHeader(){
+        val sideMenuFirstName = (requireActivity() as MainActivity).findViewById<MaterialTextView>(R.id.side_menu_header_firstName_txt)
+        val sideMenuLastName = (requireActivity() as MainActivity).findViewById<MaterialTextView>(R.id.side_menu_header_lastName_txt)
+        val sideMenuImageText = (requireActivity() as MainActivity).findViewById<MaterialTextView>(R.id.side_menu_header_image_text)
+        val sideMenuImageView = (requireActivity() as MainActivity).findViewById<ShapeableImageView>(R.id.side_menu_header_image)
+
+        sideMenuFirstName.text = prefs.userfullname
+        sideMenuImageText.text
+
+        if (prefs.userfullname.toString()[0].uppercaseChar().toString().trim().isNotEmpty() && prefs.userfullname.toString()[0].uppercaseChar().toString().trim().isNotBlank()){
+            sideMenuImageText.text = prefs.userfullname.toString()[0].uppercaseChar().toString().trim()
+        }
+
+        Glide.with(sideMenuImageView)
+            .load(prefs.host+"v1/"+prefs.userprofileimage)
+            .fitCenter()
+            .listener(object : RequestListener<Drawable?> {
+
+                override fun onResourceReady(
+                    resource: Drawable,
+                    model: Any,
+                    target: Target<Drawable?>?,
+                    dataSource: DataSource,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    sideMenuImageText.visibility = View.GONE
+                    return false
+                }
+
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable?>,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    sideMenuImageText.visibility = View.VISIBLE
+                    return false
+                }
+            })
+            .into(sideMenuImageView)
+    }
     //endregion ALL FUNCTIONS
 
     //region BACK EVENT FUNCTIONS
@@ -342,7 +450,7 @@ class LoginFragment : Fragment() {
                         setSideMenuItems()
                         initJsonSerMenuTree(it)
                     }
-
+                    sideMenuSetHeader()
                     findNavController().navigate(R.id.quickInfoFragment)
                     initBottomNavigation()
 
