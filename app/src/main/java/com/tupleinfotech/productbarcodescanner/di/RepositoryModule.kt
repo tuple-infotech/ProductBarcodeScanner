@@ -1,9 +1,9 @@
 package com.tupleinfotech.productbarcodescanner.di
 
-import com.jmsc.postab.data.repository.db.DBRepository
-import com.jmsc.postab.data.repository.db.DBRepositoryImpl
-import com.tupleinfotech.productbarcodescanner.repository.BarcodeRepository
-import com.tupleinfotech.productbarcodescanner.repository.BarcodeRepositoryImpl
+import com.tupleinfotech.productbarcodescanner.data.repository.db.DBRepository
+import com.tupleinfotech.productbarcodescanner.data.repository.db.DBRepositoryImpl
+import com.tupleinfotech.productbarcodescanner.data.repository.barcode.BarcodeRepository
+import com.tupleinfotech.productbarcodescanner.data.repository.barcode.BarcodeRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

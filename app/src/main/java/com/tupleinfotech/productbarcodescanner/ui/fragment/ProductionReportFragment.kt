@@ -1,14 +1,17 @@
 package com.tupleinfotech.productbarcodescanner.ui.fragment
 
-import android.app.DatePickerDialog
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.view.GestureDetector
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -19,39 +22,42 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.databinding.FragmentProductionReportBinding
 import com.tupleinfotech.productbarcodescanner.model.ProductionDetailsResponse
-import com.tupleinfotech.productbarcodescanner.model.WorkshopListResponse
 import com.tupleinfotech.productbarcodescanner.model.getProductWarehouseDataResponse
 import com.tupleinfotech.productbarcodescanner.ui.activity.MainActivity
 import com.tupleinfotech.productbarcodescanner.ui.adapter.ProductionReportAdapter
 import com.tupleinfotech.productbarcodescanner.ui.adapter.ProductionWarehouseListingAdapter
+import com.tupleinfotech.productbarcodescanner.ui.dialog.FilterDialog
 import com.tupleinfotech.productbarcodescanner.ui.viewmodel.SharedViewModel
 import com.tupleinfotech.productbarcodescanner.util.AppHelper
+import com.tupleinfotech.productbarcodescanner.util.AppHelper.Companion.isWithinBounds
 import com.tupleinfotech.productbarcodescanner.util.Constants
-import com.tupleinfotech.productbarcodescanner.util.DialogHelper
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.host
 import com.tupleinfotech.productbarcodescanner.util.UrlEndPoints
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Calendar
 
 @AndroidEntryPoint
 class ProductionReportFragment : Fragment() {
 
     //region VARIABLES
-    private var _binding                    : FragmentProductionReportBinding?                                  = null
-    private val binding                     get()                                                   = _binding!!
-    lateinit var prefs : SharedPreferences
-    private val c                                           : Calendar                              = Calendar.getInstance()
-    private var factoryID = "0"
-    private var warehouseID = "0"
-    private var fromDate = "0"
-    private var toDate = "0"
-    private val sharedViewModel             : SharedViewModel by viewModels()
-    private var productionReportAdapter               : ProductionReportAdapter?        = null
-    private var productionWarehouseListingAdapter               : ProductionWarehouseListingAdapter?        = null
-    private var productsData                :   ArrayList<ProductionDetailsResponse.Products>          =       arrayListOf()
-    private var productWarehouseData                :   ArrayList<getProductWarehouseDataResponse.Products>          =       arrayListOf()
-    private var isFromWarehouse             : Boolean  = false
+    private var _binding                                : FragmentProductionReportBinding?                          = null
+    private val binding                                 get()                                                       = _binding!!
+    lateinit var prefs                                  : SharedPreferences
+    private val sharedViewModel                         : SharedViewModel                                           by viewModels()
+    private var factoryID                               : String                                                    = "0"
+    private var warehouseID                             : String                                                    = "0"
+    private var factoryName                             : String                                                    = ""
+    private var wareHouseName                           : String                                                    = ""
+    private var fromDate                                : String                                                    = "0"
+    private var toDate                                  : String                                                    = "0"
+    private var productionReportAdapter                 : ProductionReportAdapter?                                  = ProductionReportAdapter()
+    private var productionWarehouseListingAdapter       : ProductionWarehouseListingAdapter?                        = ProductionWarehouseListingAdapter()
+    private var productsData                            : ArrayList<ProductionDetailsResponse.Products>             = arrayListOf()
+    private var productWarehouseData                    : ArrayList<getProductWarehouseDataResponse.Products>       = arrayListOf()
+    private var isFromWarehouse                         : Boolean                                                   = false
+    private var isDragging                              : Boolean                                                   = false
+    private var dX                                      : Float                                                     = 0f
+    private var dY                                      : Float                                                     = 0f
 
     //endregion VARIABLES
 
@@ -65,9 +71,8 @@ class ProductionReportFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
-        _binding = FragmentProductionReportBinding.inflate(inflater, container, false)
-
-        prefs = PreferenceHelper.customPreference(requireContext(), Constants.CUSTOM_PREF_NAME)
+        _binding    = FragmentProductionReportBinding.inflate(inflater, container, false)
+        prefs       = PreferenceHelper.customPreference(requireContext(), Constants.CUSTOM_PREF_NAME)
 
         init()
         return binding.root
@@ -80,37 +85,153 @@ class ProductionReportFragment : Fragment() {
     private fun init(){
 
         sharedViewModel.initActionbarWithSideMenu(requireActivity() as MainActivity)
+        fromDate    = AppHelper.getCurrentDate1()
+        toDate      = AppHelper.getCurrentDate1()
 
         if (isFromWarehouse){
-            binding.selectWorkshopTv.visibility = GONE
-            binding.recyclerviewDetails.srNo.text        = "Ds. Name"
-            binding.recyclerviewDetails.compoName.text   = "Barcode"
-            binding.recyclerviewDetails.compoQty.text    = "F. Name"
-            binding.recyclerviewDetails.action.visibility = GONE
+//            binding.selectWorkshopTv.visibility = GONE
+            binding.recyclerviewDetails.srNo.text           = "Ds. Name"
+            binding.recyclerviewDetails.compoName.text      = "Barcode"
+            binding.recyclerviewDetails.compoQty.text       = "F. Name"
+            binding.recyclerviewDetails.action.visibility   = GONE
+
+/*            findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Bundle>("WarehouseResult")?.observe(viewLifecycleOwner) { resultData ->
+                if (!observerExecuted) {
+                    observerExecuted = true
+                    fromDate        = resultData?.getString("FromDate").toString()
+                    toDate          = resultData?.getString("ToDate").toString()
+                    wareHouseName   = resultData?.getString("WareHouseName").toString()
+                    warehouseID     = resultData?.getString("WareHouseID").toString()
+                }
+            }*/
+
+            getProductWarehouseData()
             initProductWarehouseItem()
 
-        }else{
-            binding.selectWorkshopTv.visibility = VISIBLE
-            binding.recyclerviewDetails.srNo.text        = "Ds. Name"
-            binding.recyclerviewDetails.compoName.text   = "Barcode"
-            binding.recyclerviewDetails.compoQty.text    = "F. Name"
-            binding.recyclerviewDetails.action.text      = "Wh. Name"
-            binding.recyclerviewDetails.action.visibility = VISIBLE
+        }
+        else{
+//            binding.selectWorkshopTv.visibility = VISIBLE
+            binding.recyclerviewDetails.srNo.text           = "Ds. Name"
+            binding.recyclerviewDetails.compoName.text      = "Barcode"
+            binding.recyclerviewDetails.compoQty.text       = "F. Name"
+            binding.recyclerviewDetails.action.text         = "Wh. Name"
+            binding.recyclerviewDetails.action.visibility   = VISIBLE
+
+/*            findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Bundle>("WarehouseWorkshopResult")?.observe(viewLifecycleOwner) { resultData ->
+                if (!observerExecuted) {
+                    observerExecuted = true
+                    fromDate        = resultData?.getString("FromDate").toString()
+                    toDate          = resultData?.getString("ToDate").toString()
+                    wareHouseName   = resultData?.getString("WareHouseName").toString()
+                    warehouseID     = resultData?.getString("WareHouseID").toString()
+                    factoryName     = resultData?.getString("FactoryName").toString()
+                    factoryID       = resultData?.getString("FactoryID").toString()
+                }
+            }*/
+
+            getProductionReportDetails()
             initProductManufactureItem()
+
 
         }
 
         onBackPressed()
-        openFromDatePicker()
-        openToDatePicker()
-        getWorkshopList()
-        getWarehouseList()
-        filterList()
+//        openFromDatePicker()
+//        openToDatePicker()
+//        getWorkshopList()
+//        getWarehouseList()
+//        filterList()
+
+        filterbtnclick()
     }
+
     //endregion INIT METHOD
 
     //region BUTTON FUNCTIONALITY
 
+    //Filter button click and movable functionality
+    @SuppressLint("ClickableViewAccessibility")
+    private fun filterbtnclick(){
+
+        binding.filter.setImageResource(R.drawable.icon_filter)
+
+        val gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onSingleTapUp(e: MotionEvent): Boolean {
+                val filterDialog = FilterDialog()
+                filterDialog.showsDialog
+                val args            = Bundle()
+                args.putBoolean("isfromwarehouse"   ,isFromWarehouse)
+                args.putString("FromDate"           ,fromDate)
+                args.putString("ToDate"             ,toDate)
+                args.putString("FactoryID"          ,factoryID)
+                args.putString("WareHouseID"        ,warehouseID)
+                args.putString("WareHouseName"      ,wareHouseName)
+                args.putString("FactoryName"        ,factoryName)
+
+                filterDialog.arguments  = args
+                filterDialog.show(childFragmentManager, "dialog")
+                filterDialog.isFromWarehouseFilterClick = { fromdate,todate,warehousename,warehouseid ->
+                    filterDialog.dismiss()
+                    fromDate        = fromdate.toString()
+                    toDate          = todate.toString()
+                    wareHouseName   = warehousename.toString()
+                    warehouseID     = warehouseid.toString()
+
+                    getProductWarehouseData()
+
+                }
+                filterDialog.isFromWarehouseAndWorkShopFilterClick = { fromdate,todate,warehousename,warehouseid,factoryname,factoryid ->
+                    filterDialog.dismiss()
+                    fromDate        = fromdate.toString()
+                    toDate          = todate.toString()
+                    wareHouseName   = warehousename.toString()
+                    warehouseID     = warehouseid.toString()
+                    factoryName     = factoryname.toString()
+                    factoryID       = factoryid.toString()
+                    getProductionReportDetails()
+
+                }
+                return true
+            }
+
+            override fun onDown(e: MotionEvent): Boolean {
+                return true
+            }
+        })
+
+        binding.filter.setOnTouchListener { _, event ->
+            gestureDetector.onTouchEvent(event)
+            val touchX          = event.rawX
+            val touchY          = event.rawY
+            val screenWidth     = resources.displayMetrics.widthPixels
+            val screenHeight    = resources.displayMetrics.heightPixels
+            val bottomMargin    = 100 // Adjust the margin as needed
+            val topMargin       = 230
+
+            when (event.action) {
+
+                MotionEvent.ACTION_DOWN -> {
+                    isDragging  = false
+                    dX          = binding.filter.x - touchX
+                    dY          = binding.filter.y - touchY
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    val newX = touchX + dX
+                    val newY = touchY + dY
+                    if (isWithinBounds(newX, newY, screenWidth, screenHeight, topMargin, bottomMargin, binding.filter.width, binding.filter.height)) {
+                        binding.filter.animate().x(newX).y(newY).setDuration(0).start()
+                        isDragging = true
+                    }
+                }
+                MotionEvent.ACTION_UP   -> {
+                    if (!isDragging) {}
+                }
+
+            }
+            true
+        }
+    }
+/*
     private fun filterList(){
         binding.filterBtn.setOnClickListener {
 
@@ -136,12 +257,13 @@ class ProductionReportFragment : Fragment() {
             }
         }
     }
+*/
 
     //endregion BUTTON FUNCTIONALITY
 
     //region ALL FUNCTIONS
 
-    private fun initWorkshopDropDown(itemList: ArrayList<WorkshopListResponse.List>){
+/*    private fun initWorkshopDropDown(itemList: ArrayList<WorkshopListResponse.List>){
         binding.selectWorkshopTv.setOnClickListener {
             sharedViewModel.showWorkshopListingDialog(requireContext(),itemList,false) {
                 binding.selectWorkshopTv.text = it.FactoryName.toString()
@@ -159,9 +281,9 @@ class ProductionReportFragment : Fragment() {
             }
         }
 
-    }
+    }*/
 
-    private fun openFromDatePicker(){
+/*    private fun openFromDatePicker(){
         var cDay    = c.get(Calendar.DAY_OF_MONTH)
         var cMonth  = c.get(Calendar.MONTH)
         var cYear   = c.get(Calendar.YEAR)
@@ -204,7 +326,7 @@ class ProductionReportFragment : Fragment() {
             calendarDialog.show()
         }
 
-    }
+    }*/
 
     private fun initProductManufactureItem(){
         if (productsData.isEmpty()){
@@ -223,8 +345,8 @@ class ProductionReportFragment : Fragment() {
             updateList(productsData)
             onItemClick = {
                 val args = Bundle()
-                args.getString("barcode",it.Barcode)
-                args.getBoolean("isEditable",false)
+                args.putString("barcode",it)
+                args.putBoolean("isEditable",false)
                 findNavController().navigate(R.id.BarcodeProductDetailsFragment,args)
             }
         }
@@ -249,8 +371,8 @@ class ProductionReportFragment : Fragment() {
             updateList(productWarehouseData)
             onItemClick = {
                 val args = Bundle()
-                args.getString("barcode",it.Barcode)
-                args.getBoolean("isEditable",false)
+                args.putString("barcode",it)
+                args.putBoolean("isEditable",false)
                 findNavController().navigate(R.id.BarcodeProductDetailsFragment,args)
             }
 
@@ -276,12 +398,12 @@ class ProductionReportFragment : Fragment() {
 
     //region API SERVICE
 
-    //http://150.129.105.34/api/v1/productmanufacture/getWorkshopList
+/*    //http://150.129.105.34/api/v1/productmanufacture/getWorkshopList
     private fun getWorkshopList(){
         val requestMap = mutableMapOf<String, Any>() // Empty mutable map
 
         val getWorkshopListUrl = prefs.host + UrlEndPoints.GET_WORKSHOP_LIST
-        sharedViewModel.api_service(requireContext(),getWorkshopListUrl,requestMap,{ getWorkshopResponse ->
+        sharedViewModel.api_service(requireContext(),getWorkshopListUrl,requestMap,{},{ getWorkshopResponse ->
             println(getWorkshopResponse)
             val workshopListResponse: WorkshopListResponse? = AppHelper.convertJsonToModel(getWorkshopResponse)
 
@@ -307,7 +429,7 @@ class ProductionReportFragment : Fragment() {
         val requestMap = mutableMapOf<String, Any>() // Empty mutable map
 
         val getWorkshopListUrl = prefs.host + UrlEndPoints.GET_WAREHOUSE_LIST
-        sharedViewModel.api_service(requireContext(),getWorkshopListUrl,requestMap,{ getWorkshopResponse ->
+        sharedViewModel.api_service(requireContext(),getWorkshopListUrl,requestMap,{},{ getWorkshopResponse ->
             println(getWorkshopResponse)
             val workshopListResponse: WorkshopListResponse? = AppHelper.convertJsonToModel(getWorkshopResponse)
 
@@ -326,7 +448,7 @@ class ProductionReportFragment : Fragment() {
                 println(it)
             })
 
-    }
+    }*/
 
     //http://150.129.105.34/api/v1/productionreportrequest/getproductiondetails
     private fun getProductionReportDetails(){
@@ -338,7 +460,7 @@ class ProductionReportFragment : Fragment() {
         )
 
         val getProductionDetailsurl = prefs.host + UrlEndPoints.GET_PRODUCTION_DETAILS
-        sharedViewModel.api_service(requireContext(),getProductionDetailsurl,requestMap,{ getProductionDetailsResponse ->
+        sharedViewModel.api_service(requireContext(),getProductionDetailsurl,requestMap,{},{ getProductionDetailsResponse ->
             println(getProductionDetailsResponse)
             val productionDettailsResponse: ProductionDetailsResponse? = AppHelper.convertJsonToModel(getProductionDetailsResponse)
 
@@ -349,6 +471,7 @@ class ProductionReportFragment : Fragment() {
                 productionReportAdapter?.updateList(productsData)
 
                 if (productsData.isEmpty()){
+                    Toast.makeText(requireContext(),productionDettailsResponse.ErrorMessage.toString(),Toast.LENGTH_SHORT).show()
                     binding.recyclerviewDetails.root.visibility = GONE
                 }else{
                     binding.recyclerviewDetails.root.visibility = VISIBLE
@@ -374,7 +497,7 @@ class ProductionReportFragment : Fragment() {
             "EndDate"       to   toDate
         )
         val getProductionDetailsurl = prefs.host + UrlEndPoints.GET_PRODUCT_WAREHOUSE_DATA
-        sharedViewModel.api_service(requireContext(),getProductionDetailsurl,requestMap,{ getProductionDetailsResponse ->
+        sharedViewModel.api_service(requireContext(),getProductionDetailsurl,requestMap,{},{ getProductionDetailsResponse ->
             println(getProductionDetailsResponse)
             val productionDettailsResponse: getProductWarehouseDataResponse? = AppHelper.convertJsonToModel(getProductionDetailsResponse)
 
@@ -383,6 +506,7 @@ class ProductionReportFragment : Fragment() {
                 productWarehouseData = productionDettailsResponse.products
                 productionWarehouseListingAdapter?.updateList(productWarehouseData)
                 if (productWarehouseData.isEmpty()){
+                    Toast.makeText(requireContext(),productionDettailsResponse.ErrorMessage.toString(),Toast.LENGTH_SHORT).show()
                     binding.recyclerviewDetails.root.visibility = GONE
                 }else{
                     binding.recyclerviewDetails.root.visibility = VISIBLE

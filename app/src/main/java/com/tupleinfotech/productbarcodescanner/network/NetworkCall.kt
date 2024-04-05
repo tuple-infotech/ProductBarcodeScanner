@@ -19,18 +19,9 @@ object NetworkCall {
 
                 when(throwable){
 
-                    is IOException      -> NetworkResult.Error(
-                        "IO Exception =>" + throwable.message,
-                        null
-                    )
-                    is HttpException    -> NetworkResult.Error(
-                        "HTTP Exception =>" + throwable.message,
-                        null
-                    )
-                    else                -> NetworkResult.Error(
-                        "Something Went Wrong =>" + throwable.message,
-                        null
-                    )
+                    is IOException      -> NetworkResult.Error("IO Exception =>" + throwable.message,null)
+                    is HttpException    -> NetworkResult.Error("HTTP Exception =>" + throwable.message,null)
+                    else                -> NetworkResult.Error("Something Went Wrong =>" + throwable.message,null)
 
                 }
 

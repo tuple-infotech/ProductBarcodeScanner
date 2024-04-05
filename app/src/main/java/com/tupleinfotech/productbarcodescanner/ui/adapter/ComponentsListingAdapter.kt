@@ -11,13 +11,12 @@ import com.tupleinfotech.productbarcodescanner.databinding.LayoutListingItemBind
 import java.util.Locale
 
 @SuppressLint("NotifyDataSetChanged")
-class ComponentsListingAdapter(): RecyclerView.Adapter<ComponentsListingAdapter.ViewHolder>(), Filterable {
+class ComponentsListingAdapter : RecyclerView.Adapter<ComponentsListingAdapter.ViewHolder>(), Filterable {
 
     //region VARIABLES
-//    private var hostList    : List<Pair<String,String>> = mutableListOf()
-    var hostList    : List<String> = mutableListOf()
-    private var filterList  : List<String> = mutableListOf()
-    var onItemClick         : ((String) -> Unit)? =    null
+    private var hostList    : List<String>          = mutableListOf()
+    private var filterList  : List<String>          = mutableListOf()
+    var onItemClick         : ((String) -> Unit)?   = null
 
     inner class ViewHolder(val binding: LayoutListingItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -35,7 +34,7 @@ class ComponentsListingAdapter(): RecyclerView.Adapter<ComponentsListingAdapter.
         val currentItem = filterList[position]
         holder.binding.apply {
             fieldQty.visibility = GONE
-            fieldName.text = currentItem.toString()
+            fieldName.text      = currentItem.toString()
         }
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(hostList[position])
@@ -67,8 +66,8 @@ class ComponentsListingAdapter(): RecyclerView.Adapter<ComponentsListingAdapter.
     //region ALL FUNCTIONS
 
     fun updateItems(items: List<String>?) {
-        hostList = items ?: emptyList()
-        filterList = items ?: emptyList()
+        hostList    = items ?: emptyList()
+        filterList  = items ?: emptyList()
         notifyDataSetChanged()
     }
     //endregion ALL FUNCTIONS

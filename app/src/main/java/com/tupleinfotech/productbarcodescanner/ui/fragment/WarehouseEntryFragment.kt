@@ -31,17 +31,17 @@ import dagger.hilt.android.AndroidEntryPoint
 class WarehouseEntryFragment : Fragment() {
 
     //region VARIABLES
-    private var _binding                : FragmentWarehouseEntryBinding?                   = null
-    private val binding                 get()                                       = _binding!!
-    private val sharedViewModel             : SharedViewModel by viewModels()
-    private var warehouseID = "0"
-    private var pipeID = "0"
-    private var locationId = "0"
-    private var vendorId = "0"
-    private var warehouseInwardNotes = ""
-    lateinit var prefs : SharedPreferences
-    private var barcodetext                 : String?                                               = null
-    private var observerExecuted            : Boolean                                               = false
+    private var _binding                : FragmentWarehouseEntryBinding?        = null
+    private val binding                 get()                                   = _binding!!
+    private lateinit var prefs          : SharedPreferences
+    private val sharedViewModel         : SharedViewModel                       by viewModels()
+    private var warehouseID             : String                                = "0"
+    private var pipeID                  : String                                = "0"
+    private var locationId              : String                                = "0"
+    private var vendorId                : String                                = "0"
+    private var warehouseInwardNotes    : String                                = ""
+    private var barcodetext             : String?                               = ""
+    private var observerExecuted        : Boolean                               = false
 
     //endregion VARIABLES
 
@@ -54,8 +54,8 @@ class WarehouseEntryFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View {
-        _binding = FragmentWarehouseEntryBinding.inflate(inflater, container, false)
-        prefs = PreferenceHelper.customPreference(requireContext(), Constants.CUSTOM_PREF_NAME)
+        _binding    = FragmentWarehouseEntryBinding.inflate(inflater, container, false)
+        prefs       = PreferenceHelper.customPreference(requireContext(), Constants.CUSTOM_PREF_NAME)
 
         init()
 
@@ -194,7 +194,7 @@ class WarehouseEntryFragment : Fragment() {
         val requestMap = mutableMapOf<String, Any>() // Empty mutable map
 
         val getWorkshopListUrl = prefs.host + UrlEndPoints.GET_WAREHOUSE_LIST
-        sharedViewModel.api_service(requireContext(),getWorkshopListUrl,requestMap,{ getWorkshopResponse ->
+        sharedViewModel.api_service(requireContext(),getWorkshopListUrl,requestMap,{},{ getWorkshopResponse ->
             println(getWorkshopResponse)
             val workshopListResponse: WorkshopListResponse? = AppHelper.convertJsonToModel(getWorkshopResponse)
 
@@ -221,7 +221,7 @@ class WarehouseEntryFragment : Fragment() {
         )
 
         val getDataByBarcodeUrl = prefs.host + UrlEndPoints.GET_DATA_BY_BARCODE
-        sharedViewModel.api_service(requireContext(),getDataByBarcodeUrl,map,{ getDataByBarcoderesponse ->
+        sharedViewModel.api_service(requireContext(),getDataByBarcodeUrl,map,{},{ getDataByBarcoderesponse ->
             println(getDataByBarcoderesponse)
             val getDataByBarcodeResponse: GetDataByBarcodeResponse? =
                 AppHelper.convertJsonToModel(getDataByBarcoderesponse)
@@ -285,7 +285,7 @@ class WarehouseEntryFragment : Fragment() {
         )
 
         val getDataByBarcodeUrl = prefs.host + UrlEndPoints.SAVE_WAREHOUSE_IN_DATA
-        sharedViewModel.api_service(requireContext(),getDataByBarcodeUrl,map,{ saveWarehouseData ->
+        sharedViewModel.api_service(requireContext(),getDataByBarcodeUrl,map,{},{ saveWarehouseData ->
             println(saveWarehouseData)
             val gson = Gson()
             val responseJson = gson.fromJson(saveWarehouseData, JsonObject::class.java)
@@ -335,7 +335,7 @@ class WarehouseEntryFragment : Fragment() {
         )
 
         val getDataByBarcodeUrl = prefs.host + UrlEndPoints.UPDATE_WAREHOUSE_IN_DATA
-        sharedViewModel.api_service(requireContext(),getDataByBarcodeUrl,map,{ saveWarehouseData ->
+        sharedViewModel.api_service(requireContext(),getDataByBarcodeUrl,map,{},{ saveWarehouseData ->
             println(saveWarehouseData)
             val gson = Gson()
             val responseJson = gson.fromJson(saveWarehouseData, JsonObject::class.java)

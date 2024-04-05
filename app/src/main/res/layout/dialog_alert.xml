@@ -28,10 +28,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <include
+                android:id="@+id/heading_constraint"
+                layout="@layout/layout_custom_actionbar"
+                android:layout_margin="3dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+<!--            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/heading_constraint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/style_bg_edit_text"
+                android:backgroundTint="@color/custom_action_bar_orange"
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="0dp"
@@ -55,14 +67,12 @@
 
                 <TextView
                     android:id="@+id/alert_title"
-                    style="@style/EditTextStyle.alert.blue"
+                    style="@style/EditTextStyleWithoutBG"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="0dp"
                     android:hint="@string/app_name"
                     android:textAlignment="center"
-                    android:paddingEnd="@dimen/dp_0"
-                    android:paddingStart="@dimen/dp_10"
                     android:textSize="@dimen/dp_20"
                     android:textStyle="bold"
                     android:visibility="visible"
@@ -70,7 +80,20 @@
                     app:layout_constraintStart_toEndOf="@+id/alert_icon_img"
                     app:layout_constraintTop_toTopOf="parent" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/brand_name_txt"
+                    style="@style/TextView.TextView_14_SP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_8"
+                    android:text="Powered by Tuple Infotech"
+                    android:textColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/alert_title"
+                    app:layout_constraintTop_toBottomOf="@+id/alert_title" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>-->
 
             <TextView
                 android:id="@+id/alert_text"

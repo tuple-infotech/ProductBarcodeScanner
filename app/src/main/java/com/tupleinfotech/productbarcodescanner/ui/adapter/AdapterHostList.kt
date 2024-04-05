@@ -1,4 +1,4 @@
-package com.jmsc.postab.ui.dialogfragment.addhost
+package com.tupleinfotech.productbarcodescanner.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

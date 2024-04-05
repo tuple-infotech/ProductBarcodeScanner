@@ -1,6 +1,7 @@
 package com.tupleinfotech.productbarcodescanner.ui.fragment
 
 import android.content.SharedPreferences
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -22,6 +24,7 @@ import com.tupleinfotech.productbarcodescanner.model.GetDataByBarcodeResponse
 import com.tupleinfotech.productbarcodescanner.ui.activity.MainActivity
 import com.tupleinfotech.productbarcodescanner.ui.adapter.ComponentDataAdapter
 import com.tupleinfotech.productbarcodescanner.ui.viewmodel.SharedViewModel
+import com.tupleinfotech.productbarcodescanner.util.AppHelper.Companion.convertIso8601ToReadable
 import com.tupleinfotech.productbarcodescanner.util.AppHelper.Companion.convertJsonToModel
 import com.tupleinfotech.productbarcodescanner.util.Constants
 import com.tupleinfotech.productbarcodescanner.util.DialogHelper
@@ -35,16 +38,16 @@ import dagger.hilt.android.AndroidEntryPoint
 class BarcodeProductDetailsFragment : Fragment() {
 
     //region VARIABLES
-    private var _binding                    : FragmentBarcodeProductDetailsBinding?                                  = null
+    private var _binding                    : FragmentBarcodeProductDetailsBinding?                 = null
     private val binding                     get()                                                   = _binding!!
-    lateinit var prefs : SharedPreferences
+    private lateinit var prefs              : SharedPreferences
+    private val sharedViewModel             : SharedViewModel                                       by viewModels()
     private var observerExecuted            : Boolean                                               = false
-    private var barcodetext                 : String?                                               = null
-    private val sharedViewModel             : SharedViewModel by viewModels()
+    private var barcodetext                 : String?                                               = ""
     private var componentDataAdapter        : ComponentDataAdapter?                                 = ComponentDataAdapter()
-    private var componentData               = ArrayList<GetDataByBarcodeResponse.Components>()
-    private var isEditable                  : Boolean = true
-    private var barcode                     : String = ""
+    private var componentData               : ArrayList<GetDataByBarcodeResponse.Components>        = ArrayList<GetDataByBarcodeResponse.Components>()
+    private var isEditable                  : Boolean                                               = true
+    private var barcode                     : String                                                = ""
     //endregion VARIABLES
 
     //region OVERRIDE METHODS (LIFECYCLE)
@@ -52,14 +55,14 @@ class BarcodeProductDetailsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            isEditable = it.getBoolean("isEditable")
-            barcode = it.getString("barcode",barcode)
+            isEditable  = it.getBoolean("isEditable")
+            barcode     = it.getString("barcode",barcode)
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View {
-        _binding = FragmentBarcodeProductDetailsBinding.inflate(inflater, container, false)
-        prefs = PreferenceHelper.customPreference(requireContext(), Constants.CUSTOM_PREF_NAME)
+        _binding    = FragmentBarcodeProductDetailsBinding.inflate(inflater, container, false)
+        prefs       = PreferenceHelper.customPreference(requireContext(), Constants.CUSTOM_PREF_NAME)
 
         init()
         return binding.root
@@ -74,28 +77,27 @@ class BarcodeProductDetailsFragment : Fragment() {
         if (!isEditable){
             binding.etBoxBarcode.setText(barcode.toString())
             binding.etBoxBarcodeScanned.setText(barcode.toString())
-            binding.inputLayoutBarcode.hint = "Vendor Name"
+            binding.inputLayoutBarcode.hint     = "Vendor Name"
+            binding.scanBtn.visibility          = GONE
+            binding.clearBtn.visibility         = GONE
+            binding.whCell.visibility           = VISIBLE
+            binding.etBoxWhRowNo.visibility     = VISIBLE
+            binding.etBoxWhCellNo.visibility    = VISIBLE
             getDataByBarcode(barcode)
-            binding.scanBtn.visibility = GONE
-            binding.clearBtn.visibility = GONE
-            binding.whCell.visibility = VISIBLE
-            binding.etBoxWhRowNo.visibility = VISIBLE
-            binding.etBoxWhCellNo.visibility = VISIBLE
 
         }
         else{
-            binding.inputLayoutBarcode.hint = "Barcode"
-            binding.scanBtn.visibility = VISIBLE
-            binding.clearBtn.visibility = VISIBLE
-            binding.whCell.visibility = GONE
-            binding.etBoxWhRowNo.visibility = GONE
-            binding.etBoxWhCellNo.visibility = GONE
+            binding.inputLayoutBarcode.hint     = "Barcode"
+            binding.scanBtn.visibility          = VISIBLE
+            binding.clearBtn.visibility         = VISIBLE
+            binding.whCell.visibility           = GONE
+            binding.etBoxWhRowNo.visibility     = GONE
+            binding.etBoxWhCellNo.visibility    = GONE
 
         }
         sharedViewModel.initActionbarWithSideMenu(requireActivity() as MainActivity)
 
         scanButton()
-
         clearButton()
         getScannedBarcodeData()
         initorderlist()
@@ -166,18 +168,27 @@ class BarcodeProductDetailsFragment : Fragment() {
 
     private fun initorderlist() {
 
-        binding.recyclerviewDetails.action.visibility = GONE
-        binding.recyclerviewDetails.srNo.visibility = GONE
+        binding.recyclerviewDetails.action.visibility   = GONE
+        binding.recyclerviewDetails.srNo.visibility     = GONE
 
-        val layoutManager : RecyclerView.LayoutManager = LinearLayoutManager(requireActivity())
-        val recycleviewOrderlist            = binding.recyclerviewDetails.itemListRv
-        componentDataAdapter                = ComponentDataAdapter()
+        val leftdrawable = ContextCompat.getDrawable(requireContext(), R.drawable.style_bg_top_left_curved)
+        leftdrawable?.setColorFilter(ContextCompat.getColor(requireContext(), R.color.orange), PorterDuff.Mode.SRC_IN)
+        binding.recyclerviewDetails.compoName.background = leftdrawable
+
+        val rightdrawable = ContextCompat.getDrawable(requireContext(), R.drawable.style_bg_top_right_curved)
+        rightdrawable?.setColorFilter(ContextCompat.getColor(requireContext(), R.color.orange), PorterDuff.Mode.SRC_IN)
+        binding.recyclerviewDetails.compoQty.background = rightdrawable
+
+
+        val layoutManager : RecyclerView.LayoutManager  = LinearLayoutManager(requireActivity())
+        val recycleviewOrderlist                        = binding.recyclerviewDetails.itemListRv
+        componentDataAdapter                            = ComponentDataAdapter()
         componentDataAdapter?.updateList(componentData)
 
-        recycleviewOrderlist.adapter        = componentDataAdapter
-        recycleviewOrderlist.layoutManager  = layoutManager
+        recycleviewOrderlist.adapter                    = componentDataAdapter
+        recycleviewOrderlist.layoutManager              = layoutManager
 
-        recycleviewOrderlist.adapter = componentDataAdapter
+        recycleviewOrderlist.adapter                    = componentDataAdapter
 
     }
 
@@ -219,7 +230,7 @@ class BarcodeProductDetailsFragment : Fragment() {
         )
 
         val getDataByBarcodeUrl = prefs.host + UrlEndPoints.GET_DATA_BY_BARCODE
-        sharedViewModel.api_service(requireContext(),getDataByBarcodeUrl,map,{ getDataByBarcoderesponse ->
+        sharedViewModel.api_service(requireContext(),getDataByBarcodeUrl,map,{},{ getDataByBarcoderesponse ->
             println(getDataByBarcoderesponse)
             val getDataByBarcodeResponse: GetDataByBarcodeResponse? = convertJsonToModel(getDataByBarcoderesponse)
 
@@ -240,8 +251,8 @@ class BarcodeProductDetailsFragment : Fragment() {
                             binding.etBoxDesignName.setText(it.DesignName.toString())
                             binding.etBoxWhName.setText(it.WarehouseName.toString())
                             binding.etBoxFtName.setText(it.FactoryName.toString())
-                            binding.etBoxWhInTime.setText(it.WarehouseInTime.toString())
-                            binding.etBoxWhOutTime.setText(it.WarehouseOutTime.toString())
+                            binding.etBoxWhInTime.setText(convertIso8601ToReadable(it.WarehouseInTime.toString()))
+                            binding.etBoxWhOutTime.setText(convertIso8601ToReadable(it.WarehouseOutTime.toString()))
                             binding.etBoxWhInNotes.setText(it.WarehouseInNotes.toString())
                             binding.etBoxWhOutNotes.setText(it.WarehouseOutNotes.toString())
                             binding.etBoxWhRowNo.setText(it.WarehouseRowNo.toString())

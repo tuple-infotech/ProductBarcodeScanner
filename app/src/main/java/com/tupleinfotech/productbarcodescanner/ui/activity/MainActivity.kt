@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.tupleinfotech.productbarcodescanner.R
@@ -24,10 +25,6 @@ class MainActivity : AppCompatActivity() {
     private var _binding                    : ActivityMainBinding?                          =       null
     private val binding                     get()                                           =       _binding!!
     private lateinit var navController      : NavController
-//    private lateinit var treeViewAdapter    : TreeViewAdapter
-//
-//    var defaultmenuid : String = ""
-//    var menuid: String = ""
 
     //endregion VARIABLES
 
@@ -51,9 +48,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-//        setSupportActionBar(findViewById(R.id.my_toolbar))
-//        supportActionBar?.title = "CTS (Powered by Tuple Infotech)"
-
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navigation_host_fragments) as NavHostFragment
         navController = navHostFragment.navController // Initialize navController
 
@@ -68,6 +62,9 @@ class MainActivity : AppCompatActivity() {
     //endregion BUTTON FUNCTIONALITY
 
     //region ALL FUNCTIONS
+
+    fun setDrawerLockMode(lockMode: Int)                    =       findViewById<DrawerLayout>(R.id.drawer_layout).setDrawerLockMode(lockMode)
+
     //Custom Bottom Navigation Functionality
 
     fun initBottomNavigation(isVisible: Boolean, bottomMenuItemCount: Int, bottomNavigationItemName : ArrayList<String>, bottomNavSelectedImageItemList : ArrayList<Int>) {
@@ -79,24 +76,7 @@ class MainActivity : AppCompatActivity() {
 
         if (bottomMenuItemCount in 1..4) {
             for (i in 0 until bottomMenuItemCount) {
-                when (i) {
-                    0 -> {
-                        binding.bottomNavigationView.menu.add(Menu.NONE, i, Menu.NONE, bottomNavigationItemName[i]).setIcon(
-                            ResourcesCompat.getDrawable(this.resources, bottomNavSelectedImageItemList[i], this.theme))
-                    }
-                    1 -> {
-                        binding.bottomNavigationView.menu.add(Menu.NONE, i, Menu.NONE, bottomNavigationItemName[i]).setIcon(
-                            ResourcesCompat.getDrawable(this.resources, bottomNavSelectedImageItemList[i], this.theme))
-                    }
-                    2 -> {
-                        binding.bottomNavigationView.menu.add(Menu.NONE, i, Menu.NONE, bottomNavigationItemName[i]).setIcon(
-                            ResourcesCompat.getDrawable(this.resources, bottomNavSelectedImageItemList[i], this.theme))
-                    }
-                    3 -> {
-                        binding.bottomNavigationView.menu.add(Menu.NONE, i, Menu.NONE, bottomNavigationItemName[i]).setIcon(
-                            ResourcesCompat.getDrawable(this.resources, bottomNavSelectedImageItemList[i], this.theme))
-                    }
-                }
+                binding.bottomNavigationView.menu.add(Menu.NONE, i, Menu.NONE, bottomNavigationItemName[i]).setIcon(ResourcesCompat.getDrawable(this.resources, bottomNavSelectedImageItemList[i], this.theme))
             }
         }
         else {
@@ -154,68 +134,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
-/*    fun setSideMenuItems(){
-
-        binding.menuRv.layoutManager = LinearLayoutManager(this@MainActivity)
-        binding.menuRv.isNestedScrollingEnabled = false
-
-        val factory = object : TreeViewHolderFactory {
-            override fun getTreeViewHolder(view: View, layout: Int): TreeViewHolder {
-                return FileViewHolder(view)
-            }
-        }
-
-        treeViewAdapter = TreeViewAdapter(factory)
-        val click = object : TreeViewAdapter.OnTreeNodeClickListener{
-            override fun onTreeNodeClick(treeNode: TreeNode, view: View) {
-                val menu = treeNode.value as LoginResponse.Menu
-                //TODO: Set Navigation Click on the basis of Menu Id
-                menuid = menu.MenuId ?:"0"
-                println(menuid)
-
-            }
-        }
-
-        treeViewAdapter.setTreeNodeClickListener(click)
-        binding.menuRv.adapter = treeViewAdapter
-
-    }
-
-    fun initJsonSerMenuTree(MenuRights : List<LoginResponse.Menu>) {
-//        val jsonFileString = getJsonDataFromAsset(this, "accessrights.json")
-//        if (jsonFileString != null) {
-//            Log.i("data", jsonFileString)
-//        }
-//
-//        val gson = Gson()
-//        val response = gson.fromJson(jsonFileString, MenuRights::class.java)
-//
-        val fileRoots: MutableList<TreeNode> = ArrayList()
-
-        MenuRights.forEach { menu ->
-            val newNode = TreeNode(menu.MenuName.toString(), menu, com.tupleinfotech.treeview.R.layout.list_item_file,"http://150.129.105.34:85/Image/SiteImages/banner-image.jpg")
-
-            // If this category is default, set menuid accordingly
-            if (menu.MenuId == defaultmenuid) {
-                menuid = menu.MenuId ?: "0"
-            }
-
-            findSubCategory(menu.SubMenus, newNode)
-            fileRoots.add(newNode)
-        }
-
-        treeViewAdapter.updateTreeNodes(fileRoots)
-//        treeViewAdapter.expandNodesAtLevel(0)
-    }
-
-    private fun findSubCategory(submenus: List<LoginResponse.Menu>, parent: TreeNode) {
-        submenus.forEach { submenu ->
-            val newNode = TreeNode(submenu.MenuName.toString(), submenu, com.tupleinfotech.treeview.R.layout.list_item_file,"http://150.129.105.34:85/Image/SiteImages/banner-image.jpg")
-            findSubCategory(submenu.SubMenus, newNode)
-            parent.addChild(newNode)
-        }
-    }*/
 
     //endregion ALL FUNCTIONS
 

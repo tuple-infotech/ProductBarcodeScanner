@@ -1,5 +1,6 @@
 package com.tupleinfotech.productbarcodescanner.ui.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -8,10 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tupleinfotech.productbarcodescanner.databinding.LayoutProductManufactureItemviewBinding
 import com.tupleinfotech.productbarcodescanner.model.ProductionDetailsResponse
 
+@SuppressLint("NotifyDataSetChanged")
 class ProductionReportAdapter : RecyclerView.Adapter<ProductionReportAdapter.ViewHolder>() {
 
     var hostlist                :   List<ProductionDetailsResponse.Products>          =       mutableListOf()
-    var onItemClick                         : ((ProductionDetailsResponse.Products) -> Unit)?        = null
+    var onItemClick                         : ((String) -> Unit)?        = null
 
     inner class ViewHolder (val binding : LayoutProductManufactureItemviewBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -26,18 +28,18 @@ class ProductionReportAdapter : RecyclerView.Adapter<ProductionReportAdapter.Vie
         with(holder){
             with(hostlist[position]){
 
-                binding.srNo.text        =   currentitem.DesignName
-                binding.fieldName.text     =   currentitem.Barcode
-                binding.fieldQty.text    =   currentitem.FactoryName
-                binding.fieldOthers.text  =   currentitem.WarehouseName
+                binding.srNo.text        = currentitem.DesignName
+                binding.fieldName.text   = currentitem.Barcode
+                binding.fieldQty.text    = currentitem.FactoryName
+                binding.fieldOthers.text = currentitem.WarehouseName
 
                 holder.itemView.setOnClickListener {
-                    onItemClick?.invoke(hostlist[position])
+                    onItemClick?.invoke(hostlist[position].Barcode.toString())
                 }
-                binding.lastCl.visibility = VISIBLE
-                binding.editbtn.visibility = GONE
-                binding.deletebtn.visibility = GONE
-                binding.fieldOthers.visibility = VISIBLE
+                binding.lastCl.visibility       = VISIBLE
+                binding.editbtn.visibility      = GONE
+                binding.deletebtn.visibility    = GONE
+                binding.fieldOthers.visibility  = VISIBLE
 
             }
         }

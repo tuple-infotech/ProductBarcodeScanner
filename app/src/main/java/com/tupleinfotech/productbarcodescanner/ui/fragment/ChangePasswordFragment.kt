@@ -63,11 +63,10 @@ class ChangePasswordFragment : Fragment() {
 
     private fun init(){
 
-        sharedViewModel.initActionbarWithoutSideMenu(requireActivity() as MainActivity)
-
+        sharedViewModel.initActionbarWithSideMenu(requireActivity() as MainActivity)
         screenWiseFunctionality()
         onBackPressed()
-        initBack()
+//        initBack()
     }
 
     //endregion INIT METHOD
@@ -242,17 +241,17 @@ class ChangePasswordFragment : Fragment() {
 
     }
 
-    private fun initBack(){
-        binding.arrowBnt.setOnClickListener{
-            println("BUTTON CLICK")
-            if (isfromProfile == true) {
-                findNavController().popBackStack()
-            }else {
-                findNavController().popBackStack()
-                findNavController().popBackStack()
-            }
-        }
-    }
+//    private fun initBack(){
+//        binding.arrowBnt.setOnClickListener{
+//            println("BUTTON CLICK")
+//            if (isfromProfile == true) {
+//                findNavController().popBackStack()
+//            }else {
+//                findNavController().popBackStack()
+//                findNavController().popBackStack()
+//            }
+//        }
+//    }
 
     //endregion BACK EVENT FUNCTIONS
 

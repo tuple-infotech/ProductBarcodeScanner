@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -12,24 +12,37 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_arrow_right" />
+        android:layout_margin="4dp"
+        android:src="@drawable/ic_arrow_right"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/file_type_icon"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_centerVertical="true"
+        android:layout_margin="4dp"
         android:layout_toEndOf="@id/file_state_icon"
         android:layout_toRightOf="@id/file_state_icon"
-        android:src="@drawable/ic_folder" />
+        android:src="@drawable/ic_folder"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/file_state_icon"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/file_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         android:layout_toEndOf="@id/file_type_icon"
         android:layout_toRightOf="@id/file_state_icon"
         android:paddingStart="5dp"
-        android:textSize="22dp"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/file_type_icon"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Directory" />
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

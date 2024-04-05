@@ -13,16 +13,17 @@ import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.useraddress
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userdob
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.useremail
-import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userfullname
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userfirstname
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.usergender
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userlastname
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userphone
 
-@SuppressLint("NotifyDataSetChanged")
+@SuppressLint("NotifyDataSetChanged","SetTextI18n")
 class ProfileItemAdapter: RecyclerView.Adapter<ProfileItemAdapter.ViewHolder>() {
 
     //region VARIABLES
     var fieldLabelList            :   List<String>          =       mutableListOf()
-    private lateinit var prefs                              : SharedPreferences
+    private lateinit var prefs    : SharedPreferences
 
     //endregion VARIABLES
 
@@ -38,14 +39,14 @@ class ProfileItemAdapter: RecyclerView.Adapter<ProfileItemAdapter.ViewHolder>() 
 
         with(holder){
             with(fieldLabelList[position]) {
-                prefs = PreferenceHelper.customPreference(itemView.context, Constants.CUSTOM_PREF_NAME)
+                prefs   = PreferenceHelper.customPreference(itemView.context, Constants.CUSTOM_PREF_NAME)
 
                 binding.apply {
 
                     fieldTitleTxt.text = currentitem
                     when(currentitem.toString()){
                         "Full Name" -> {
-                            fieldName.text = prefs.userfullname
+                            fieldName.text = prefs.userfirstname + " " + prefs.userlastname
                             fieldImg.setImageResource(R.drawable.icon_user)
                         }
                         "Email"     -> {

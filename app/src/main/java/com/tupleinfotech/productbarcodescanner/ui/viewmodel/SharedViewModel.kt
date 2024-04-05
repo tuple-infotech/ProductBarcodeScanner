@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tupleinfotech.productbarcodescanner.R
+import com.tupleinfotech.productbarcodescanner.data.repository.barcode.BarcodeRepository
 import com.tupleinfotech.productbarcodescanner.databinding.DialogSelectListItemBinding
 import com.tupleinfotech.productbarcodescanner.model.WorkshopListResponse
 import com.tupleinfotech.productbarcodescanner.network.NetworkResult
-import com.tupleinfotech.productbarcodescanner.repository.BarcodeRepository
 import com.tupleinfotech.productbarcodescanner.ui.activity.MainActivity
 import com.tupleinfotech.productbarcodescanner.ui.adapter.ComponentsListingAdapter
 import com.tupleinfotech.productbarcodescanner.ui.adapter.WarehouseListingAdapter
@@ -39,6 +39,7 @@ class SharedViewModel @Inject constructor (private val barcodeRepository: Barcod
         context: Context,
         apiUrl : String,
         requestMap: Map<String, Any>,
+        onLoading: (String) -> Unit = {},
         onSuccess: (String) -> Unit,
         onFailure: (String) -> Unit
     ) {
@@ -55,6 +56,7 @@ class SharedViewModel @Inject constructor (private val barcodeRepository: Barcod
                             }
                             is NetworkResult.Loading    -> {
                                 Log.i("==>", "LOADING" + response.message)
+                                onLoading("LOADING")
                             }
                             is NetworkResult.Success    -> {
                                 if (response.data?.isSuccessful == true) {
@@ -92,10 +94,10 @@ class SharedViewModel @Inject constructor (private val barcodeRepository: Barcod
     }
 
     //Action bar without side menu
-    fun initActionbarWithoutSideMenu(activity: Activity){
+    fun initActionbarWithoutSideMenu(activity: Activity,rightButton : Int = 0){
         val drawerLayout = (activity as MainActivity).findViewById<DrawerLayout>(R.id.drawer_layout)
 
-        (activity as MainActivity).initActionbar("CTS",leftButton = 0, rightButton = 0,  leftButtonClick = {
+        (activity as MainActivity).initActionbar("CTS",leftButton = 0, rightButton = rightButton,  leftButtonClick = {
             drawerLayout.openDrawer(GravityCompat.START)
         })
     }
@@ -126,10 +128,9 @@ class SharedViewModel @Inject constructor (private val barcodeRepository: Barcod
             View.GONE
 
         _binding.customActionBar.notificationBtn.setImageResource(R.drawable.ic_close_square)
-        _binding.customActionBar.notificationBtn.imageTintList = context.resources.getColorStateList(
-            R.color.orange)
+        _binding.customActionBar.notificationBtn.imageTintList = context.resources.getColorStateList(R.color.orange)
         _binding.customActionBar.arrowBnt.visibility = View.GONE
-        _binding.customActionBar.setOurText.text = "Select"
+        _binding.customActionBar.setOurText.text = "Select Workshop"
         _binding.customActionBar.notificationBtn.setOnClickListener {
             alertDialog.dismiss()
         }
@@ -178,10 +179,9 @@ class SharedViewModel @Inject constructor (private val barcodeRepository: Barcod
             View.GONE
 
         _binding.customActionBar.notificationBtn.setImageResource(R.drawable.ic_close_square)
-        _binding.customActionBar.notificationBtn.imageTintList = context.resources.getColorStateList(
-            R.color.orange)
+        _binding.customActionBar.notificationBtn.imageTintList = context.resources.getColorStateList(R.color.orange)
         _binding.customActionBar.arrowBnt.visibility = View.GONE
-        _binding.customActionBar.setOurText.text = "Select"
+        _binding.customActionBar.setOurText.text = "Select Warehouse"
         _binding.customActionBar.notificationBtn.setOnClickListener {
             alertDialog.dismiss()
         }
@@ -232,7 +232,7 @@ class SharedViewModel @Inject constructor (private val barcodeRepository: Barcod
         _binding.customActionBar.notificationBtn.setImageResource(R.drawable.ic_close_square)
         _binding.customActionBar.notificationBtn.imageTintList = context.resources.getColorStateList(R.color.orange)
         _binding.customActionBar.arrowBnt.visibility = View.GONE
-        _binding.customActionBar.setOurText.text = "Select"
+        _binding.customActionBar.setOurText.text = "Select Components"
         _binding.customActionBar.notificationBtn.setOnClickListener {
             alertDialog.dismiss()
         }

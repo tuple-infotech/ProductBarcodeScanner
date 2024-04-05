@@ -13,7 +13,10 @@
         android:layout_height="wrap_content"
         android:drawableEnd="@drawable/ic_arrow_down"
         android:text="Warehouse"
-        android:textColor="@color/black"
+        android:textColor="@color/text_color"
+        android:padding="@dimen/dp_8"
+        android:paddingStart="@dimen/dp_16"
+        android:paddingEnd="@dimen/dp_16"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -40,8 +43,6 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:inputType="text"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp"
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -80,8 +81,6 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:inputType="text"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp"
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -107,8 +106,6 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:inputType="text"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp"
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -134,8 +131,6 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:inputType="text"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp"
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -144,8 +139,9 @@
         android:id="@+id/btn_cl"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="8dp"
+        android:layout_marginTop="8dp"
         android:layout_weight="1"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_layout_inward_notes">
@@ -155,7 +151,9 @@
             style="@style/ButtonStyle.Green"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
             android:layout_weight="1"
             android:text="Inward"
             android:visibility="visible"
@@ -168,7 +166,9 @@
             style="@style/ButtonStyle.Red"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:text="Cancel"
             android:visibility="visible"
@@ -179,17 +179,16 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/show_warehouse_data_btn"
             style="@style/ButtonStyle.Green"
-            android:backgroundTint="@color/bottom_nav_color"
+            android:backgroundTint="@color/orange"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:layout_weight="1"
-            android:text="ShowDetails"
+            android:text="Show Details"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inward_btn" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

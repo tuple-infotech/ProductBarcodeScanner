@@ -180,14 +180,26 @@ class DialogHelper {
             //endregion Dialog Creation
 
             //region Set the dialog title and message
-            _binding.alertTitle.text = GlobalVariables.AlertTitle
+            if (GlobalVariables.AlertTitle.isEmpty()){
+                _binding.headingConstraint.setOurText.text = context.resources.getString(R.string.app_name)
+            }
+            else if (GlobalVariables.AlertTitle.isBlank()){
+                _binding.headingConstraint.setOurText.text = context.resources.getString(R.string.app_name)
+            }
+            else{
+                _binding.headingConstraint.setOurText.text = GlobalVariables.AlertTitle
+            }
+
             _binding.alertText.text = message
             //endregion Set the dialog title and message
 
             //region Dialog Image
-            Glide.with(_binding.alertIconImg)
+            _binding.headingConstraint.arrowBnt.visibility = GONE
+            _binding.headingConstraint.notificationBtn.visibility = GONE
+
+            Glide.with(_binding.headingConstraint.arrowBnt)
                 .load(GlobalVariables.ImageBaseUrl + GlobalVariables.ALERTIMAGE)
-                .into(_binding.alertIconImg)
+                .into(_binding.headingConstraint.arrowBnt)
             //endregion Dialog Image
 
             //region positive and negetive button click, text and visibility

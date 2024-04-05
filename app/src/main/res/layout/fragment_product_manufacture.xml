@@ -9,8 +9,8 @@
     <androidx.core.widget.NestedScrollView
         android:id="@+id/main_nsv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/show_warehouse_data_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -18,7 +18,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/main_cl"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,8 +32,9 @@
                 android:layout_margin="8dp"
                 android:hint="Barcode"
                 app:layout_constraintEnd_toStartOf="@+id/scan_btn"
+                app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/input_layout_component">
+                app:layout_constraintTop_toBottomOf="@+id/input_layout_workshop">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etBox_barcode"
@@ -48,8 +49,9 @@
 
             <ImageButton
                 android:id="@+id/scan_btn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintHorizontal_weight="0.3"
                 android:layout_marginEnd="4dp"
                 android:background="@color/transparent"
                 android:src="@drawable/icon_search_btn"
@@ -104,7 +106,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:layout_marginTop="135dp"
                 android:background="@drawable/style_bg_edit_text"
                 android:drawableEnd="@drawable/ic_arrow_down"
                 android:hint="Components"
@@ -113,7 +114,7 @@
                 android:paddingEnd="@dimen/dp_16"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/input_layout_workshop" />
+                app:layout_constraintTop_toBottomOf="@+id/input_layout_design_name" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_layout_component_qty"
@@ -121,12 +122,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:layout_marginTop="47dp"
+                app:layout_constraintHorizontal_weight="1"
                 android:hint="Component Qty"
                 android:visibility="visible"
                 app:layout_constraintEnd_toStartOf="@+id/add_btn"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/input_layout_design_name">
+                app:layout_constraintTop_toBottomOf="@+id/input_layout_component">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_box_component_qty"
@@ -143,10 +144,10 @@
                 android:id="@+id/add_btn"
                 style="@style/ButtonStyle.Green"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="40dp"
+                app:layout_constraintHorizontal_weight="0.4"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_weight="1"
                 android:text="Add"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="@+id/input_layout_component_qty"
@@ -160,30 +161,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/dp_8"
-                app:layout_constraintBottom_toTopOf="@+id/show_warehouse_data_btn"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/input_layout_component_qty" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/show_warehouse_data_btn"
-                style="@style/ButtonStyle.Green"
-                android:backgroundTint="@color/bottom_nav_color"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                android:text="ShowDetails"
-                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recyclerview_details" />
+                app:layout_constraintTop_toBottomOf="@+id/input_layout_component_qty" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/show_warehouse_data_btn"
+        style="@style/ButtonStyle.Green"
+        android:backgroundTint="@color/orange"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        android:text="Show Details"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_nsv" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

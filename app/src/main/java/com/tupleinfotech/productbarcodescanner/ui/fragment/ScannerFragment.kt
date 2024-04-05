@@ -41,12 +41,12 @@ class ScannerFragment : Fragment() {
 
     private var _binding                : FragmentScannerBinding?                   = null
     private val binding                 get()                                       = _binding!!
+    private val sharedViewModel         : SharedViewModel                           by viewModels()
     private var cameraProviderFuture    : ListenableFuture<ProcessCameraProvider>?  = null
     private var imageAnalysis           : ImageAnalysis?                            = null
     private var cameraProvider          : ProcessCameraProvider?                    = null
     private var previewView             : PreviewView?                              = null
-    private var barcodeText             : String?                                   = null
-    private val sharedViewModel             : SharedViewModel by viewModels()
+    private var barcodeText             : String?                                   = ""
 
     //endregion VARIABLES
 
@@ -72,7 +72,7 @@ class ScannerFragment : Fragment() {
 
     private fun init(){
 
-        sharedViewModel.initActionbarWithoutSideMenu(requireActivity() as MainActivity)
+        sharedViewModel.initActionbarWithSideMenu(requireActivity() as MainActivity)
 
         cameraPermission()
         onBackPressed()
@@ -137,8 +137,7 @@ class ScannerFragment : Fragment() {
                 scanner.process(image)
                     .addOnSuccessListener { barcodes -> processBarcode(barcodes) }
                     .addOnFailureListener {
-                        Toast.makeText(requireContext(),"Could not detect barcode!",
-                            Toast.LENGTH_SHORT).show()}
+                        Toast.makeText(requireContext(),"Could not detect barcode!",Toast.LENGTH_SHORT).show()}
                     .addOnCompleteListener {
                         mediaImage.close()
                         imageProxy.close()

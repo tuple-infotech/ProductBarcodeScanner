@@ -22,6 +22,24 @@
         <item name="height">48dp</item>
     </style>
 
+    //EditText Style
+
+    <style name="EditTextStyleWithoutBG">
+        <item name="android:textSize">@dimen/dp_14</item>
+        <item name="android:padding">@dimen/dp_8</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_marginStart">@dimen/dp_8</item>
+        <item name="android:layout_marginEnd">@dimen/dp_8</item>
+        <item name="singleLine">true</item>
+        <item name="maxLines">1</item>
+        <item name="android:layout_marginTop">@dimen/dp_8</item>
+        <item name="paddingStart">@dimen/dp_8</item>
+        <item name="elevation">@dimen/dp_5</item>
+        <item name="android:inputType">text</item>
+        <item name="android:textColorHint">@color/black</item>
+        <item name="height">48dp</item>
+    </style>
+
     //EditText line_box Style
 
     <style name="EditTextStyle.line_box">
@@ -38,9 +56,9 @@
 
     //EditText alert Style Blue
 
-    <style name="EditTextStyle.alert.blue">
+    <style name="EditTextStyle.alert.dim_orange">
         <item name="android:background">@drawable/style_bg_edit_text</item>
-        <item name="backgroundTint">#805CA0FF</item>
+        <item name="backgroundTint">@color/custom_action_bar_orange</item>
     </style>
 
     <!--endregion EditText Styles-->
@@ -49,8 +67,9 @@
 
     //Button Orange BG
     <style name="ButtonStyle.Orange">
-        <item name="android:background">@drawable/style_bg_edit_text</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@drawable/style_btn_orange</item>
+        <item name="android:backgroundTint">@color/orange</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:layout_marginStart">@dimen/dp_20</item>
         <item name="android:layout_marginEnd">@dimen/dp_20</item>
     </style>
@@ -109,6 +128,7 @@
         <item name="android:background">@drawable/style_btn_green</item>
         <item name="android:layout_width">150dp</item>
     </style>
+
 
     <!--region TextView Styles-->
 
@@ -242,11 +262,11 @@
         <item name="android:layout_marginStart">@dimen/dp_20</item>
         <item name="android:layout_marginEnd">@dimen/dp_20</item>
         <item name="startIconMinSize">@dimen/dp_8</item>
-        <item name="hintTextColor">@color/orange_low_opacity</item>
-        <item name="startIconTint">@color/orange_low_opacity</item>
-        <item name="boxStrokeColor">@color/orange_low_opacity</item>
-        <item name="cursorColor">@color/orange_low_opacity</item>
-        <item name="android:textColorHint">@color/orange_low_opacity</item>
+        <item name="hintTextColor">@color/text_color</item>
+        <item name="startIconTint">@color/text_color</item>
+        <item name="boxStrokeColor">@color/text_color</item>
+        <item name="cursorColor">@color/text_color</item>
+        <item name="android:textColorHint">@color/text_color</item>
         <item name="helperText">""</item>
         <item name="helperTextTextColor">@color/red</item>
         <item name="helperTextEnabled">true</item>
@@ -274,14 +294,14 @@
 
     <style name="TextInputEditText">
         <item name="android:background">@color/transparent</item>
-        <item name="android:textColor">@color/orange_low_opacity</item>
+        <item name="android:textColor">@color/text_color</item>
         <item name="android:imeOptions">actionNext</item>
         <item name="android:paddingStart">@dimen/dp_0</item>
         <item name="android:singleLine">true</item>
     </style>
 
     <style name="TextInputEditText.otptext">
-        <item name="android:textColor">@color/orange_low_opacity</item>
+        <item name="android:textColor">@color/text_color</item>
         <item name="android:layout_marginTop">@dimen/dp_20</item>
         <item name="android:layout_marginBottom">@dimen/dp_20</item>
         <item name="android:layout_marginStart">@dimen/dp_20</item>

@@ -1,5 +1,6 @@
 package com.tupleinfotech.productbarcodescanner.ui.fragment
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -25,21 +26,24 @@ import com.tupleinfotech.productbarcodescanner.ui.adapter.ProfileItemAdapter
 import com.tupleinfotech.productbarcodescanner.ui.viewmodel.SharedViewModel
 import com.tupleinfotech.productbarcodescanner.util.Constants
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper
-import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.host
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.ipAddress
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userfirstname
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userfullname
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userlastname
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userprofileimage
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
+@SuppressLint("SetTextI18n")
 class ProfileFragment : Fragment() {
 
     //region VARIABLES
     private var _binding                                    : FragmentProfileBinding?               =  null
     private val binding                                     get()                                   =  _binding!!
+    private lateinit var prefs                              : SharedPreferences
+    private val sharedViewModel                             : SharedViewModel                       by viewModels()
     private var profileItemAdapter                          : ProfileItemAdapter                    = ProfileItemAdapter()
     private val profileItemData                             : ArrayList<String>                     = arrayListOf()
-    private lateinit var prefs                              : SharedPreferences
-    private val sharedViewModel             : SharedViewModel by viewModels()
 
     //endregion VARIABLES
 
@@ -52,9 +56,9 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        val view = binding.root
-        prefs = PreferenceHelper.customPreference(requireContext(), Constants.CUSTOM_PREF_NAME)
+        _binding    = FragmentProfileBinding.inflate(inflater, container, false)
+        val view    = binding.root
+        prefs       = PreferenceHelper.customPreference(requireContext(), Constants.CUSTOM_PREF_NAME)
 
         init()
 
@@ -90,12 +94,19 @@ class ProfileFragment : Fragment() {
     //region ALL FUNCTIONS
 
     private fun loadImage(){
-        if (prefs.userfullname.toString()[0].uppercaseChar().toString().trim().isEmpty() && prefs.userfullname.toString()[0].uppercaseChar().toString().trim().isBlank()){
+        if (prefs.userfullname.toString()[0].uppercaseChar().toString().trim().isNotEmpty() && prefs.userfullname.toString()[0].uppercaseChar().toString().trim().isNotBlank()){
             binding.profileLayout.shapeableImageViewtext.text = prefs.userfullname.toString()[0].uppercaseChar().toString().trim()
         }
+        if (prefs.userfirstname.toString()[0].uppercaseChar().toString().trim().isEmpty() && prefs.userfirstname.toString()[0].uppercaseChar().toString().trim().isBlank()){
+            binding.profileLayout.shapeableImageViewtext.text = prefs.userlastname.toString()[0].uppercaseChar().toString().trim()
+        }else if (prefs.userlastname.toString()[0].uppercaseChar().toString().trim().isEmpty() && prefs.userlastname.toString()[0].uppercaseChar().toString().trim().isBlank()){
+            binding.profileLayout.shapeableImageViewtext.text = prefs.userfirstname.toString()[0].uppercaseChar().toString().trim()
+        } else if (prefs.userfirstname.toString()[0].uppercaseChar().toString().trim().isNotEmpty() && prefs.userfirstname.toString()[0].uppercaseChar().toString().trim().isNotBlank() && prefs.userlastname.toString()[0].uppercaseChar().toString().trim().isNotEmpty() && prefs.userlastname.toString()[0].uppercaseChar().toString().trim().isNotBlank()) {
+            binding.profileLayout.shapeableImageViewtext.text = prefs.userfirstname.toString()[0].uppercaseChar().toString().trim() + prefs.userlastname.toString()[0].uppercaseChar().toString().trim()
+        }
 
-        Glide.with(binding.root)
-            .load(prefs.host+"v1/"+prefs.userprofileimage)
+        Glide.with(binding.profileLayout.shapeableImageView)
+            .load("http://"+prefs.ipAddress+prefs.userprofileimage)
             .fitCenter()
             .listener(object : RequestListener<Drawable?> {
 

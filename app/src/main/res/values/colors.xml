@@ -11,6 +11,7 @@
 
     <color name="image_bg_color">#FFF9F5</color>
     <color name="orange">#FD7D26</color>
+    <color name="custom_action_bar_orange">#40FD7D26</color>
     <color name="bottom_nav_color">#464755</color>
     <color name="orange_low_opacity">#7A3E1B</color>
     <color name="dark_text_color">#1D160D</color>

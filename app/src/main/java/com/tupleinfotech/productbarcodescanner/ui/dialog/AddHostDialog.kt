@@ -16,6 +16,7 @@ import com.jmsc.postab.db.AddHost
 import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.databinding.AddHostDialogBinding
 import com.tupleinfotech.productbarcodescanner.ui.adapter.AddHostAdepter
+import com.tupleinfotech.productbarcodescanner.ui.viewmodel.AddHostViewModel
 import com.tupleinfotech.productbarcodescanner.util.AppHelper
 import com.tupleinfotech.productbarcodescanner.util.Constants
 import com.tupleinfotech.productbarcodescanner.util.DialogHelper

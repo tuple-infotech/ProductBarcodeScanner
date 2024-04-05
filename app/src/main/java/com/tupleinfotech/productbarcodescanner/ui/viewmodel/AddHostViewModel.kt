@@ -1,9 +1,9 @@
-package com.jmsc.postab.ui.dialogfragment.addhost
+package com.tupleinfotech.productbarcodescanner.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jmsc.postab.data.repository.db.DBRepository
 import com.jmsc.postab.db.AddHost
+import com.tupleinfotech.productbarcodescanner.data.repository.db.DBRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch

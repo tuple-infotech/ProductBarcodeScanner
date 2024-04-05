@@ -16,9 +16,9 @@ class WorkshopListingAdapter: RecyclerView.Adapter<WorkshopListingAdapter.ViewHo
 
     //region VARIABLES
 //    private var hostList    : List<Pair<String,String>> = mutableListOf()
-    var hostList    : List<WorkshopListResponse.List> = mutableListOf()
-    private var filterList  : List<WorkshopListResponse.List> = mutableListOf()
-    var onItemClick         : ((WorkshopListResponse.List) -> Unit)? =    null
+    private var hostList    : List<WorkshopListResponse.List>           = mutableListOf()
+    private var filterList  : List<WorkshopListResponse.List>           = mutableListOf()
+    var onItemClick         : ((WorkshopListResponse.List) -> Unit)?    = null
 
     inner class ViewHolder(val binding: LayoutListingItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -36,7 +36,7 @@ class WorkshopListingAdapter: RecyclerView.Adapter<WorkshopListingAdapter.ViewHo
         val currentItem = filterList[position]
         holder.binding.apply {
             fieldQty.visibility = GONE
-            fieldName.text = currentItem.FactoryName
+            fieldName.text      = currentItem.FactoryName
         }
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(hostList[position])
@@ -50,8 +50,8 @@ class WorkshopListingAdapter: RecyclerView.Adapter<WorkshopListingAdapter.ViewHo
                 val filteredList = hostList.filter { item ->
                     item.toString().lowercase(Locale.getDefault()).contains(constraint.toString().lowercase(Locale.getDefault()))
                 }
-                val results = FilterResults()
-                results.values = filteredList
+                val results     = FilterResults()
+                results.values  = filteredList
                 return results
             }
 
@@ -68,8 +68,8 @@ class WorkshopListingAdapter: RecyclerView.Adapter<WorkshopListingAdapter.ViewHo
     //region ALL FUNCTIONS
 
     fun updateItems(items: List<WorkshopListResponse.List>?) {
-        hostList = items ?: emptyList()
-        filterList = items ?: emptyList()
+        hostList    = items ?: emptyList()
+        filterList  = items ?: emptyList()
         notifyDataSetChanged()
     }
     //endregion ALL FUNCTIONS

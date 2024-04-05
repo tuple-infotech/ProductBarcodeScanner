@@ -13,7 +13,6 @@ import java.util.Locale
 class ListingAdapter(var hostList    : List<Pair<String,String>> = mutableListOf()): RecyclerView.Adapter<ListingAdapter.ViewHolder>(), Filterable {
 
     //region VARIABLES
-//    private var hostList    : List<Pair<String,String>> = mutableListOf()
     private var filterList  : List<Pair<String,String>> = mutableListOf()
     var onItemClick         : ((Pair<String,String>) -> Unit)? =    null
 
@@ -32,7 +31,7 @@ class ListingAdapter(var hostList    : List<Pair<String,String>> = mutableListOf
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = filterList[position]
         holder.binding.apply {
-            fieldName.text = currentItem.second.toString()
+            fieldName.text = currentItem.second
         }
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(hostList[position])
@@ -64,8 +63,8 @@ class ListingAdapter(var hostList    : List<Pair<String,String>> = mutableListOf
     //region ALL FUNCTIONS
 
     fun updateItems(items: List<Pair<String,String>>?) {
-        hostList = items ?: emptyList()
-        filterList = items ?: emptyList()
+        hostList    = items ?: emptyList()
+        filterList  = items ?: emptyList()
         notifyDataSetChanged()
     }
     //endregion ALL FUNCTIONS

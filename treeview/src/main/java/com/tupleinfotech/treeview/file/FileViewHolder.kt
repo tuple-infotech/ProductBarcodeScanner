@@ -1,13 +1,8 @@
 package com.tupleinfotech.treeview.file
 
-import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestListener
 import com.tupleinfotech.treeview.R
 import com.tupleinfotech.treeview.TreeNode
 import com.tupleinfotech.treeview.TreeViewHolder
@@ -28,18 +23,60 @@ class FileViewHolder(itemView: View) : TreeViewHolder(itemView) {
         val fileNameStr: String = node.text
         //val fileNameStr: String = node.value.toString()
         fileName.text = fileNameStr
+
         val dotIndex = fileNameStr.indexOf('.')
-
         if (dotIndex == -1) {
-            //node.imageurl
-
-            Glide.with(fileTypeIcon)
-                .load(node.imageurl)
-                .fitCenter()
-                .diskCacheStrategy(DiskCacheStrategy.ALL) //using to load into cache then second time it will load fast.
-                .transform(RoundedCorners(10))
-                .into(fileTypeIcon)
-            //fileTypeIcon.setImageResource(R.drawable.ic_folder)
+            when(node.text.toString()){
+                "Dashboard"             -> {
+                    fileTypeIcon.setImageResource(R.drawable.icon_dashboard)
+                }
+                "Barcode"               -> {
+                    fileTypeIcon.setImageResource(R.drawable.icon_barcode)
+                }
+                "Print Barcode"         -> {
+                    fileTypeIcon.setImageResource(R.drawable.icon_barcode)
+                }
+                "Print Barcode Report"  -> {
+                    fileTypeIcon.setImageResource(R.drawable.icon_barcode)
+                }
+                "Production"            -> {
+                    fileTypeIcon.setImageResource(R.drawable.icon_side_menu_orderhistory)
+                }
+                "Product Manufacture"   -> {
+                    fileTypeIcon.setImageResource(R.drawable.icon_side_menu_orderhistory)
+                }
+                "Warehouse Entry"       -> {
+                    fileTypeIcon.setImageResource(R.drawable.icon_side_menu_orderhistory)
+                }
+                "Product Details"       -> {
+                    fileTypeIcon.setImageResource(R.drawable.icon_side_menu_orderhistory)
+                }
+                "Production Report"     -> {
+                    fileTypeIcon.setImageResource(R.drawable.icon_side_menu_orderhistory)
+                }
+                "User Utility"          -> {
+                    fileTypeIcon.setImageResource(R.drawable.icon_user)
+                }
+                "Manage User"           -> {
+                    fileTypeIcon.setImageResource(R.drawable.icon_user)
+                }
+                "Master"                -> {
+                    fileTypeIcon.setImageResource(R.drawable.icon_master)
+                }
+                "State Master"          -> {
+                    fileTypeIcon.setImageResource(R.drawable.icon_master)
+                }
+                "City Master"           -> {
+                    fileTypeIcon.setImageResource(R.drawable.icon_master)
+                }
+                "Logout"                -> {
+                    fileTypeIcon.setImageResource(R.drawable.icon_logout)
+                }
+                else                    -> {
+                    //fileTypeIcon.setImageResource(R.drawable.ic_folder)
+                }
+            }
+//            fileTypeIcon.setImageResource(R.drawable.ic_folder)
         } else {
             val extension = fileNameStr.substring(dotIndex)
             val extensionIcon = ExtensionTable.getExtensionIcon(extension)

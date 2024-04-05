@@ -1,4 +1,4 @@
-package com.tupleinfotech.productbarcodescanner.repository
+package com.tupleinfotech.productbarcodescanner.data.repository.barcode
 
 import com.tupleinfotech.productbarcodescanner.network.NetworkResult
 import kotlinx.coroutines.flow.Flow

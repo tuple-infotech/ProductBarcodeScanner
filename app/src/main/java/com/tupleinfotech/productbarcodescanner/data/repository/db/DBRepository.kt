@@ -1,9 +1,10 @@
-package com.jmsc.postab.data.repository.db
+package com.tupleinfotech.productbarcodescanner.data.repository.db
 
 import com.jmsc.postab.db.AddHost
 import kotlinx.coroutines.flow.Flow
 
 interface DBRepository {
+
     fun getAllHost(): Flow<List<AddHost>>
 
     suspend fun insertHost(host: AddHost)

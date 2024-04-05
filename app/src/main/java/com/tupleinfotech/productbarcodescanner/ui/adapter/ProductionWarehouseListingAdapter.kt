@@ -1,5 +1,6 @@
 package com.tupleinfotech.productbarcodescanner.ui.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,10 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tupleinfotech.productbarcodescanner.databinding.LayoutProductManufactureItemviewBinding
 import com.tupleinfotech.productbarcodescanner.model.getProductWarehouseDataResponse
 
+@SuppressLint("NotifyDataSetChanged")
 class ProductionWarehouseListingAdapter : RecyclerView.Adapter<ProductionWarehouseListingAdapter.ViewHolder>() {
 
     var hostlist                :   List<getProductWarehouseDataResponse.Products>          =       mutableListOf()
-    var onItemClick                         : ((getProductWarehouseDataResponse.Products) -> Unit)?        = null
+    var onItemClick                         : ((String) -> Unit)?        = null
 
     inner class ViewHolder (val binding : LayoutProductManufactureItemviewBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -26,17 +28,17 @@ class ProductionWarehouseListingAdapter : RecyclerView.Adapter<ProductionWarehou
             with(hostlist[position]){
 
                 binding.srNo.text        =   currentitem.DesignName
-                binding.fieldName.text     =   currentitem.Barcode
+                binding.fieldName.text   =   currentitem.Barcode
                 binding.fieldQty.text    =   currentitem.FactoryName
 
                 holder.itemView.setOnClickListener {
-                    onItemClick?.invoke(hostlist[position])
+                    onItemClick?.invoke(hostlist[position].Barcode.toString())
                 }
 
-                binding.lastCl.visibility = View.GONE
-                binding.editbtn.visibility = View.GONE
-                binding.deletebtn.visibility = View.GONE
-                binding.fieldOthers.visibility = View.GONE
+                binding.lastCl.visibility       = View.GONE
+                binding.editbtn.visibility      = View.GONE
+                binding.deletebtn.visibility    = View.GONE
+                binding.fieldOthers.visibility  = View.GONE
 
             }
         }

@@ -1,5 +1,6 @@
 package com.tupleinfotech.productbarcodescanner.ui.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -8,12 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tupleinfotech.productbarcodescanner.databinding.LayoutProductManufactureItemviewBinding
 import com.tupleinfotech.productbarcodescanner.model.GetDataByBarcodeResponse
 
+@SuppressLint("NotifyDataSetChanged")
 class ProductManufactureItemAdapter : RecyclerView.Adapter<ProductManufactureItemAdapter.ViewHolder>() {
 
     //region VARIABLES
-    var hostlist                :   List<GetDataByBarcodeResponse.Components>          =       mutableListOf()
-    var onEditItemClick         : ((GetDataByBarcodeResponse.Components) -> Unit)? =    null
-    var onDeleteItemClick         : ((GetDataByBarcodeResponse.Components) -> Unit)? =    null
+    var hostlist                : List<GetDataByBarcodeResponse.Components>             = mutableListOf()
+    var onEditItemClick         : ((GetDataByBarcodeResponse.Components) -> Unit)?      = null
+    var onDeleteItemClick       : ((GetDataByBarcodeResponse.Components) -> Unit)?      = null
 
     inner class ViewHolder (val binding : LayoutProductManufactureItemviewBinding) : RecyclerView.ViewHolder(binding.root)
     //endregion VARIABLES
@@ -31,12 +33,12 @@ class ProductManufactureItemAdapter : RecyclerView.Adapter<ProductManufactureIte
         with(holder){
             with(hostlist[position]){
 
-                binding.fieldName.text = currentitem.ComponentsName
-                binding.fieldQty.text = currentitem.ComponentsQty
-                binding.lastCl.visibility = VISIBLE
-                binding.fieldOthers.visibility = GONE
-                binding.editbtn.visibility = VISIBLE
-                binding.deletebtn.visibility = VISIBLE
+                binding.fieldName.text          = currentitem.ComponentsName
+                binding.fieldQty.text           = currentitem.ComponentsQty
+                binding.lastCl.visibility       = VISIBLE
+                binding.fieldOthers.visibility  = GONE
+                binding.editbtn.visibility      = VISIBLE
+                binding.deletebtn.visibility    = VISIBLE
 
                 binding.editbtn.setOnClickListener {
                     onEditItemClick?.invoke(hostlist[position])

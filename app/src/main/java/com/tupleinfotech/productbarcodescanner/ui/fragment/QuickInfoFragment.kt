@@ -4,6 +4,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
@@ -52,9 +54,9 @@ class QuickInfoFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View {
-        _binding = FragmentQuickInfoBinding.inflate(inflater, container, false)
-        val view = binding.root
-        prefs = PreferenceHelper.customPreference(requireContext(), Constants.CUSTOM_PREF_NAME)
+        _binding    = FragmentQuickInfoBinding.inflate(inflater, container, false)
+        val view    = binding.root
+        prefs       = PreferenceHelper.customPreference(requireContext(), Constants.CUSTOM_PREF_NAME)
 
         init()
 
@@ -185,8 +187,13 @@ class QuickInfoFragment : Fragment() {
         val requestMap = mutableMapOf<String, Any>() // Empty mutable map
 
         val quickInfoDataUrl = prefs.host + UrlEndPoints.DASHBOARD_QUICK_INFO
-        sharedViewModel.api_service(requireContext(),quickInfoDataUrl,requestMap,{ quickInfoDataResponse ->
+        sharedViewModel.api_service(requireContext(),quickInfoDataUrl,requestMap,
+            {
+                binding.progressbar.visibility = VISIBLE
+            },
+            { quickInfoDataResponse ->
             println(quickInfoDataResponse)
+                binding.progressbar.visibility = GONE
 
             val quickInfoData: QuickInfoDataResponse? = AppHelper.convertJsonToModel(quickInfoDataResponse)
 
@@ -229,6 +236,7 @@ class QuickInfoFragment : Fragment() {
 
         },
             {
+                binding.progressbar.visibility = GONE
                 DialogHelper.Alert_Selection(requireContext(),it.toString(),resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
             }
         )

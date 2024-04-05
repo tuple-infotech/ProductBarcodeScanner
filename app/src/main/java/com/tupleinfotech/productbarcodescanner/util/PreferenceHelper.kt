@@ -5,23 +5,24 @@ import android.content.SharedPreferences
 
 object PreferenceHelper {
 
-    val HOST = "HOST"
-    val IMAGEURL = "IMAGE"
-
-    val IP_ADDRESS = "IPADDRESS"
-    val PORT = "PORT"
-    val LAST_SELECTED_HOST_ID = "HOST_ID"
-    val USER_ID = "USER_ID"
-    val USER_NAME = "USER_NAME"
-    val USER_PASSWORD = "PASSWORD"
-
-    val USER_FULLNAME = "FULLNAME"
-    val USER_EMAIL = "EMAIL"
-    val USER_PHONE = "PHONE"
-    val USER_ADDRESS = "ADDRESS"
-    val USER_DOB = "DOB"
-    val USER_GENDER = "GENDER"
-    val USER_PROFILE_IMAGE = "PROFILE_IMAGE"
+    val HOST                    = "HOST"
+    val IMAGEURL                = "IMAGE"
+    val IP_ADDRESS              = "IPADDRESS"
+    val PORT                    = "PORT"
+    val LAST_SELECTED_HOST_ID   = "HOST_ID"
+    val USER_ID                 = "USER_ID"
+    val USER_NAME               = "USER_NAME"
+    val USER_FIRST_NAME         = "USER_FIRST_NAME"
+    val USER_LAST_NAME          = "USER_LAST_NAME"
+    val USER_PASSWORD           = "PASSWORD"
+    val USER_FULLNAME           = "FULLNAME"
+    val USER_EMAIL              = "EMAIL"
+    val USER_PHONE              = "PHONE"
+    val USER_ADDRESS            = "ADDRESS"
+    val USER_DOB                = "DOB"
+    val USER_GENDER             = "GENDER"
+    val USER_PROFILE_IMAGE      = "PROFILE_IMAGE"
+    val USER_MENU_RIGHTS        = "USER_MENU_RIGHTS"
 
     fun customPreference(context: Context, name: String): SharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE)
 
@@ -101,6 +102,31 @@ object PreferenceHelper {
                 it.putString(USER_NAME, value)
             }
         }
+
+    var SharedPreferences.userfirstname
+        get() = getString(USER_FIRST_NAME, "")
+        set(value) {
+            editMe {
+                it.putString(USER_FIRST_NAME, value)
+            }
+        }
+
+    var SharedPreferences.userlastname
+        get() = getString(USER_LAST_NAME, "")
+        set(value) {
+            editMe {
+                it.putString(USER_LAST_NAME, value)
+            }
+        }
+
+    var SharedPreferences.usermenurights
+        get() = getString(USER_MENU_RIGHTS, "")
+        set(value) {
+            editMe {
+                it.putString(USER_MENU_RIGHTS, value)
+            }
+        }
+
     var SharedPreferences.userfullname
         get() = getString(USER_FULLNAME, "")
         set(value) {
@@ -116,6 +142,7 @@ object PreferenceHelper {
                 it.putString(USER_EMAIL, value)
             }
         }
+
     var SharedPreferences.userphone
         get() = getString(USER_PHONE, "")
         set(value) {
@@ -123,6 +150,7 @@ object PreferenceHelper {
                 it.putString(USER_PHONE, value)
             }
         }
+
     var SharedPreferences.useraddress
         get() = getString(USER_ADDRESS, "")
         set(value) {
@@ -130,6 +158,7 @@ object PreferenceHelper {
                 it.putString(USER_ADDRESS, value)
             }
         }
+
     var SharedPreferences.userdob
         get() = getString(USER_DOB, "")
         set(value) {
@@ -137,6 +166,7 @@ object PreferenceHelper {
                 it.putString(USER_DOB, value)
             }
         }
+
     var SharedPreferences.usergender
         get() = getString(USER_GENDER, "")
         set(value) {
@@ -144,6 +174,7 @@ object PreferenceHelper {
                 it.putString(USER_GENDER, value)
             }
         }
+
     var SharedPreferences.userprofileimage
         get() = getString(USER_PROFILE_IMAGE, "")
         set(value) {

@@ -39,17 +39,17 @@ class ProductManufactureFragment : Fragment() {
 
     //region VARIABLES
 
-    private var _binding                                    : FragmentProductManufactureBinding?    =  null
-    private val binding                                     get()                                   =  _binding!!
-    private lateinit var prefs                              : SharedPreferences
-    private var productManufactureItemAdapter               : ProductManufactureItemAdapter?        = null
-    private var barcodetext                 : String?                                               = null
-    private var observerExecuted            : Boolean                                               = false
-    private val sharedViewModel             : SharedViewModel by viewModels()
-    private var componentData               = ArrayList<GetDataByBarcodeResponse.Components>()
-    private var factoryID = "0"
-    private var barcodeScannedFactoryID = "10"
-    private var barcodeScannedPipeID = "0"
+    private var _binding                            : FragmentProductManufactureBinding?                =  null
+    private val binding                             get()                                               =  _binding!!
+    private lateinit var prefs                      : SharedPreferences
+    private val sharedViewModel                     : SharedViewModel                                   by viewModels()
+    private var productManufactureItemAdapter       : ProductManufactureItemAdapter?                    = ProductManufactureItemAdapter()
+    private var barcodetext                         : String?                                           = ""
+    private var observerExecuted                    : Boolean                                           = false
+    private var componentData                       : ArrayList<GetDataByBarcodeResponse.Components>    = arrayListOf()
+    private var factoryID                           : String                                            = "0"
+    private var barcodeScannedFactoryID             : String                                            = "0"
+    private var barcodeScannedPipeID                : String                                            = "0"
 
     //endregion VARIABLES
 
@@ -62,9 +62,9 @@ class ProductManufactureFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View {
-        _binding = FragmentProductManufactureBinding.inflate(inflater, container, false)
-        val view = binding.root
-        prefs = PreferenceHelper.customPreference(requireContext(), Constants.CUSTOM_PREF_NAME)
+        _binding    = FragmentProductManufactureBinding.inflate(inflater, container, false)
+        val view    = binding.root
+        prefs       = PreferenceHelper.customPreference(requireContext(), Constants.CUSTOM_PREF_NAME)
         init()
         return view
     }
@@ -74,9 +74,7 @@ class ProductManufactureFragment : Fragment() {
     //region INIT METHOD
 
     private fun init(){
-
         sharedViewModel.initActionbarWithSideMenu(requireActivity() as MainActivity)
-
         initProductManufactureItem()
         scanButton()
         getScannedBarcodeData()
@@ -99,8 +97,8 @@ class ProductManufactureFragment : Fragment() {
     private fun initWorkshopDropDown(itemList: ArrayList<WorkshopListResponse.List>){
         binding.inputLayoutWorkshop.setOnClickListener {
             sharedViewModel.showWorkshopListingDialog(requireContext(),itemList,false) {
-                binding.inputLayoutWorkshop.text = it.FactoryName.toString()
-                factoryID = it.FactoryId.toString()
+                binding.inputLayoutWorkshop.text    = it.FactoryName.toString()
+                factoryID                           = it.FactoryId.toString()
             }
         }
 
@@ -151,20 +149,20 @@ class ProductManufactureFragment : Fragment() {
             }
             else {
                 val componentsMap = mapOf(
-                    "ComponentsName" to binding.inputLayoutComponent.text.toString(),
-                    "ComponentsQty" to binding.etBoxComponentQty.text.toString()
+                    "ComponentsName"    to binding.inputLayoutComponent.text.toString(),
+                    "ComponentsQty"     to binding.etBoxComponentQty.text.toString()
                 )
 
                 val componentsArrayList = ArrayList<Map<String, Any>>()
                 componentsArrayList.add(componentsMap)
 
                 val map = mapOf<String, Any>(
-                    "PipeId" to pipeId.trim(),
-                    "Barcode" to binding.etBoxBarcode.text.toString().trim(),
-                    "DesignName" to binding.etBoxDesignName.text.toString().trim(),
-                    "CreatedBy" to prefs.userId.toString(),
-                    "FactoryId" to factoryID,
-                    "Components" to componentsArrayList
+                    "PipeId"        to pipeId.trim(),
+                    "Barcode"       to binding.etBoxBarcode.text.toString().trim(),
+                    "DesignName"    to binding.etBoxDesignName.text.toString().trim(),
+                    "CreatedBy"     to prefs.userId.toString(),
+                    "FactoryId"     to factoryID,
+                    "Components"    to componentsArrayList
                 )
                 updatePipeEntry(map)
             }
@@ -187,20 +185,20 @@ class ProductManufactureFragment : Fragment() {
             }
             else {
                 val componentsMap = mapOf(
-                    "ComponentsName" to binding.inputLayoutComponent.text.toString(),
-                    "ComponentsQty" to binding.etBoxComponentQty.text.toString()
+                    "ComponentsName"    to binding.inputLayoutComponent.text.toString(),
+                    "ComponentsQty"     to binding.etBoxComponentQty.text.toString()
                 )
 
                 val componentsArrayList = ArrayList<Map<String, Any>>()
                 componentsArrayList.add(componentsMap)
 
                 val map = mapOf<String, Any>(
-                    "PipeId" to barcodeScannedPipeID.trim(),
-                    "Barcode" to binding.etBoxBarcode.text.toString().trim(),
-                    "DesignName" to binding.etBoxDesignName.text.toString().trim(),
-                    "CreatedBy" to prefs.userId.toString(),
-                    "FactoryId" to barcodeScannedFactoryID,
-                    "Components" to componentsArrayList
+                    "PipeId"        to barcodeScannedPipeID.trim(),
+                    "Barcode"       to binding.etBoxBarcode.text.toString().trim(),
+                    "DesignName"    to binding.etBoxDesignName.text.toString().trim(),
+                    "CreatedBy"     to prefs.userId.toString(),
+                    "FactoryId"     to barcodeScannedFactoryID,
+                    "Components"    to componentsArrayList
                 )
                 addPipeEntry(map)
             }
@@ -270,7 +268,7 @@ class ProductManufactureFragment : Fragment() {
         )
 
         val getDataByBarcodeUrl = prefs.host + UrlEndPoints.GET_DATA_BY_BARCODE_MANUFACTURE
-        sharedViewModel.api_service(requireContext(),getDataByBarcodeUrl,map,{ getDataByBarcoderesponse ->
+        sharedViewModel.api_service(requireContext(),getDataByBarcodeUrl,map,{},{ getDataByBarcoderesponse ->
             println(getDataByBarcoderesponse)
             val getDataByBarcodeResponse: GetDataByBarcodeResponse? = AppHelper.convertJsonToModel(getDataByBarcoderesponse)
 
@@ -332,7 +330,7 @@ class ProductManufactureFragment : Fragment() {
         val requestMap = mutableMapOf<String, Any>() // Empty mutable map
 
         val getWorkshopListUrl = prefs.host + UrlEndPoints.GET_WORKSHOP_LIST
-        sharedViewModel.api_service(requireContext(),getWorkshopListUrl,requestMap,{ getWorkshopResponse ->
+        sharedViewModel.api_service(requireContext(),getWorkshopListUrl,requestMap,{},{ getWorkshopResponse ->
             println(getWorkshopResponse)
             val workshopListResponse: WorkshopListResponse? = AppHelper.convertJsonToModel(getWorkshopResponse)
 
@@ -358,7 +356,7 @@ class ProductManufactureFragment : Fragment() {
 
         val updatePipeEntryUrl = prefs.host + UrlEndPoints.UPDATE_PIPE_ENTRY
 
-        sharedViewModel.api_service(requireContext(),updatePipeEntryUrl,requestMap,{ getUpdatePipeEntryResponse ->
+        sharedViewModel.api_service(requireContext(),updatePipeEntryUrl,requestMap,{},{ getUpdatePipeEntryResponse ->
             println(getUpdatePipeEntryResponse)
 
             val gson = Gson()
@@ -400,7 +398,7 @@ class ProductManufactureFragment : Fragment() {
 
         val updatePipeEntryUrl = prefs.host + UrlEndPoints.UPDATE_ADD_ENTRY
 
-        sharedViewModel.api_service(requireContext(),updatePipeEntryUrl,requestMap,{ getUpdatePipeEntryResponse ->
+        sharedViewModel.api_service(requireContext(),updatePipeEntryUrl,requestMap,{},{ getUpdatePipeEntryResponse ->
             println(getUpdatePipeEntryResponse)
 
             val gson = Gson()
@@ -411,8 +409,8 @@ class ProductManufactureFragment : Fragment() {
                 if (responseJson["ErrorMessage"].asString.equals("Pipe added successfully",true)){
 
                     DialogHelper.Alert_Selection(requireContext(),responseJson["ErrorMessage"].asString,"OK","", onPositiveButtonClick = {
-                        binding.inputLayoutWorkshop.text = "WorkShop"
-                        binding.inputLayoutComponent.text = "Components"
+                        binding.inputLayoutWorkshop.text    = "WorkShop"
+                        binding.inputLayoutComponent.text   = "Components"
                         binding.etBoxBarcode.text?.clear()
                         binding.etBoxDesignName.text?.clear()
                         binding.etBoxComponentQty.text?.clear()

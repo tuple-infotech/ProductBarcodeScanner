@@ -1,4 +1,4 @@
-package com.jmsc.postab.data.repository.db
+package com.tupleinfotech.productbarcodescanner.data.repository.db
 
 import android.util.Log
 import androidx.annotation.WorkerThread
@@ -34,7 +34,7 @@ class DBRepositoryImpl @Inject constructor(private val addHostDao: AddHostDao): 
     }
 
     override suspend fun checkHostExit(host_name: String,host_ip: String,host_port: String): Boolean {
-        Log.i("==check",""+host_name+" "+host_ip)
+        Log.i("==check", "$host_name $host_ip")
         return addHostDao.checkHostExit(host_name,host_ip,host_port)
     }
 

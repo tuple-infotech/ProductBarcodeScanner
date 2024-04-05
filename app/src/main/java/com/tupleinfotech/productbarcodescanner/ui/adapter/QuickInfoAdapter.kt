@@ -13,8 +13,8 @@ import com.tupleinfotech.productbarcodescanner.model.QuickInfoDataResponse
 class QuickInfoAdapter : RecyclerView.Adapter<QuickInfoAdapter.ViewHolder>() {
 
     //region VARIABLES
-    var hostList            :   List<Pair<String,Int>>          =       mutableListOf()
-    var quickInfoDataCount = QuickInfoDataResponse.QuickInfo()
+    var hostList            :   List<Pair<String,Int>>          = mutableListOf()
+    var quickInfoDataCount  :   QuickInfoDataResponse.QuickInfo = QuickInfoDataResponse.QuickInfo()
 
     //endregion VARIABLES
 
@@ -35,52 +35,52 @@ class QuickInfoAdapter : RecyclerView.Adapter<QuickInfoAdapter.ViewHolder>() {
 
                 when(binding.quickInfoLabelTv.text.toString()){
                     "Total Barcode"     -> {
-                        binding.quickInfoFirstCountTv.visibility = GONE
-                        binding.quickInfoSecondCountTv.visibility = VISIBLE
-                        binding.quickInfoSecondCountTv.text = quickInfoDataCount.TotalBarcodePrint
-                        binding.quickInfoThirdCountTv.visibility = GONE
+                        binding.quickInfoFirstCountTv.visibility    = GONE
+                        binding.quickInfoSecondCountTv.visibility   = VISIBLE
+                        binding.quickInfoThirdCountTv.visibility    = GONE
+                        binding.quickInfoSecondCountTv.text         = quickInfoDataCount.TotalBarcodePrint
                     }
                     "Total Production"  -> {
-                        binding.quickInfoFirstCountTv.visibility = GONE
-                        binding.quickInfoSecondCountTv.visibility = VISIBLE
-                        binding.quickInfoSecondCountTv.text = quickInfoDataCount.TotalProduction
-                        binding.quickInfoThirdCountTv.visibility = GONE
+                        binding.quickInfoFirstCountTv.visibility    = GONE
+                        binding.quickInfoSecondCountTv.visibility   = VISIBLE
+                        binding.quickInfoThirdCountTv.visibility    = GONE
+                        binding.quickInfoSecondCountTv.text         = quickInfoDataCount.TotalProduction
 
                     }
                     "Inward"            -> {
-                        binding.quickInfoFirstCountTv.visibility = GONE
-                        binding.quickInfoSecondCountTv.visibility = VISIBLE
-                        binding.quickInfoSecondCountTv.text = quickInfoDataCount.TotalInWard
-                        binding.quickInfoThirdCountTv.visibility = GONE
+                        binding.quickInfoFirstCountTv.visibility    = GONE
+                        binding.quickInfoSecondCountTv.visibility   = VISIBLE
+                        binding.quickInfoThirdCountTv.visibility    = GONE
+                        binding.quickInfoSecondCountTv.text         = quickInfoDataCount.TotalInWard
 
                     }
                     "Outward"           -> {
-                        binding.quickInfoFirstCountTv.visibility = GONE
-                        binding.quickInfoSecondCountTv.visibility = VISIBLE
-                        binding.quickInfoSecondCountTv.text = quickInfoDataCount.TotalOutWard
-                        binding.quickInfoThirdCountTv.visibility = GONE
+                        binding.quickInfoFirstCountTv.visibility    = GONE
+                        binding.quickInfoSecondCountTv.visibility   = VISIBLE
+                        binding.quickInfoThirdCountTv.visibility    = GONE
+                        binding.quickInfoSecondCountTv.text         = quickInfoDataCount.TotalOutWard
 
                     }
                     "Total Users"       -> {
-                        binding.quickInfoFirstCountTv.visibility = VISIBLE
-                        binding.quickInfoFirstCountTv.text = quickInfoDataCount.ActiveUsers
-                        binding.quickInfoSecondCountTv.visibility = GONE
-                        binding.quickInfoThirdCountTv.visibility = VISIBLE
-                        binding.quickInfoThirdCountTv.text = quickInfoDataCount.InActiveUsers
+                        binding.quickInfoFirstCountTv.visibility    = VISIBLE
+                        binding.quickInfoSecondCountTv.visibility   = GONE
+                        binding.quickInfoThirdCountTv.visibility    = VISIBLE
+                        binding.quickInfoFirstCountTv.text          = quickInfoDataCount.ActiveUsers
+                        binding.quickInfoThirdCountTv.text          = quickInfoDataCount.InActiveUsers
 
                     }
                     "Warehouse"         -> {
-                        binding.quickInfoFirstCountTv.visibility = GONE
-                        binding.quickInfoSecondCountTv.visibility = VISIBLE
-                        binding.quickInfoSecondCountTv.text = quickInfoDataCount.TotalWarehouse
-                        binding.quickInfoThirdCountTv.visibility = GONE
+                        binding.quickInfoFirstCountTv.visibility    = GONE
+                        binding.quickInfoSecondCountTv.visibility   = VISIBLE
+                        binding.quickInfoThirdCountTv.visibility    = GONE
+                        binding.quickInfoSecondCountTv.text         = quickInfoDataCount.TotalWarehouse
 
                     }
                     "Workshop"          -> {
-                        binding.quickInfoFirstCountTv.visibility = GONE
-                        binding.quickInfoSecondCountTv.visibility = VISIBLE
-                        binding.quickInfoSecondCountTv.text = quickInfoDataCount.TotalFactory
-                        binding.quickInfoThirdCountTv.visibility = GONE
+                        binding.quickInfoFirstCountTv.visibility    = GONE
+                        binding.quickInfoSecondCountTv.visibility   = VISIBLE
+                        binding.quickInfoThirdCountTv.visibility    = GONE
+                        binding.quickInfoSecondCountTv.text         = quickInfoDataCount.TotalFactory
 
                     }
                 }

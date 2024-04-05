@@ -75,22 +75,25 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/side_menu_header_lastName_txt"
-            style="@style/TextView.TextView_24_SP"
+            style="@style/TextView.TextView_20_SP"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_8"
             android:gravity="start"
             android:singleLine="true"
-            android:visibility="gone"
             android:text="Joshi"
             android:textColor="@color/orange"
             android:textStyle="bold"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/side_menu_header_imageconstraint"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/side_menu_header_imageconstraint" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/side_menu_header_firstName_txt"
-            style="@style/TextView.TextView_24_SP"
+            style="@style/TextView.TextView_20_SP"
             android:layout_width="0dp"
+            android:layout_margin="@dimen/dp_8"
             android:layout_height="wrap_content"
             android:gravity="start"
             android:singleLine="true"
@@ -98,6 +101,7 @@
             android:textColor="@color/orange"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/side_menu_header_lastName_txt"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/side_menu_header_imageconstraint"
             app:layout_constraintTop_toTopOf="@+id/side_menu_header_imageconstraint" />
 
