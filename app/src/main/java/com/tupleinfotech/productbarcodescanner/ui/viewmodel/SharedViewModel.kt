@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -17,7 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.data.repository.barcode.BarcodeRepository
 import com.tupleinfotech.productbarcodescanner.databinding.DialogSelectListItemBinding
+import com.tupleinfotech.productbarcodescanner.model.ProductionDetailsResponse
 import com.tupleinfotech.productbarcodescanner.model.WorkshopListResponse
+import com.tupleinfotech.productbarcodescanner.model.getProductWarehouseDataResponse
 import com.tupleinfotech.productbarcodescanner.network.NetworkResult
 import com.tupleinfotech.productbarcodescanner.ui.activity.MainActivity
 import com.tupleinfotech.productbarcodescanner.ui.adapter.ComponentsListingAdapter
@@ -25,6 +28,7 @@ import com.tupleinfotech.productbarcodescanner.ui.adapter.WarehouseListingAdapte
 import com.tupleinfotech.productbarcodescanner.ui.adapter.WorkshopListingAdapter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -32,6 +36,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SharedViewModel @Inject constructor (private val barcodeRepository: BarcodeRepository) : ViewModel() {
+
+    private val _productlist    = MutableLiveData<ArrayList<getProductWarehouseDataResponse.Products>>(ArrayList<getProductWarehouseDataResponse.Products>())
+    // The UI collects from this StateFlow to get its state updates
+    fun setItemWareHouseDetails(item : ArrayList<getProductWarehouseDataResponse.Products>){
+        _productlist.value = item
+    }
+
+    private val _categorylist   = MutableStateFlow<ArrayList<ProductionDetailsResponse.Products>>(ArrayList<ProductionDetailsResponse.Products>())
+    // The UI collects from this StateFlow to get its state updates
+    fun setItemProductionReportProductData(item : ArrayList<ProductionDetailsResponse.Products>){
+        _categorylist.value = item
+    }
 
     //region Common Api Calling Method
 

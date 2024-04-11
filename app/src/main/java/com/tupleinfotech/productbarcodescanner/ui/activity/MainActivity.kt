@@ -1,22 +1,47 @@
 package com.tupleinfotech.productbarcodescanner.ui.activity
 
+import android.annotation.SuppressLint
+import android.content.SharedPreferences
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.Menu
 import android.view.View
+import android.view.View.GONE
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.databinding.ActivityMainBinding
+import com.tupleinfotech.productbarcodescanner.util.AlertMsgs
+import com.tupleinfotech.productbarcodescanner.util.Constants
+import com.tupleinfotech.productbarcodescanner.util.DialogHelper
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.clearValues
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.ipAddress
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.password
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userfirstname
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userfullname
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userlastname
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.username
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userprofileimage
 import dagger.hilt.android.AndroidEntryPoint
 
 @Suppress("DEPRECATION")
+@SuppressLint("SetTextI18n")
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -25,6 +50,7 @@ class MainActivity : AppCompatActivity() {
     private var _binding                    : ActivityMainBinding?                          =       null
     private val binding                     get()                                           =       _binding!!
     private lateinit var navController      : NavController
+    private lateinit var prefs             : SharedPreferences
 
     //endregion VARIABLES
 
@@ -47,15 +73,21 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        prefs       = PreferenceHelper.customPreference(this, Constants.CUSTOM_PREF_NAME)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navigation_host_fragments) as NavHostFragment
         navController = navHostFragment.navController // Initialize navController
 
+        init()
     }
 
     //endregion OVERRIDE METHODS (LIFECYCLE)
 
     //region INIT METHOD
+
+    private fun init(){
+        initSideMenu()
+    }
     //endregion INIT METHOD
 
     //region BUTTON FUNCTIONALITY
@@ -118,7 +150,7 @@ class MainActivity : AppCompatActivity() {
         binding.customActionBar.arrowBnt.setImageResource(leftButton)
 
         if (rightButton == 0){
-            binding.customActionBar.notificationBtn.visibility = View.GONE
+            binding.customActionBar.notificationBtn.visibility = View.INVISIBLE
         }
         else{
             binding.customActionBar.notificationBtn.visibility = View.VISIBLE
@@ -133,6 +165,116 @@ class MainActivity : AppCompatActivity() {
             rightButtonClick()
         }
 
+    }
+
+    private fun initSideMenu(){
+        binding.navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.side_menu_home                         ->      {
+                    navController.navigate(R.id.quickInfoFragment)
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                }
+                R.id.side_menu_product_manufacture          ->      {
+                    navController.navigate(R.id.productManufactureFragment)
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                }
+                R.id.side_menu_warehouse_entry              ->      {
+                    navController.navigate(R.id.warehouseEntryFragment)
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                }
+                R.id.side_product_details                   ->      {
+                    navController.navigate(R.id.BarcodeProductDetailsFragment)
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                }
+                R.id.side_production_report                 ->      {
+                    navController.navigate(R.id.productionReportFragment)
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                }
+                R.id.side_menu_logout                       ->      {
+                    DialogHelper.Alert_Selection(
+                        context                     =           this@MainActivity,
+                        message                     =           AlertMsgs.SignOut,
+                        positiveButtonTitle         =           "YES",
+                        negativeButtonTitle         =           "NO",
+                        onPositiveButtonClick       =           {
+                            val userId      = prefs.username
+                            val password    = prefs.password
+                            prefs.clearValues
+                            prefs.username  = userId
+                            prefs.password  = password
+                            navController.navigate(R.id.loginFragment)
+                            binding.drawerLayout.closeDrawers()
+                            binding.bottomNavigationView.menu.clear()
+                            binding.bottomNavigationView.visibility = GONE
+                            binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                        },
+                        onNegativeButtonClick       = {},
+                        showNegativeButton          = true,
+                        onDismiss                   = {}
+                    )
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                }
+                // Add more cases for other menu items
+                else                                        ->      false
+            }
+        }
+
+    }
+
+    fun sideMenuSetHeader(){
+        val headerView          : View          = binding.navView.getHeaderView(0)
+        val sideMenuFirstName   : TextView  = headerView.findViewById(R.id.side_menu_header_firstName_txt)
+        val sideMenuLastName    : TextView  = headerView.findViewById(R.id.side_menu_header_lastName_txt)
+        val sideMenuImageText   : TextView  = headerView.findViewById(R.id.side_menu_header_image_text)
+        val sideMenuImageView   : ImageView = headerView.findViewById(R.id.side_menu_header_image)
+
+        sideMenuFirstName.text  = prefs.userfirstname
+        sideMenuLastName.text   = prefs.userlastname
+
+        if (prefs.userfullname.toString()[0].uppercaseChar().toString().trim().isNotEmpty() && prefs.userfullname.toString()[0].uppercaseChar().toString().trim().isNotBlank()){
+            sideMenuImageText.text = prefs.userfullname.toString()[0].uppercaseChar().toString().trim()
+        }
+        if (prefs.userfirstname.toString()[0].uppercaseChar().toString().trim().isEmpty() && prefs.userfirstname.toString()[0].uppercaseChar().toString().trim().isBlank()){
+            sideMenuImageText.text = prefs.userlastname.toString()[0].uppercaseChar().toString().trim()
+        }else if (prefs.userlastname.toString()[0].uppercaseChar().toString().trim().isEmpty() && prefs.userlastname.toString()[0].uppercaseChar().toString().trim().isBlank()){
+            sideMenuImageText.text = prefs.userfirstname.toString()[0].uppercaseChar().toString().trim()
+        } else if (prefs.userfirstname.toString()[0].uppercaseChar().toString().trim().isNotEmpty() && prefs.userfirstname.toString()[0].uppercaseChar().toString().trim().isNotBlank() && prefs.userlastname.toString()[0].uppercaseChar().toString().trim().isNotEmpty() && prefs.userlastname.toString()[0].uppercaseChar().toString().trim().isNotBlank()) {
+            sideMenuImageText.text = prefs.userfirstname.toString()[0].uppercaseChar().toString().trim() + prefs.userlastname.toString()[0].uppercaseChar().toString().trim()
+        }
+
+        Glide.with(sideMenuImageView)
+            .load("http://"+prefs.ipAddress+prefs.userprofileimage)
+            .fitCenter()
+            .listener(object : RequestListener<Drawable?> {
+
+                override fun onResourceReady(
+                    resource: Drawable,
+                    model: Any,
+                    target: Target<Drawable?>?,
+                    dataSource: DataSource,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    sideMenuImageText.visibility = View.GONE
+                    return false
+                }
+
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable?>,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    sideMenuImageText.visibility = View.VISIBLE
+                    return false
+                }
+            })
+            .into(sideMenuImageView)
     }
 
     //endregion ALL FUNCTIONS

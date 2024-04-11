@@ -140,6 +140,8 @@ class FilterDialog : DialogFragment() {
         filterList()
         openFromDatePicker()
         openToDatePicker()
+        initFilterResetList()
+
     }
 
     private fun openFromDatePicker(){
@@ -205,6 +207,19 @@ class FilterDialog : DialogFragment() {
 
     }
 
+    private fun initFilterResetList(){
+        binding.cancelBtn.setOnClickListener {
+            if (isFromWarehouse){
+                isFromWarehouseFilterClick?.invoke(AppHelper.getCurrentDate1(),AppHelper.getCurrentDate1(),"Warehouse","0")
+
+            }
+            else{
+                isFromWarehouseAndWorkShopFilterClick?.invoke(AppHelper.getCurrentDate1(),AppHelper.getCurrentDate1(),"Warehouse","0","Workshop","0")
+
+            }
+        }
+    }
+
     private fun filterList(){
         binding.filterBtn.setOnClickListener {
 
@@ -216,10 +231,10 @@ class FilterDialog : DialogFragment() {
                 DialogHelper.Alert_Selection(requireContext(),"Please select end date !!",resources.getString(
                     R.string.singlebtntext),"", showNegativeButton = false,)
             }
-            else if (binding.selectWarehouseTv.text.toString().equals("Warehouse",true)){
+/*            else if (binding.selectWarehouseTv.text.toString().equals("Warehouse",true)){
                 DialogHelper.Alert_Selection(requireContext(),"Please select warehouse !!",resources.getString(
                     R.string.singlebtntext),"", showNegativeButton = false,)
-            }
+            }*/
             else {
                 if (isFromWarehouse){
 
@@ -232,7 +247,9 @@ class FilterDialog : DialogFragment() {
 //                    findNavController().popBackStack()
                 }
                 else{
-                    if (binding.selectWorkshopTv.text.toString().equals("Workshop",true)){
+                    isFromWarehouseAndWorkShopFilterClick?.invoke(fromDate.trim(),toDate.trim(),wareHouseName.trim(),warehouseID.trim(),factoryName.trim(),factoryID.trim())
+
+/*                    if (binding.selectWorkshopTv.text.toString().equals("Workshop",true)){
                         DialogHelper.Alert_Selection(requireContext(),"Please select workshop !!",resources.getString(
                             R.string.singlebtntext),"", showNegativeButton = false,)
                     }
@@ -246,7 +263,7 @@ class FilterDialog : DialogFragment() {
 //                        args.putString("FactoryID",factoryID.trim())
 //                        findNavController().previousBackStackEntry?.savedStateHandle?.set("WarehouseWorkshopResult", args)
 //                        findNavController().popBackStack()
-                    }
+                    }*/
                 }
             }
         }

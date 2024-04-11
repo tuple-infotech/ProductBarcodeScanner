@@ -2,10 +2,11 @@ package com.tupleinfotech.productbarcodescanner.ui.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.tupleinfotech.productbarcodescanner.databinding.LayoutProductManufactureItemviewBinding
+import com.tupleinfotech.productbarcodescanner.databinding.LayoutTwoItemViewBinding
 import com.tupleinfotech.productbarcodescanner.model.getProductWarehouseDataResponse
 
 @SuppressLint("NotifyDataSetChanged")
@@ -14,10 +15,10 @@ class ProductionWarehouseListingAdapter : RecyclerView.Adapter<ProductionWarehou
     var hostlist                :   List<getProductWarehouseDataResponse.Products>          =       mutableListOf()
     var onItemClick                         : ((String) -> Unit)?        = null
 
-    inner class ViewHolder (val binding : LayoutProductManufactureItemviewBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder (val binding : LayoutTwoItemViewBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductionWarehouseListingAdapter.ViewHolder {
-        val binding = LayoutProductManufactureItemviewBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding = LayoutTwoItemViewBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return ViewHolder(binding)
     }
 
@@ -27,18 +28,19 @@ class ProductionWarehouseListingAdapter : RecyclerView.Adapter<ProductionWarehou
         with(holder){
             with(hostlist[position]){
 
-                binding.srNo.text        =   currentitem.DesignName
-                binding.fieldName.text   =   currentitem.Barcode
-                binding.fieldQty.text    =   currentitem.FactoryName
+                binding.tvFirst.text           =   currentitem.DesignName
+                binding.tvThird.text          =   currentitem.Barcode
+                binding.tvSecond.text            =   currentitem.FactoryName
+
+                binding.firstview.visibility    =   VISIBLE
+                binding.tvFourth.visibility     =   GONE
+                binding.thirdview.visibility    =   VISIBLE
+                binding.fourthview.visibility   =   GONE
+
 
                 holder.itemView.setOnClickListener {
                     onItemClick?.invoke(hostlist[position].Barcode.toString())
                 }
-
-                binding.lastCl.visibility       = View.GONE
-                binding.editbtn.visibility      = View.GONE
-                binding.deletebtn.visibility    = View.GONE
-                binding.fieldOthers.visibility  = View.GONE
 
             }
         }

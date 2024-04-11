@@ -1,7 +1,6 @@
 package com.tupleinfotech.productbarcodescanner.ui.fragment
 
 import android.content.SharedPreferences
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,7 +11,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -168,16 +166,9 @@ class BarcodeProductDetailsFragment : Fragment() {
 
     private fun initorderlist() {
 
-        binding.recyclerviewDetails.action.visibility   = GONE
-        binding.recyclerviewDetails.srNo.visibility     = GONE
-
-        val leftdrawable = ContextCompat.getDrawable(requireContext(), R.drawable.style_bg_top_left_curved)
-        leftdrawable?.setColorFilter(ContextCompat.getColor(requireContext(), R.color.orange), PorterDuff.Mode.SRC_IN)
-        binding.recyclerviewDetails.compoName.background = leftdrawable
-
-        val rightdrawable = ContextCompat.getDrawable(requireContext(), R.drawable.style_bg_top_right_curved)
-        rightdrawable?.setColorFilter(ContextCompat.getColor(requireContext(), R.color.orange), PorterDuff.Mode.SRC_IN)
-        binding.recyclerviewDetails.compoQty.background = rightdrawable
+        binding.recyclerviewDetails.tvFirst.text              =   "Comp. Name"
+        binding.recyclerviewDetails.tvSecond.text               =   "Comp. Qty"
+        binding.recyclerviewDetails.firstview.visibility        =   VISIBLE
 
 
         val layoutManager : RecyclerView.LayoutManager  = LinearLayoutManager(requireActivity())

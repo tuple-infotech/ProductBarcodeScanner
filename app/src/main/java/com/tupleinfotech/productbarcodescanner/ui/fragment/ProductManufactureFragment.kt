@@ -1,5 +1,6 @@
 package com.tupleinfotech.productbarcodescanner.ui.fragment
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -35,6 +36,7 @@ import com.tupleinfotech.productbarcodescanner.util.UrlEndPoints
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
+@SuppressLint("SetTextI18n")
 class ProductManufactureFragment : Fragment() {
 
     //region VARIABLES
@@ -48,9 +50,9 @@ class ProductManufactureFragment : Fragment() {
     private var observerExecuted                    : Boolean                                           = false
     private var componentData                       : ArrayList<GetDataByBarcodeResponse.Components>    = arrayListOf()
     private var factoryID                           : String                                            = "0"
-    private var barcodeScannedFactoryID             : String                                            = "0"
     private var barcodeScannedPipeID                : String                                            = "0"
-
+    private var barcode                : String                                            = "0"
+    private var factorylist       : ArrayList<WorkshopListResponse.List> = arrayListOf()
     //endregion VARIABLES
 
     //region OVERRIDE METHODS (LIFECYCLE)
@@ -80,17 +82,71 @@ class ProductManufactureFragment : Fragment() {
         getScannedBarcodeData()
         getBarcodeDetails()
         getWorkshopList()
-        addButtonFunctionality()
         initShowDetails()
+        cancelButtonFunctionality()
     }
 
     //endregion INIT METHOD
 
     //region BUTTON FUNCTIONALITY
 
+    private fun cancelButtonFunctionality(){
+        binding.btnCancel.setOnClickListener {
+            binding.inputLayoutWorkshop.text    = "WorkShop"
+            binding.inputLayoutComponent.text   = "Components"
+            binding.etBoxBarcode.text?.clear()
+            binding.etBoxDesignName.text?.clear()
+            binding.etBoxComponentQty.text?.clear()
+            binding.addBtn.text = "Add"
+            val hostList = ArrayList<GetDataByBarcodeResponse.Components>()
+            productManufactureItemAdapter?.updateList(hostList)
+            binding.recyclerviewDetails.root.visibility = GONE
+        }
+    }
     private fun initShowDetails(){
-        binding.showWarehouseDataBtn.setOnClickListener {
+        binding.btnShowDetails.setOnClickListener {
             findNavController().navigate(R.id.productionReportFragment)
+        }
+    }
+
+    private fun saveButtonfunctionality(){
+        binding.btnSave.setOnClickListener {
+            var componentsMap : Map<String,String> = mapOf()
+            val componentsArrayList = ArrayList<Map<String, Any>>()
+
+            componentData.forEach {
+                componentsMap = mapOf(
+                    "ComponentsName"    to it.ComponentsName.toString(),
+                    "ComponentsQty"     to it.ComponentsQty.toString(),
+                )
+                componentsArrayList.add(componentsMap)
+            }
+            println(componentsArrayList)
+
+            val map = mapOf<String, Any>(
+                "PipeId"        to barcodeScannedPipeID.trim(),
+                "Barcode"       to binding.etBoxBarcode.text.toString().trim(),
+                "DesignName"    to binding.etBoxDesignName.text.toString().trim(),
+                "CreatedBy"     to prefs.userId.toString(),
+                "FactoryId"     to factoryID,
+                "Components"    to componentsArrayList
+            )
+
+            if (componentData.isNotEmpty()){
+                if (barcodeScannedPipeID == "0"){
+                    addPipeEntry(map)
+                }
+                else{
+                    updatePipeEntry(map)
+                }
+            }else{
+                if (barcodeScannedPipeID == "0"){
+                    DialogHelper.Alert_Selection(requireContext(),"Please Enter Components!!","OK","")
+                }
+                else{
+                    updatePipeEntry(map)
+                }
+            }
         }
     }
 
@@ -139,42 +195,12 @@ class ProductManufactureFragment : Fragment() {
 
     }
 
-    private fun updateButtonFunctionality(pipeId : String){
-        binding.addBtn.setOnClickListener {
-            if (binding.inputLayoutWorkshop.text.toString().equals("WorkShop",true)){
-                DialogHelper.Alert_Selection(requireContext(),"Please Select Workshop","OK","")
-            }
-            else if (binding.inputLayoutWorkshop.text.toString().equals("Components",true)){
-                DialogHelper.Alert_Selection(requireContext(),"Please Select Component","OK","")
-            }
-            else {
-                val componentsMap = mapOf(
-                    "ComponentsName"    to binding.inputLayoutComponent.text.toString(),
-                    "ComponentsQty"     to binding.etBoxComponentQty.text.toString()
-                )
-
-                val componentsArrayList = ArrayList<Map<String, Any>>()
-                componentsArrayList.add(componentsMap)
-
-                val map = mapOf<String, Any>(
-                    "PipeId"        to pipeId.trim(),
-                    "Barcode"       to binding.etBoxBarcode.text.toString().trim(),
-                    "DesignName"    to binding.etBoxDesignName.text.toString().trim(),
-                    "CreatedBy"     to prefs.userId.toString(),
-                    "FactoryId"     to factoryID,
-                    "Components"    to componentsArrayList
-                )
-                updatePipeEntry(map)
-            }
-        }
-    }
-
     private fun addButtonFunctionality(){
         binding.addBtn.setOnClickListener {
-            if (binding.inputLayoutWorkshop.text.toString().equals("WorkShop",true)){
+            if (binding.inputLayoutWorkshop.text.toString().equals("Workshop",true)){
                 DialogHelper.Alert_Selection(requireContext(),"Please Select Workshop!!","OK","")
             }
-            else if (binding.inputLayoutWorkshop.text.toString().equals("Components",true)){
+            else if (binding.inputLayoutComponent.text.toString().equals("Components",true)){
                 DialogHelper.Alert_Selection(requireContext(),"Please Select Component!!","OK","")
             }
             else if (binding.etBoxBarcode.text.toString().isEmpty()){
@@ -184,29 +210,73 @@ class ProductManufactureFragment : Fragment() {
                 DialogHelper.Alert_Selection(requireContext(),"Please Enter Component Quantity!!","OK","")
             }
             else {
-                val componentsMap = mapOf(
-                    "ComponentsName"    to binding.inputLayoutComponent.text.toString(),
-                    "ComponentsQty"     to binding.etBoxComponentQty.text.toString()
-                )
+                println(isComponentNameExists(componentData,binding.inputLayoutComponent.text.toString().trim()))
 
-                val componentsArrayList = ArrayList<Map<String, Any>>()
-                componentsArrayList.add(componentsMap)
+                val componentName = binding.inputLayoutComponent.text.toString().trim()
+                if (isComponentNameExists(componentData, componentName)) {
+                    // Component name exists in componentData
+                    DialogHelper.Alert_Selection(requireContext(), "Item Already Exists!!", "OK", "", onPositiveButtonClick = {
+                        binding.inputLayoutComponent.text = "Components"
+                        binding.etBoxComponentQty.text?.clear()
+                    })
+                } else {
+                    // Component name doesn't exist in componentData
+                    val component = GetDataByBarcodeResponse.Components()
+                    component.ComponentsId = 0
+                    component.PipeId = barcodeScannedPipeID.toString().toInt()
+                    component.Barcode = binding.etBoxBarcode.text.toString().trim()
+                    component.ComponentsName = componentName
+                    component.ComponentsQty = binding.etBoxComponentQty.text.toString()
+                    componentData.add(component)
+                    productManufactureItemAdapter?.updateList(componentData)
+                    DialogHelper.Alert_Selection(requireContext(), "Item Added Successfully!!", "OK", "", onPositiveButtonClick = {
+                        binding.inputLayoutComponent.text = "Components"
+                        binding.etBoxComponentQty.text?.clear()
+                    })
+                    if (componentData.isEmpty()){
+                        binding.recyclerviewDetails.root.visibility = GONE
+                    }
+                    else{
+                        binding.recyclerviewDetails.root.visibility = VISIBLE
+                    }
+                }
 
-                val map = mapOf<String, Any>(
-                    "PipeId"        to barcodeScannedPipeID.trim(),
-                    "Barcode"       to binding.etBoxBarcode.text.toString().trim(),
-                    "DesignName"    to binding.etBoxDesignName.text.toString().trim(),
-                    "CreatedBy"     to prefs.userId.toString(),
-                    "FactoryId"     to barcodeScannedFactoryID,
-                    "Components"    to componentsArrayList
-                )
-                addPipeEntry(map)
+/*                componentData.forEach {
+                    if (it.ComponentsName.toString() == binding.inputLayoutComponent.text.toString().trim()){
+                        DialogHelper.Alert_Selection(requireContext(),"Item Already Exists!!","OK","", onPositiveButtonClick = {
+                            binding.inputLayoutComponent.text = "Components"
+                            binding.etBoxComponentQty.text?.clear()
+                        })
+                    }
+                    else{
+                        val component = GetDataByBarcodeResponse.Components()
+                        component.ComponentsId      = 0
+                        component.PipeId            = barcodeScannedPipeID.toString().toInt()
+                        component.Barcode           = binding.etBoxBarcode.text.toString().trim()
+                        component.ComponentsName    = binding.inputLayoutComponent.text.toString()
+                        component.ComponentsQty     = binding.etBoxComponentQty.text.toString()
+                        componentData.add(component)
+                        productManufactureItemAdapter?.updateList(componentData)
+
+                    }
+                }*/
+
             }
         }
     }
     //endregion BUTTON FUNCTIONALITY
 
     //region ALL FUNCTIONS
+
+    fun isComponentNameExists(componentData: List<GetDataByBarcodeResponse.Components>, componentName: String): Boolean {
+        for (component in componentData) {
+            if (component.ComponentsName.toString().trim() == componentName.trim()) {
+                return true
+            }
+        }
+        return false
+    }
+
     private fun getScannedBarcodeData(){
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Bundle>("ScannedResult")?.observe(viewLifecycleOwner) { resultData ->
             if (!observerExecuted) {
@@ -222,9 +292,23 @@ class ProductManufactureFragment : Fragment() {
     private fun initProductManufactureItem(){
         if (componentData.isEmpty()){
             binding.recyclerviewDetails.root.visibility = GONE
-        }else{
+        }
+        else{
             binding.recyclerviewDetails.root.visibility = VISIBLE
         }
+
+
+        binding.recyclerviewDetails.tvFirst.text            =   "Name"
+        binding.recyclerviewDetails.tvFourth.text            =   "Comp. Qty"
+        binding.recyclerviewDetails.tvLast.text           =   "Action"
+
+        binding.recyclerviewDetails.tvFirst.visibility            =   VISIBLE
+        binding.recyclerviewDetails.tvLast.visibility            =   VISIBLE
+        binding.recyclerviewDetails.tvFourth.visibility            =   VISIBLE
+
+        binding.recyclerviewDetails.firstview.visibility            =   VISIBLE
+        binding.recyclerviewDetails.thirdview.visibility            =   VISIBLE
+
         val linearLayoutManager : RecyclerView.LayoutManager    = LinearLayoutManager(requireActivity())
         val recyclerviewItemList                                = binding.recyclerviewDetails.itemListRv
         recyclerviewItemList.layoutManager                      = linearLayoutManager
@@ -241,17 +325,24 @@ class ProductManufactureFragment : Fragment() {
                 binding.inputLayoutComponent.text = it.ComponentsName.toString()
 
                 binding.addBtn.text = "Update"
-                updateButtonFunctionality(it.PipeId.toString())
+                addButtonFunctionality()
+//                updateButtonFunctionality(it.PipeId.toString())
             }
 
             onDeleteItemClick = {
-
+                componentData.remove(it)
+                updateList(componentData)
+                if (componentData.isEmpty()){
+                    binding.recyclerviewDetails.root.visibility = GONE
+                }
+                else{
+                    binding.recyclerviewDetails.root.visibility = VISIBLE
+                }
             }
         }
         recyclerviewItemList.adapter                            = productManufactureItemAdapter
 
     }
-
 
     //endregion ALL FUNCTIONS
 
@@ -283,7 +374,14 @@ class ProductManufactureFragment : Fragment() {
                             binding.etBoxBarcode.setText(it.Barcode.toString())
                             binding.etBoxDesignName.setText(it.DesignName.toString())
                             barcodeScannedPipeID    = it.PipeId.toString()
-                            barcodeScannedFactoryID = it.FactoryId.toString()
+
+                            factorylist.forEach { factorylist ->
+                                if (it.FactoryId.toString() == factorylist.FactoryId.toString()){
+                                    binding.inputLayoutWorkshop.text = factorylist.FactoryName.toString()
+                                }
+                            }
+                            factoryID = it.FactoryId.toString()
+                            barcode =   it.Barcode.toString()
                         }
 
                         getDataByBarcodeResponse.pipes.first().Components.let {
@@ -294,15 +392,31 @@ class ProductManufactureFragment : Fragment() {
                                 binding.recyclerviewDetails.root.visibility = GONE
                             }else{
                                 binding.recyclerviewDetails.root.visibility = VISIBLE
+
                             }
                         }
-                    }else{
+
+
+
+                    }
+                    else{
                         binding.etBoxBarcode.text?.clear()
                         binding.etBoxDesignName.text?.clear()
                         binding.recyclerviewDetails.root.visibility = GONE
 
                         val hostList = ArrayList<GetDataByBarcodeResponse.Components>()
                         productManufactureItemAdapter?.updateList(hostList)
+                    }
+
+                    addButtonFunctionality()
+                    if (barcodeScannedPipeID == "0"){
+                        saveButtonfunctionality()
+
+                        //Add
+                    }else{
+                        saveButtonfunctionality()
+
+                        //update
                     }
 
                 }
@@ -336,6 +450,7 @@ class ProductManufactureFragment : Fragment() {
 
             if (workshopListResponse != null) {
                 println(workshopListResponse)
+                factorylist = workshopListResponse.Factorylist
                 initWorkshopDropDown(workshopListResponse.Factorylist)
             }
             else {

@@ -10,7 +10,7 @@
         android:id="@+id/main_nsv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/show_warehouse_data_btn"
+        app:layout_constraintBottom_toTopOf="@id/btnCl"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -92,7 +92,7 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/style_bg_edit_text"
                 android:drawableEnd="@drawable/ic_arrow_down"
-                android:hint="Workshop"
+                android:text="Workshop"
                 android:padding="@dimen/dp_8"
                 android:paddingStart="@dimen/dp_16"
                 android:paddingEnd="@dimen/dp_16"
@@ -108,7 +108,7 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/style_bg_edit_text"
                 android:drawableEnd="@drawable/ic_arrow_down"
-                android:hint="Components"
+                android:text="Components"
                 android:padding="@dimen/dp_8"
                 android:paddingStart="@dimen/dp_16"
                 android:paddingEnd="@dimen/dp_16"
@@ -157,7 +157,7 @@
 
             <include
                 android:id="@+id/recyclerview_details"
-                layout="@layout/layout_items_tableview"
+                layout="@layout/layout_items_manufacturetableview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/dp_8"
@@ -171,19 +171,73 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/show_warehouse_data_btn"
-        style="@style/ButtonStyle.Green"
-        android:backgroundTint="@color/orange"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/btnCl"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:layout_weight="1"
-        android:text="Show Details"
-        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_nsv" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_show_details"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/style_bg_edit_text"
+            android:backgroundTint="@color/orange"
+            android:padding="@dimen/dp_0"
+            android:text="Show Details"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp_15"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_cancel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_save" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_save"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_margin="@dimen/dp_8"
+            android:background="@drawable/style_bg_edit_text"
+            android:backgroundTint="@color/btn_green"
+            android:padding="@dimen/dp_0"
+            android:text="Save"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp_15"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/style_bg_edit_text"
+            android:backgroundTint="@color/btn_red"
+            android:padding="@dimen/dp_0"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_show_details"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_show_details"
+            app:layout_constraintTop_toTopOf="@+id/btn_show_details" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

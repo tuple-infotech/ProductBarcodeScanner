@@ -40,6 +40,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etBox_barcode_scanned"
             android:layout_width="match_parent"
+            android:imeOptions="actionDone"
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:inputType="text"

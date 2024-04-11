@@ -37,6 +37,7 @@ import com.tupleinfotech.productbarcodescanner.util.UrlEndPoints
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
+@SuppressLint("SetTextI18n","ClickableViewAccessibility")
 class ProductionReportFragment : Fragment() {
 
     //region VARIABLES
@@ -70,7 +71,7 @@ class ProductionReportFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View {
         _binding    = FragmentProductionReportBinding.inflate(inflater, container, false)
         prefs       = PreferenceHelper.customPreference(requireContext(), Constants.CUSTOM_PREF_NAME)
 
@@ -88,60 +89,56 @@ class ProductionReportFragment : Fragment() {
         fromDate    = AppHelper.getCurrentDate1()
         toDate      = AppHelper.getCurrentDate1()
 
+        println(isFromWarehouse)
+
         if (isFromWarehouse){
 //            binding.selectWorkshopTv.visibility = GONE
-            binding.recyclerviewDetails.srNo.text           = "Ds. Name"
-            binding.recyclerviewDetails.compoName.text      = "Barcode"
-            binding.recyclerviewDetails.compoQty.text       = "F. Name"
-            binding.recyclerviewDetails.action.visibility   = GONE
+            binding.recyclerviewDetails.tvFirst.text           =   "Design Name"
+            binding.recyclerviewDetails.tvThird.text          =   "Barcode"
+            binding.recyclerviewDetails.tvSecond.text            =   "Factory Name"
 
-/*            findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Bundle>("WarehouseResult")?.observe(viewLifecycleOwner) { resultData ->
-                if (!observerExecuted) {
-                    observerExecuted = true
-                    fromDate        = resultData?.getString("FromDate").toString()
-                    toDate          = resultData?.getString("ToDate").toString()
-                    wareHouseName   = resultData?.getString("WareHouseName").toString()
-                    warehouseID     = resultData?.getString("WareHouseID").toString()
-                }
-            }*/
+            binding.recyclerviewDetails.firstview.visibility    =   VISIBLE
+            binding.recyclerviewDetails.tvFourth.visibility     =   GONE
+            binding.recyclerviewDetails.thirdview.visibility    =   VISIBLE
+            binding.recyclerviewDetails.fourthview.visibility   =   GONE
 
-            getProductWarehouseData()
+
+            if (productWarehouseData.isEmpty()){
+                getProductWarehouseData()
+            }
+            else {
+                sharedViewModel.setItemWareHouseDetails(productWarehouseData)
+            }
+
             initProductWarehouseItem()
 
         }
         else{
 //            binding.selectWorkshopTv.visibility = VISIBLE
-            binding.recyclerviewDetails.srNo.text           = "Ds. Name"
-            binding.recyclerviewDetails.compoName.text      = "Barcode"
-            binding.recyclerviewDetails.compoQty.text       = "F. Name"
-            binding.recyclerviewDetails.action.text         = "Wh. Name"
-            binding.recyclerviewDetails.action.visibility   = VISIBLE
 
-/*            findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Bundle>("WarehouseWorkshopResult")?.observe(viewLifecycleOwner) { resultData ->
-                if (!observerExecuted) {
-                    observerExecuted = true
-                    fromDate        = resultData?.getString("FromDate").toString()
-                    toDate          = resultData?.getString("ToDate").toString()
-                    wareHouseName   = resultData?.getString("WareHouseName").toString()
-                    warehouseID     = resultData?.getString("WareHouseID").toString()
-                    factoryName     = resultData?.getString("FactoryName").toString()
-                    factoryID       = resultData?.getString("FactoryID").toString()
-                }
-            }*/
+            binding.recyclerviewDetails.tvFirst.text           =   "Ds Name"
+            binding.recyclerviewDetails.tvThird.text          =   "Barcode"
+            binding.recyclerviewDetails.tvFourth.text            =   "Fh Name"
+            binding.recyclerviewDetails.tvSecond.text            =   "Wh Name"
 
-            getProductionReportDetails()
+            binding.recyclerviewDetails.firstview.visibility    =   VISIBLE
+            binding.recyclerviewDetails.tvFourth.visibility     =   VISIBLE
+            binding.recyclerviewDetails.thirdview.visibility    =   VISIBLE
+            binding.recyclerviewDetails.fourthview.visibility   =   VISIBLE
+
+
+            if (productsData.isEmpty()){
+                getProductionReportDetails()
+            }
+            else {
+                sharedViewModel.setItemProductionReportProductData(productsData)
+            }
+
             initProductManufactureItem()
-
 
         }
 
         onBackPressed()
-//        openFromDatePicker()
-//        openToDatePicker()
-//        getWorkshopList()
-//        getWarehouseList()
-//        filterList()
-
         filterbtnclick()
     }
 
@@ -150,7 +147,6 @@ class ProductionReportFragment : Fragment() {
     //region BUTTON FUNCTIONALITY
 
     //Filter button click and movable functionality
-    @SuppressLint("ClickableViewAccessibility")
     private fun filterbtnclick(){
 
         binding.filter.setImageResource(R.drawable.icon_filter)
@@ -231,102 +227,10 @@ class ProductionReportFragment : Fragment() {
             true
         }
     }
-/*
-    private fun filterList(){
-        binding.filterBtn.setOnClickListener {
-
-            if (binding.startDateTv.text.toString().equals("-Start Date-",true)){
-                DialogHelper.Alert_Selection(requireContext(),"Please select start date !!",resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
-            }
-            else if (binding.endDateTv.text.toString().equals("-End Date-",true)){
-                DialogHelper.Alert_Selection(requireContext(),"Please select end date !!",resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
-            }
-            else if (binding.selectWarehouseTv.text.toString().equals("Warehouse",true)){
-                DialogHelper.Alert_Selection(requireContext(),"Please select warehouse !!",resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
-            }
-            else {
-                if (isFromWarehouse){
-                    getProductWarehouseData()
-                }else{
-                    if (binding.selectWorkshopTv.text.toString().equals("Workshop",true)){
-                        DialogHelper.Alert_Selection(requireContext(),"Please select workshop !!",resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
-                    }else {
-                        getProductionReportDetails()
-                    }
-                }
-            }
-        }
-    }
-*/
 
     //endregion BUTTON FUNCTIONALITY
 
     //region ALL FUNCTIONS
-
-/*    private fun initWorkshopDropDown(itemList: ArrayList<WorkshopListResponse.List>){
-        binding.selectWorkshopTv.setOnClickListener {
-            sharedViewModel.showWorkshopListingDialog(requireContext(),itemList,false) {
-                binding.selectWorkshopTv.text = it.FactoryName.toString()
-                factoryID = it.FactoryId.toString()
-            }
-        }
-
-    }
-
-    private fun initWarehouseDropDown(itemList: ArrayList<WorkshopListResponse.List>){
-        binding.selectWarehouseTv.setOnClickListener {
-            sharedViewModel.showWarehouseListingDialog(requireContext(),itemList,false) {
-                binding.selectWarehouseTv.text = it.WarehouseName.toString()
-                warehouseID = it.WarehouseId.toString()
-            }
-        }
-
-    }*/
-
-/*    private fun openFromDatePicker(){
-        var cDay    = c.get(Calendar.DAY_OF_MONTH)
-        var cMonth  = c.get(Calendar.MONTH)
-        var cYear   = c.get(Calendar.YEAR)
-
-        binding.startDateTv.setOnClickListener {
-            val calendarDialog = DatePickerDialog(requireContext(),{ _, year, month, dayOfMonth ->
-                cDay            = dayOfMonth
-                cMonth          = month
-                cYear           = year
-
-//                fromDateDay            = dayOfMonth
-//                fromDateMonth          = month
-//                fromDateYear           = year
-
-                fromDate = String.format("%04d-%02d-%02d",year, month + 1, dayOfMonth,)
-                binding.startDateTv.text = String.format("%02d/%02d/%02d",month + 1, dayOfMonth, year)
-            }, cYear, cMonth, cDay )
-            calendarDialog.show()
-        }
-    }
-
-    private fun openToDatePicker(){
-        var cDay    = c.get(Calendar.DAY_OF_MONTH)
-        var cMonth  = c.get(Calendar.MONTH)
-        var cYear   = c.get(Calendar.YEAR)
-
-        binding.endDateTv.setOnClickListener {
-            val calendarDialog = DatePickerDialog(requireContext(),{ _, year, month, dayOfMonth ->
-                cDay            = dayOfMonth
-                cMonth          = month
-                cYear           = year
-                toDate = String.format("%04d-%02d-%02d",year, month + 1, dayOfMonth,)
-                binding.endDateTv.text = String.format("%02d/%02d/%02d",month + 1, dayOfMonth, year)
-            }, cYear, cMonth, cDay )
-            /*            val c2                              = Calendar.getInstance()
-                        c2.add(Calendar.DAY_OF_MONTH,fromDateDay)
-                        c2.add(Calendar.MONTH,fromDateMonth)
-                        c2.add(Calendar.YEAR,fromDateYear)
-                        calendarDialog.datePicker.minDate   = c2.timeInMillis*/
-            calendarDialog.show()
-        }
-
-    }*/
 
     private fun initProductManufactureItem(){
         if (productsData.isEmpty()){
@@ -334,6 +238,7 @@ class ProductionReportFragment : Fragment() {
         }else{
             binding.recyclerviewDetails.root.visibility = VISIBLE
         }
+
         val linearLayoutManager : RecyclerView.LayoutManager    = LinearLayoutManager(requireActivity())
         val recyclerviewItemList                                = binding.recyclerviewDetails.itemListRv
         recyclerviewItemList.layoutManager                      = linearLayoutManager
@@ -360,6 +265,7 @@ class ProductionReportFragment : Fragment() {
         }else{
             binding.recyclerviewDetails.root.visibility = VISIBLE
         }
+                
         val linearLayoutManager : RecyclerView.LayoutManager    = LinearLayoutManager(requireActivity())
         val recyclerviewItemList                                = binding.recyclerviewDetails.itemListRv
         recyclerviewItemList.layoutManager                      = linearLayoutManager
@@ -398,58 +304,6 @@ class ProductionReportFragment : Fragment() {
 
     //region API SERVICE
 
-/*    //http://150.129.105.34/api/v1/productmanufacture/getWorkshopList
-    private fun getWorkshopList(){
-        val requestMap = mutableMapOf<String, Any>() // Empty mutable map
-
-        val getWorkshopListUrl = prefs.host + UrlEndPoints.GET_WORKSHOP_LIST
-        sharedViewModel.api_service(requireContext(),getWorkshopListUrl,requestMap,{},{ getWorkshopResponse ->
-            println(getWorkshopResponse)
-            val workshopListResponse: WorkshopListResponse? = AppHelper.convertJsonToModel(getWorkshopResponse)
-
-            if (workshopListResponse != null) {
-                println(workshopListResponse)
-                initWorkshopDropDown(workshopListResponse.Factorylist)
-            }
-            else {
-                binding.recyclerviewDetails.itemListRv.visibility = View.GONE
-
-                Log.i("==>", "ERROR: Unable to parse JSON into model")
-            }
-
-        },
-            {
-                println(it)
-            })
-
-    }
-
-   //http://150.129.105.34/api/v1/warehouseApi/getWarehouseList
-    private fun getWarehouseList(){
-        val requestMap = mutableMapOf<String, Any>() // Empty mutable map
-
-        val getWorkshopListUrl = prefs.host + UrlEndPoints.GET_WAREHOUSE_LIST
-        sharedViewModel.api_service(requireContext(),getWorkshopListUrl,requestMap,{},{ getWorkshopResponse ->
-            println(getWorkshopResponse)
-            val workshopListResponse: WorkshopListResponse? = AppHelper.convertJsonToModel(getWorkshopResponse)
-
-            if (workshopListResponse != null) {
-                println(workshopListResponse)
-                initWarehouseDropDown(workshopListResponse.WarehouseList)
-            }
-            else {
-                binding.recyclerviewDetails.itemListRv.visibility = View.GONE
-
-                Log.i("==>", "ERROR: Unable to parse JSON into model")
-            }
-
-        },
-            {
-                println(it)
-            })
-
-    }*/
-
     //http://150.129.105.34/api/v1/productionreportrequest/getproductiondetails
     private fun getProductionReportDetails(){
         val requestMap = mapOf<String, Any>(
@@ -468,12 +322,14 @@ class ProductionReportFragment : Fragment() {
                 println(productionDettailsResponse)
 
                 productsData = productionDettailsResponse.products
+                sharedViewModel.setItemProductionReportProductData(productsData)
                 productionReportAdapter?.updateList(productsData)
 
                 if (productsData.isEmpty()){
                     Toast.makeText(requireContext(),productionDettailsResponse.ErrorMessage.toString(),Toast.LENGTH_SHORT).show()
                     binding.recyclerviewDetails.root.visibility = GONE
-                }else{
+                }
+                else{
                     binding.recyclerviewDetails.root.visibility = VISIBLE
                 }
             }
@@ -505,10 +361,13 @@ class ProductionReportFragment : Fragment() {
                 println(productionDettailsResponse.products)
                 productWarehouseData = productionDettailsResponse.products
                 productionWarehouseListingAdapter?.updateList(productWarehouseData)
+                sharedViewModel.setItemWareHouseDetails(productWarehouseData)
+
                 if (productWarehouseData.isEmpty()){
                     Toast.makeText(requireContext(),productionDettailsResponse.ErrorMessage.toString(),Toast.LENGTH_SHORT).show()
                     binding.recyclerviewDetails.root.visibility = GONE
-                }else{
+                }
+                else{
                     binding.recyclerviewDetails.root.visibility = VISIBLE
                 }
             }
@@ -525,7 +384,5 @@ class ProductionReportFragment : Fragment() {
     }
 
     //endregion API SERVICE
-
-
 
 }

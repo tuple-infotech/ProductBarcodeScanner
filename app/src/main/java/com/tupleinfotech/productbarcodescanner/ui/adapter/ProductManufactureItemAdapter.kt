@@ -2,11 +2,10 @@ package com.tupleinfotech.productbarcodescanner.ui.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.tupleinfotech.productbarcodescanner.databinding.LayoutProductManufactureItemviewBinding
+import com.tupleinfotech.productbarcodescanner.databinding.LayoutTableviewImageRowBinding
 import com.tupleinfotech.productbarcodescanner.model.GetDataByBarcodeResponse
 
 @SuppressLint("NotifyDataSetChanged")
@@ -17,13 +16,13 @@ class ProductManufactureItemAdapter : RecyclerView.Adapter<ProductManufactureIte
     var onEditItemClick         : ((GetDataByBarcodeResponse.Components) -> Unit)?      = null
     var onDeleteItemClick       : ((GetDataByBarcodeResponse.Components) -> Unit)?      = null
 
-    inner class ViewHolder (val binding : LayoutProductManufactureItemviewBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder (val binding : LayoutTableviewImageRowBinding) : RecyclerView.ViewHolder(binding.root)
     //endregion VARIABLES
 
     //region OVERRIDE METHODS (LIFECYCLE)
 
     override fun onCreateViewHolder(parent: ViewGroup,viewType: Int): ProductManufactureItemAdapter.ViewHolder {
-        val binding = LayoutProductManufactureItemviewBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding = LayoutTableviewImageRowBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return ViewHolder(binding)
     }
 
@@ -33,17 +32,15 @@ class ProductManufactureItemAdapter : RecyclerView.Adapter<ProductManufactureIte
         with(holder){
             with(hostlist[position]){
 
-                binding.fieldName.text          = currentitem.ComponentsName
-                binding.fieldQty.text           = currentitem.ComponentsQty
-                binding.lastCl.visibility       = VISIBLE
-                binding.fieldOthers.visibility  = GONE
-                binding.editbtn.visibility      = VISIBLE
-                binding.deletebtn.visibility    = VISIBLE
+                binding.tvFirst.text           =   currentitem.ComponentsName
+                binding.tvFourth.text          =   currentitem.ComponentsQty
+                binding.firstview.visibility    =   VISIBLE
 
-                binding.editbtn.setOnClickListener {
+
+                binding.btnEdit.setOnClickListener {
                     onEditItemClick?.invoke(hostlist[position])
                 }
-                binding.deletebtn.setOnClickListener {
+                binding.btnDelete.setOnClickListener {
                     onDeleteItemClick?.invoke(hostlist[position])
                 }
             }

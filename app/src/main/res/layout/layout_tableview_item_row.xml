@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    <TableRow
+        android:id="@+id/table_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        tools:ignore="UselessParent">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/first_clm"
+        style="@style/TextView.TextView_14_SP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="@dimen/dp_8"
+        android:text="Sr. No" />
+
+    <View
+        android:id="@+id/firstview"
+        android:layout_width="@dimen/dp_1"
+        android:layout_height="match_parent"
+        android:background="@color/gray_light"
+        android:backgroundTint="@color/gray_light" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/second_clm"
+        style="@style/TextView.TextView_14_SP"
+        android:layout_column="2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="@dimen/dp_8"
+        android:text="Comp. Name" />
+
+    <View
+        android:id="@+id/secondview"
+        android:layout_width="@dimen/dp_1"
+        android:layout_height="match_parent"
+        android:background="@color/gray_light" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/third_clm"
+        style="@style/TextView.TextView_14_SP"
+        android:layout_column="3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="@dimen/dp_8"
+        android:text="Comp. Name" />
+
+    <View
+        android:id="@+id/thirdview"
+        android:layout_width="@dimen/dp_1"
+        android:layout_height="match_parent"
+        android:background="@color/gray_light" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/fourth_clm"
+        style="@style/TextView.TextView_14_SP"
+        android:layout_column="4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="@dimen/dp_8"
+        android:text="Comp. Name"
+        android:visibility="visible" />
+
+    <View
+        android:id="@+id/fourthview"
+        android:layout_width="@dimen/dp_1"
+        android:layout_height="match_parent"
+        android:background="@color/gray_light" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/fifth_clm"
+        style="@style/TextView.TextView_14_SP"
+        android:layout_column="5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="@dimen/dp_8"
+        android:text="Comp. Name" />
+
+    <View
+        android:id="@+id/fifthview"
+        android:layout_width="@dimen/dp_1"
+        android:layout_height="match_parent"
+        android:background="@color/gray_light"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/sixth_clm"
+        style="@style/TextView.TextView_14_SP"
+        android:layout_column="6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="@dimen/dp_8"
+        android:text="Comp. Name" />
+
+    <View
+        android:id="@+id/sixthview"
+        android:layout_width="@dimen/dp_1"
+        android:layout_height="match_parent"
+        android:background="@color/gray_light" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/seventh_clm"
+        style="@style/TextView.TextView_14_SP"
+        android:layout_column="7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="@dimen/dp_8"
+        android:text="Comp. Name" />
+
+    <View
+        android:id="@+id/seventhview"
+        android:layout_width="@dimen/dp_1"
+        android:layout_height="match_parent"
+        android:background="@color/gray_light" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/eight_clm"
+        style="@style/TextView.TextView_14_SP"
+        android:layout_column="8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="@dimen/dp_8"
+        android:text="Qty" />
+
+    <View
+        android:id="@+id/eightview"
+        android:layout_width="@dimen/dp_1"
+        android:layout_height="match_parent"
+        android:background="@color/gray_light"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/nine_clm"
+        android:layout_column="9"
+        style="@style/TextView.TextView_14_SP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="@dimen/dp_8"
+        android:text="Action" />
+
+    </TableRow>
+    </TableLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

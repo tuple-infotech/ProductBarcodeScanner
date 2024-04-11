@@ -2,7 +2,6 @@ package com.tupleinfotech.productbarcodescanner.ui.fragment
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -19,16 +18,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.imageview.ShapeableImageView
-import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
 import com.jmsc.postab.ui.dialogfragment.addhost.AddHostDialog
 import com.tupleinfotech.productbarcodescanner.R
@@ -37,13 +26,11 @@ import com.tupleinfotech.productbarcodescanner.model.LoginResponse
 import com.tupleinfotech.productbarcodescanner.ui.activity.MainActivity
 import com.tupleinfotech.productbarcodescanner.ui.viewmodel.AddHostViewModel
 import com.tupleinfotech.productbarcodescanner.ui.viewmodel.SharedViewModel
-import com.tupleinfotech.productbarcodescanner.util.AlertMsgs
 import com.tupleinfotech.productbarcodescanner.util.AppHelper
 import com.tupleinfotech.productbarcodescanner.util.AppHelper.Companion.convertJsonToModel
 import com.tupleinfotech.productbarcodescanner.util.Constants
 import com.tupleinfotech.productbarcodescanner.util.DialogHelper
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper
-import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.clearValues
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.host
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.host_id
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.imageurl
@@ -63,11 +50,7 @@ import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.username
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userphone
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userprofileimage
 import com.tupleinfotech.productbarcodescanner.util.UrlEndPoints
-import com.tupleinfotech.treeview.TreeNode
 import com.tupleinfotech.treeview.TreeViewAdapter
-import com.tupleinfotech.treeview.TreeViewHolder
-import com.tupleinfotech.treeview.TreeViewHolderFactory
-import com.tupleinfotech.treeview.file.FileViewHolder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -232,7 +215,7 @@ class LoginFragment : Fragment() {
 
     }
 
-    fun setSideMenuItems(){
+/*    fun setSideMenuItems(){
         val drawerLayout = (requireActivity() as MainActivity).findViewById<DrawerLayout>(R.id.drawer_layout)
 
         val recyclerView = (requireActivity() as MainActivity).findViewById<RecyclerView>(R.id.menu_rv)
@@ -425,7 +408,7 @@ class LoginFragment : Fragment() {
                 }
             })
             .into(sideMenuImageView)
-    }
+    }*/
 
     //endregion ALL FUNCTIONS
 
@@ -500,12 +483,10 @@ class LoginFragment : Fragment() {
 
                     loginResponse.USER?.menu?.let {
                         println(it)
-                        setSideMenuItems()
                         val userMenuRights      = gson.toJson(it)
                         prefs.usermenurights    = userMenuRights
-                        initJsonSerMenuTree(it)
                     }
-                    sideMenuSetHeader()
+                    (requireActivity() as MainActivity).sideMenuSetHeader()
                     findNavController().navigate(R.id.quickInfoFragment)
                     initBottomNavigation()
                     (requireActivity() as MainActivity).setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED)

@@ -42,6 +42,7 @@ class WarehouseEntryFragment : Fragment() {
     private var warehouseInwardNotes    : String                                = ""
     private var barcodetext             : String?                               = ""
     private var observerExecuted        : Boolean                               = false
+    private var warehouselist       : ArrayList<WorkshopListResponse.List> = arrayListOf()
 
     //endregion VARIABLES
 
@@ -73,6 +74,7 @@ class WarehouseEntryFragment : Fragment() {
         getBarcodeDetails()
         inOutWardButton()
         initShowDetails()
+        initCancelButton()
     }
     //endregion INIT METHOD
 
@@ -137,6 +139,17 @@ class WarehouseEntryFragment : Fragment() {
 
     }
 
+    private fun initCancelButton(){
+        binding.cancelBtn.setOnClickListener {
+            binding.selectWarehouseTv.text = "Warehouse"
+            binding.etBoxBarcodeScanned.text?.clear()
+            binding.etBoxBarcodeRowNo.text?.clear()
+            binding.etBoxBarcodeCellNo.text?.clear()
+            binding.etBoxBarcodeInwardNotes.text?.clear()
+            binding.inwardBtn.text = "Inward"
+        }
+
+    }
     private fun initShowDetails(){
         binding.showWarehouseDataBtn.setOnClickListener {
             val args = Bundle()
@@ -200,6 +213,7 @@ class WarehouseEntryFragment : Fragment() {
 
             if (workshopListResponse != null) {
                 println(workshopListResponse)
+                warehouselist = workshopListResponse.WarehouseList
                 initWarehouseDropDown(workshopListResponse.WarehouseList)
             }
             else {
@@ -239,6 +253,23 @@ class WarehouseEntryFragment : Fragment() {
                             vendorId                = it.VendorId.toString()
                             warehouseInwardNotes    = it.WarehouseInNotes.toString()
 
+                            binding.etBoxBarcodeCellNo.setText(it.WarehouseCellNo.toString())
+                            binding.etBoxBarcodeRowNo.setText(it.WarehouseRowNo.toString())
+
+                            if (it.WarehouseInNotes.toString().isNotEmpty()){
+                                binding.etBoxBarcodeInwardNotes.setText(it.WarehouseInNotes.toString())
+
+                            }else{
+                                binding.etBoxBarcodeInwardNotes.setText(it.WarehouseOutNotes.toString())
+                            }
+
+                            warehouselist.forEach { warehouseList ->
+                                if (it.WarehouseId.toString() == warehouseList.FactoryId.toString()){
+                                    binding.selectWarehouseTv.text = warehouseList.FactoryName.toString()
+                                }
+                            }
+
+
                             if(it.LocationId == 0){
                                 binding.inwardBtn.text = "Inward"
                                 binding.inputLayoutInwardNotes.hint = "Inward Notes"
@@ -246,6 +277,11 @@ class WarehouseEntryFragment : Fragment() {
                             else{
                                 binding.inwardBtn.text = "Outward"
                                 binding.inputLayoutInwardNotes.hint = "Outward Notes"
+                            }
+                        }
+                        if (pipeID == "0"){
+                            getDataByBarcodeResponse.products?.components?.let {
+                                pipeID = it.first().PipeId.toString()
                             }
                         }
 
