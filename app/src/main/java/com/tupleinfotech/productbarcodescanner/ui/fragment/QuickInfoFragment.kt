@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.databinding.FragmentQuickInfoBinding
 import com.tupleinfotech.productbarcodescanner.model.QuickInfoDataResponse
@@ -70,7 +71,7 @@ class QuickInfoFragment : Fragment() {
     private fun init(){
 
         sharedViewModel.initActionbarWithSideMenu(requireActivity() as MainActivity)
-
+        (requireActivity() as MainActivity).findViewById<BottomNavigationView>(R.id.bottomNavigationView).menu.getItem(0).isChecked = true
         onBackPressed()
 //        initQuickInfoMenu()
         serviceApiQuickInfoData()

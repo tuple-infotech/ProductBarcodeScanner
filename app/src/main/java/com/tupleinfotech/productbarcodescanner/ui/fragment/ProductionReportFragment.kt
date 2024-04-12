@@ -95,7 +95,7 @@ class ProductionReportFragment : Fragment() {
 //            binding.selectWorkshopTv.visibility = GONE
             binding.recyclerviewDetails.tvFirst.text           =   "Design Name"
             binding.recyclerviewDetails.tvThird.text          =   "Barcode"
-            binding.recyclerviewDetails.tvSecond.text            =   "Factory Name"
+            binding.recyclerviewDetails.tvSecond.text            =   "Wh. Name"
 
             binding.recyclerviewDetails.firstview.visibility    =   VISIBLE
             binding.recyclerviewDetails.tvFourth.visibility     =   GONE

@@ -24,6 +24,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.databinding.ActivityMainBinding
 import com.tupleinfotech.productbarcodescanner.util.AlertMsgs
@@ -94,6 +95,15 @@ class MainActivity : AppCompatActivity() {
     //endregion BUTTON FUNCTIONALITY
 
     //region ALL FUNCTIONS
+
+    fun menuitemselection(navView: BottomNavigationView, id: Int, visibility: Boolean) {
+
+        when (visibility) {
+            true -> navView.visibility  = View.VISIBLE
+            false -> navView.visibility = View.GONE
+        }
+        navView.menu.getItem(id).isChecked = true
+    }
 
     fun setDrawerLockMode(lockMode: Int)                    =       findViewById<DrawerLayout>(R.id.drawer_layout).setDrawerLockMode(lockMode)
 

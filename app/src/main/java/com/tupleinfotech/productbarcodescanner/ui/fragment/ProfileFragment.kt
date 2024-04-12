@@ -19,6 +19,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.databinding.FragmentProfileBinding
 import com.tupleinfotech.productbarcodescanner.ui.activity.MainActivity
@@ -71,6 +72,7 @@ class ProfileFragment : Fragment() {
     private fun init() {
 
         sharedViewModel.initActionbarWithSideMenu(requireActivity() as MainActivity)
+        (requireActivity() as MainActivity).findViewById<BottomNavigationView>(R.id.bottomNavigationView).menu.getItem(3).isChecked = true
 
         loadImage()
         onBackPressed()

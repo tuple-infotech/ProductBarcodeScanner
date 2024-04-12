@@ -30,13 +30,12 @@ class ProductionWarehouseListingAdapter : RecyclerView.Adapter<ProductionWarehou
 
                 binding.tvFirst.text           =   currentitem.DesignName
                 binding.tvThird.text          =   currentitem.Barcode
-                binding.tvSecond.text            =   currentitem.FactoryName
+                binding.tvSecond.text            =   currentitem.WarehouseName
 
                 binding.firstview.visibility    =   VISIBLE
                 binding.tvFourth.visibility     =   GONE
                 binding.thirdview.visibility    =   VISIBLE
                 binding.fourthview.visibility   =   GONE
-
 
                 holder.itemView.setOnClickListener {
                     onItemClick?.invoke(hostlist[position].Barcode.toString())

@@ -140,6 +140,8 @@ class BarcodeProductDetailsFragment : Fragment() {
                 etBoxWhOutTime.text?.clear()
                 binding.etBoxWhRowNo.text?.clear()
                 binding.etBoxWhCellNo.text?.clear()
+
+                barcodetext = ""
                 val hostList = ArrayList<GetDataByBarcodeResponse.Components>()
                 componentDataAdapter?.updateList(hostList)
             }
@@ -160,6 +162,7 @@ class BarcodeProductDetailsFragment : Fragment() {
         }
 
     }
+
     //endregion BUTTON FUNCTIONALITY
 
     //region ALL FUNCTIONS
@@ -168,8 +171,9 @@ class BarcodeProductDetailsFragment : Fragment() {
 
         binding.recyclerviewDetails.tvFirst.text              =   "Comp. Name"
         binding.recyclerviewDetails.tvSecond.text               =   "Comp. Qty"
-        binding.recyclerviewDetails.firstview.visibility        =   VISIBLE
-
+        binding.recyclerviewDetails.tvThird.visibility               =   GONE
+        binding.recyclerviewDetails.tvFourth.visibility               =   GONE
+        binding.recyclerviewDetails.fourthview.visibility               =   GONE
 
         val layoutManager : RecyclerView.LayoutManager  = LinearLayoutManager(requireActivity())
         val recycleviewOrderlist                        = binding.recyclerviewDetails.itemListRv
@@ -211,8 +215,6 @@ class BarcodeProductDetailsFragment : Fragment() {
     //endregion BACK EVENT FUNCTIONS
 
     //region API SERVICE
-
-    //4154545
 
     private fun getDataByBarcode(barcodeText : String){
 

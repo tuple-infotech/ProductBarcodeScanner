@@ -5,19 +5,22 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.databinding.FragmentWarehouseEntryBinding
-import com.tupleinfotech.productbarcodescanner.model.GetDataByBarcodeResponse
+import com.tupleinfotech.productbarcodescanner.model.GetWarehouseBarcodeData
 import com.tupleinfotech.productbarcodescanner.model.WorkshopListResponse
+import com.tupleinfotech.productbarcodescanner.ui.activity.MainActivity
 import com.tupleinfotech.productbarcodescanner.ui.viewmodel.SharedViewModel
 import com.tupleinfotech.productbarcodescanner.util.AppHelper
 import com.tupleinfotech.productbarcodescanner.util.Constants
@@ -43,6 +46,7 @@ class WarehouseEntryFragment : Fragment() {
     private var barcodetext             : String?                               = ""
     private var observerExecuted        : Boolean                               = false
     private var warehouselist       : ArrayList<WorkshopListResponse.List> = arrayListOf()
+    private var vendorlist       : ArrayList<WorkshopListResponse.List> = arrayListOf()
 
     //endregion VARIABLES
 
@@ -67,7 +71,12 @@ class WarehouseEntryFragment : Fragment() {
 
     //region INIT METHOD
     private fun init(){
+        (requireActivity() as MainActivity).findViewById<BottomNavigationView>(R.id.bottomNavigationView).menu.getItem(2).isChecked = true
+
+        binding.inputLayoutOutwardNotes.visibility = GONE
+        binding.selectVendorTv.visibility = GONE
         getWarehouseList()
+        getVendorList()
         onBackPressed()
         getScannedBarcodeData()
         scanBtn()
@@ -91,7 +100,7 @@ class WarehouseEntryFragment : Fragment() {
         binding.etBoxBarcodeScanned.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (binding.etBoxBarcodeScanned.text.toString().isNotEmpty()) {
-                    getDataByBarcode(binding.etBoxBarcodeScanned.text.toString())
+                    getWarehouseBarcodeDetails(binding.etBoxBarcodeScanned.text.toString())
                 }
                 else{
                     DialogHelper.Alert_Selection(requireContext(),"Enter Barcode !!",resources.getString(R.string.singlebtntext),"", showNegativeButton = false,)
@@ -129,6 +138,9 @@ class WarehouseEntryFragment : Fragment() {
                     if (binding.etBoxBarcodeInwardNotes.text.toString().isEmpty()){
                         DialogHelper.Alert_Selection(requireContext(),"Please enter outward notes !!","OK","", onPositiveButtonClick = {})
                     }
+                    else if (binding.selectVendorTv.text.toString().equals("Vendor",true)){
+                        DialogHelper.Alert_Selection(requireContext(),"Please select vendor !!","OK","", onPositiveButtonClick = {})
+                    }
                     else {
                         updateWarehouseInData()
                     }
@@ -146,10 +158,13 @@ class WarehouseEntryFragment : Fragment() {
             binding.etBoxBarcodeRowNo.text?.clear()
             binding.etBoxBarcodeCellNo.text?.clear()
             binding.etBoxBarcodeInwardNotes.text?.clear()
+            binding.etBoxBarcodeOutwardNotes.text?.clear()
+            binding.selectVendorTv.text = "Vendor"
             binding.inwardBtn.text = "Inward"
         }
 
     }
+
     private fun initShowDetails(){
         binding.showWarehouseDataBtn.setOnClickListener {
             val args = Bundle()
@@ -168,7 +183,7 @@ class WarehouseEntryFragment : Fragment() {
                 barcodetext = resultData?.getString("Scanner")
                 if (barcodetext != null) {
                     binding.etBoxBarcodeScanned.setText(barcodetext)
-                    getDataByBarcode(barcodetext.toString())
+                    getWarehouseBarcodeDetails(barcodetext.toString())
                 }
             }
         }
@@ -179,6 +194,16 @@ class WarehouseEntryFragment : Fragment() {
             sharedViewModel.showWarehouseListingDialog(requireContext(),itemList,false) {
                 binding.selectWarehouseTv.text = it.WarehouseName.toString()
                 warehouseID = it.WarehouseId.toString()
+            }
+        }
+
+    }
+
+    private fun initVendorDropDown(itemList: ArrayList<WorkshopListResponse.List>){
+        binding.selectVendorTv.setOnClickListener {
+            sharedViewModel.showVendorListingDialog(requireContext(),itemList,false) {
+                binding.selectVendorTv.text = it.VendorName.toString()
+                vendorId = it.VendorId.toString()
             }
         }
 
@@ -228,76 +253,21 @@ class WarehouseEntryFragment : Fragment() {
 
     }
 
-    private fun getDataByBarcode(barcodeText : String){
+    private fun getVendorList(){
+        val requestMap = mutableMapOf<String, Any>() // Empty mutable map
 
-        val map = mapOf(
-            "Barcode"            to          barcodeText.trim().replace("\n",""),
-        )
+        val getWorkshopListUrl = prefs.host + UrlEndPoints.GET_VENDOR_LIST
+        sharedViewModel.api_service(requireContext(),getWorkshopListUrl,requestMap,{},{ getWorkshopResponse ->
+            println(getWorkshopResponse)
+            val workshopListResponse: WorkshopListResponse? = AppHelper.convertJsonToModel(getWorkshopResponse)
 
-        val getDataByBarcodeUrl = prefs.host + UrlEndPoints.GET_DATA_BY_BARCODE
-        sharedViewModel.api_service(requireContext(),getDataByBarcodeUrl,map,{},{ getDataByBarcoderesponse ->
-            println(getDataByBarcoderesponse)
-            val getDataByBarcodeResponse: GetDataByBarcodeResponse? =
-                AppHelper.convertJsonToModel(getDataByBarcoderesponse)
-
-            if (getDataByBarcodeResponse != null) {
-                println(getDataByBarcodeResponse)
-
-                if (getDataByBarcodeResponse.products != null && getDataByBarcodeResponse.products.toString().isNotEmpty()) {
-
-                    if (getDataByBarcodeResponse.products?.Barcode.toString().isNotEmpty()){
-                        getDataByBarcodeResponse.products?.let {
-                            binding.etBoxBarcodeScanned.setText(it.Barcode.toString())
-                            pipeID                  = it.PipeId.toString()
-                            locationId              = it.LocationId.toString()
-                            vendorId                = it.VendorId.toString()
-                            warehouseInwardNotes    = it.WarehouseInNotes.toString()
-
-                            binding.etBoxBarcodeCellNo.setText(it.WarehouseCellNo.toString())
-                            binding.etBoxBarcodeRowNo.setText(it.WarehouseRowNo.toString())
-
-                            if (it.WarehouseInNotes.toString().isNotEmpty()){
-                                binding.etBoxBarcodeInwardNotes.setText(it.WarehouseInNotes.toString())
-
-                            }else{
-                                binding.etBoxBarcodeInwardNotes.setText(it.WarehouseOutNotes.toString())
-                            }
-
-                            warehouselist.forEach { warehouseList ->
-                                if (it.WarehouseId.toString() == warehouseList.FactoryId.toString()){
-                                    binding.selectWarehouseTv.text = warehouseList.FactoryName.toString()
-                                }
-                            }
-
-
-                            if(it.LocationId == 0){
-                                binding.inwardBtn.text = "Inward"
-                                binding.inputLayoutInwardNotes.hint = "Inward Notes"
-                            }
-                            else{
-                                binding.inwardBtn.text = "Outward"
-                                binding.inputLayoutInwardNotes.hint = "Outward Notes"
-                            }
-                        }
-                        if (pipeID == "0"){
-                            getDataByBarcodeResponse.products?.components?.let {
-                                pipeID = it.first().PipeId.toString()
-                            }
-                        }
-
-                    }
-                    else{
-                        Toast.makeText(requireContext(), getDataByBarcodeResponse.ErrorMessage.toString(), Toast.LENGTH_SHORT).show()
-                        binding.etBoxBarcodeScanned.text?.clear()
-                    }
-
-                }
-                else {
-                    Toast.makeText(requireContext(), "Details Not Found", Toast.LENGTH_SHORT).show()
-                }
-
+            if (workshopListResponse != null) {
+                println(workshopListResponse)
+                vendorlist = workshopListResponse.VendorList
+                initVendorDropDown(vendorlist)
             }
             else {
+
                 Log.i("==>", "ERROR: Unable to parse JSON into model")
             }
 
@@ -306,6 +276,95 @@ class WarehouseEntryFragment : Fragment() {
                 println(it)
             })
 
+    }
+
+    private fun getWarehouseBarcodeDetails(barcodeText: String){
+
+        val map = mapOf(
+            "Barcode"            to          barcodeText.trim().replace("\n",""),
+        )
+        val getWarehouseBarcodeUrl = prefs.host + UrlEndPoints.GET_WAREHOUSE_BARCODE_DATA
+        sharedViewModel.api_service(requireContext(),getWarehouseBarcodeUrl,map,{},
+            {
+            val getWarehouseBarcodeData : GetWarehouseBarcodeData? = AppHelper.convertJsonToModel(it)
+
+                if (getWarehouseBarcodeData != null){
+
+                    getWarehouseBarcodeData.warehouseList.first().Barcode
+                    getWarehouseBarcodeData.warehouseList.first().LocationId
+                    getWarehouseBarcodeData.warehouseList.first().PipeId
+                    getWarehouseBarcodeData.warehouseList.first().WarehouseId
+                    getWarehouseBarcodeData.warehouseList.first().WarehouseRowNo
+                    getWarehouseBarcodeData.warehouseList.first().WarehouseCellNo
+                    getWarehouseBarcodeData.warehouseList.first().WarehouseInNotes
+                    getWarehouseBarcodeData.warehouseList.first().WarehouseOutNotes
+                    getWarehouseBarcodeData.warehouseList.first().VendorName
+                    getWarehouseBarcodeData.warehouseList.first().VendorId
+                    getWarehouseBarcodeData.warehouseList.first().IsDispatched
+
+                    binding.etBoxBarcodeScanned.setText(getWarehouseBarcodeData.warehouseList.first().Barcode.toString())
+
+                    pipeID                  = getWarehouseBarcodeData.warehouseList.first().PipeId.toString()
+                    locationId              = getWarehouseBarcodeData.warehouseList.first().LocationId.toString()
+                    vendorId                = getWarehouseBarcodeData.warehouseList.first().VendorId.toString()
+                    warehouseInwardNotes    = getWarehouseBarcodeData.warehouseList.first().WarehouseInNotes.toString()
+
+                    binding.etBoxBarcodeInwardNotes.setText(getWarehouseBarcodeData.warehouseList.first().WarehouseInNotes.toString())
+                    binding.etBoxBarcodeOutwardNotes.setText(getWarehouseBarcodeData.warehouseList.first().WarehouseOutNotes.toString())
+
+                    if (getWarehouseBarcodeData.warehouseList.first().IsDispatched.toString() == "0" && locationId == "0"){
+                        // INWARD
+                        binding.selectVendorTv.visibility = GONE
+                        binding.inputLayoutInwardNotes.visibility = VISIBLE
+                        binding.inputLayoutOutwardNotes.visibility = GONE
+                        binding.btnCl.visibility = VISIBLE
+                        binding.inwardBtn.visibility = VISIBLE
+                        binding.cancelBtn.visibility = VISIBLE
+                        binding.inwardBtn.text = "Inward"
+                    }
+                    else if (getWarehouseBarcodeData.warehouseList.first().IsDispatched.toString() == "0" && locationId != "0"){
+                        // OUTWARD
+                        binding.inwardBtn.text = "Outward"
+                        binding.selectVendorTv.visibility = VISIBLE
+                        binding.inputLayoutInwardNotes.visibility = GONE
+                        binding.inputLayoutOutwardNotes.visibility = VISIBLE
+                        binding.btnCl.visibility = VISIBLE
+                        binding.inwardBtn.visibility = VISIBLE
+                        binding.cancelBtn.visibility = VISIBLE
+                        binding.etBoxBarcodeRowNo.setText(getWarehouseBarcodeData.warehouseList.first().WarehouseRowNo.toString())
+                        binding.etBoxBarcodeCellNo.setText(getWarehouseBarcodeData.warehouseList.first().WarehouseCellNo.toString())
+                    }
+                    else{
+                        binding.selectVendorTv.visibility = VISIBLE
+                        binding.inputLayoutInwardNotes.visibility = VISIBLE
+                        binding.inputLayoutOutwardNotes.visibility = VISIBLE
+                        binding.btnCl.visibility = VISIBLE
+                        binding.inwardBtn.visibility = GONE
+                        binding.cancelBtn.visibility = GONE
+                        binding.etBoxBarcodeRowNo.setText(getWarehouseBarcodeData.warehouseList.first().WarehouseRowNo.toString())
+                        binding.etBoxBarcodeCellNo.setText(getWarehouseBarcodeData.warehouseList.first().WarehouseCellNo.toString())
+
+                        // OUTWARDED
+                    }
+
+                    vendorlist.forEach {
+                        if (getWarehouseBarcodeData.warehouseList.first().VendorId.toString() == it.VendorId.toString()){
+                            binding.selectVendorTv.text = it.VendorName.toString()
+                            vendorId = it.VendorId.toString()
+                        }
+                    }
+
+                    warehouselist.forEach {
+                        if (getWarehouseBarcodeData.warehouseList.first().WarehouseId.toString() == it.WarehouseId.toString()){
+                            binding.selectWarehouseTv.text = it.WarehouseName.toString()
+                            warehouseID = it.WarehouseId.toString()
+                        }
+                    }
+                }else{
+                    Log.i("==>", "ERROR: Unable to parse JSON into model")
+                }
+        },
+            { println(it) })
     }
 
     //http://150.129.105.34/api/v1/warehouseApi/saveWarehouseInData
@@ -336,6 +395,8 @@ class WarehouseEntryFragment : Fragment() {
                         binding.etBoxBarcodeRowNo.text?.clear()
                         binding.etBoxBarcodeCellNo.text?.clear()
                         binding.etBoxBarcodeInwardNotes.text?.clear()
+                        binding.etBoxBarcodeOutwardNotes.text?.clear()
+                        binding.selectVendorTv.text = "Vendor"
                         binding.inwardBtn.text = "Inward"
                     })
 
@@ -365,7 +426,7 @@ class WarehouseEntryFragment : Fragment() {
             "WarehouseCellNo"   to      binding.etBoxBarcodeCellNo.text.toString().trim().replace("\n",""),
             "WarehouseInNotes"  to      warehouseInwardNotes.trim().replace("\n",""),
             "PipeId"            to      pipeID,
-            "WarehouseOutNotes" to      binding.etBoxBarcodeInwardNotes.text.toString().trim().replace("\n",""),
+            "WarehouseOutNotes" to      binding.etBoxBarcodeOutwardNotes.text.toString().trim().replace("\n",""),
             "VendorId"          to      vendorId
 
         )
@@ -386,6 +447,8 @@ class WarehouseEntryFragment : Fragment() {
                         binding.etBoxBarcodeRowNo.text?.clear()
                         binding.etBoxBarcodeCellNo.text?.clear()
                         binding.etBoxBarcodeInwardNotes.text?.clear()
+                        binding.etBoxBarcodeOutwardNotes.text?.clear()
+                        binding.selectVendorTv.text = "Vendor"
                         binding.inwardBtn.text = "Inward"
                     })
 

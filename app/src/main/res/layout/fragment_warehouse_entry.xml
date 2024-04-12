@@ -136,6 +136,46 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_layout_outward_notes"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:hint="Outward Notes"
+        app:boxBackgroundMode="filled"
+        app:boxStrokeWidth="2dp"
+        app:helperTextEnabled="false"
+        app:hintTextColor="@color/text_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_layout_inward_notes"
+        app:startIconTint="@color/text_color">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etBox_barcode_outward_notes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:inputType="text"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/select_vendor_tv"
+        style="@style/EditTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/ic_arrow_down"
+        android:padding="@dimen/dp_8"
+        android:paddingStart="@dimen/dp_16"
+        android:paddingEnd="@dimen/dp_16"
+        android:text="Vendor"
+        android:textColor="@color/text_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_layout_outward_notes" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/btn_cl"
         android:layout_width="match_parent"
@@ -145,7 +185,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_layout_inward_notes">
+        app:layout_constraintTop_toBottomOf="@+id/select_vendor_tv">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/inward_btn"
@@ -180,11 +220,11 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/show_warehouse_data_btn"
             style="@style/ButtonStyle.Green"
-            android:backgroundTint="@color/orange"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:layout_weight="1"
+            android:backgroundTint="@color/orange"
             android:text="Show Details"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
