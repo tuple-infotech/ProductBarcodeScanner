@@ -145,6 +145,8 @@ class FilterDialog : DialogFragment() {
     }
 
     private fun openFromDatePicker(){
+        val c: Calendar = Calendar.getInstance()
+
         var cDay    = c.get(Calendar.DAY_OF_MONTH)
         var cMonth  = c.get(Calendar.MONTH)
         var cYear   = c.get(Calendar.YEAR)
@@ -160,13 +162,15 @@ class FilterDialog : DialogFragment() {
 //                fromDateYear           = year
 
                 fromDate = String.format("%04d-%02d-%02d",year, month + 1, dayOfMonth,)
-                binding.startDateTv.text = String.format("%04d-%02d-%02d",month + 1, dayOfMonth, year)
+                binding.startDateTv.text = String.format("%04d-%02d-%02d",year, month + 1, dayOfMonth)
             }, cYear, cMonth, cDay )
             calendarDialog.show()
         }
     }
 
     private fun openToDatePicker(){
+        val c: Calendar = Calendar.getInstance()
+
         var cDay    = c.get(Calendar.DAY_OF_MONTH)
         var cMonth  = c.get(Calendar.MONTH)
         var cYear   = c.get(Calendar.YEAR)
@@ -176,8 +180,8 @@ class FilterDialog : DialogFragment() {
                 cDay            = dayOfMonth
                 cMonth          = month
                 cYear           = year
-                toDate = String.format("%04d-%02d-%02d",year, month + 1, dayOfMonth,)
-                binding.endDateTv.text = String.format("%04d-%02d-%02d",month + 1, dayOfMonth, year)
+                toDate = String.format("%04d-%02d-%02d",year, month + 1, dayOfMonth)
+                binding.endDateTv.text = String.format("%04d-%02d-%02d",year, month + 1, dayOfMonth)
             }, cYear, cMonth, cDay )
 
             calendarDialog.show()

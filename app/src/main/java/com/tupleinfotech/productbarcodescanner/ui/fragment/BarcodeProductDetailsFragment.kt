@@ -22,7 +22,6 @@ import com.tupleinfotech.productbarcodescanner.model.GetDataByBarcodeResponse
 import com.tupleinfotech.productbarcodescanner.ui.activity.MainActivity
 import com.tupleinfotech.productbarcodescanner.ui.adapter.ComponentDataAdapter
 import com.tupleinfotech.productbarcodescanner.ui.viewmodel.SharedViewModel
-import com.tupleinfotech.productbarcodescanner.util.AppHelper.Companion.convertIso8601ToReadable
 import com.tupleinfotech.productbarcodescanner.util.AppHelper.Companion.convertJsonToModel
 import com.tupleinfotech.productbarcodescanner.util.Constants
 import com.tupleinfotech.productbarcodescanner.util.DialogHelper
@@ -108,6 +107,7 @@ class BarcodeProductDetailsFragment : Fragment() {
 
     private fun scanButton(){
         binding.scanBtn.setOnClickListener {
+            findNavController().currentBackStackEntry?.savedStateHandle?.remove<Bundle>("ScannedResult")
             barcodetext = ""
             binding.etBoxBarcodeScanned.text?.clear()
             binding.etBoxBarcode.text?.clear()
@@ -244,8 +244,8 @@ class BarcodeProductDetailsFragment : Fragment() {
                             binding.etBoxDesignName.setText(it.DesignName.toString())
                             binding.etBoxWhName.setText(it.WarehouseName.toString())
                             binding.etBoxFtName.setText(it.FactoryName.toString())
-                            binding.etBoxWhInTime.setText(convertIso8601ToReadable(it.WarehouseInTime.toString()))
-                            binding.etBoxWhOutTime.setText(convertIso8601ToReadable(it.WarehouseOutTime.toString()))
+                            binding.etBoxWhInTime.setText(it.WarehouseInTime.toString())
+                            binding.etBoxWhOutTime.setText(it.WarehouseOutTime.toString())
                             binding.etBoxWhInNotes.setText(it.WarehouseInNotes.toString())
                             binding.etBoxWhOutNotes.setText(it.WarehouseOutNotes.toString())
                             binding.etBoxWhRowNo.setText(it.WarehouseRowNo.toString())

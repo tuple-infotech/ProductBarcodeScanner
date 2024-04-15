@@ -183,6 +183,9 @@ class ProductManufactureFragment : Fragment() {
     private fun scanButton(){
         binding.scanBtn.setOnClickListener {
             barcodetext = ""
+            binding.etBoxBarcode.text?.clear()
+            binding.etBoxDesignName.text?.clear()
+            findNavController().currentBackStackEntry?.savedStateHandle?.remove<Bundle>("ScannedResult")
             findNavController().navigate(R.id.scannerFragment)
         }
     }
@@ -372,6 +375,9 @@ class ProductManufactureFragment : Fragment() {
             }
 
             onDeleteItemClick = {
+                binding.etBoxComponentQty.setText(it.ComponentsQty.toString())
+                binding.inputLayoutComponent.setText(it.ComponentsName.toString())
+                binding.addBtn.text                 = "Add"
                 componentData.remove(it)
                 updateList(componentData)
                 if (componentData.isEmpty()){
@@ -438,6 +444,9 @@ class ProductManufactureFragment : Fragment() {
 
                         getDataByBarcodeResponse.pipes.first().Components.let {
                             componentData = it
+                            binding.inputLayoutComponent.text = "Components"
+                            binding.etBoxComponentQty.text?.clear()
+                            binding.addBtn.text = "Add"
                             productManufactureItemAdapter?.updateList(it)
 
                             if (componentData.isEmpty()){
@@ -543,6 +552,8 @@ class ProductManufactureFragment : Fragment() {
                         val hostList = ArrayList<GetDataByBarcodeResponse.Components>()
                         productManufactureItemAdapter?.updateList(hostList)
                         binding.recyclerviewDetails.root.visibility = GONE
+                        componentData.clear()
+                        binding.btnCancel.performClick()
                     })
 
                 }
@@ -585,6 +596,7 @@ class ProductManufactureFragment : Fragment() {
                         val hostList = ArrayList<GetDataByBarcodeResponse.Components>()
                         productManufactureItemAdapter?.updateList(hostList)
                         binding.recyclerviewDetails.root.visibility = GONE
+                        binding.btnCancel.performClick()
                     })
 
                 }

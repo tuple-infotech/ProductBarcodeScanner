@@ -91,7 +91,9 @@ class WarehouseEntryFragment : Fragment() {
 
     private fun scanBtn(){
         binding.scanBtn.setOnClickListener {
+            findNavController().currentBackStackEntry?.savedStateHandle?.remove<Bundle>("ScannedResult")
             barcodetext = ""
+            binding.etBoxBarcodeScanned.text?.clear()
             findNavController().navigate(R.id.scannerFragment)
         }
     }

@@ -3,13 +3,15 @@ package com.tupleinfotech.productbarcodescanner.model
 import com.google.gson.annotations.SerializedName
 
 data class GetDataByBarcodeResponse(
-    @SerializedName("products"                  ) var products              : Products?             = Products(),
-    @SerializedName("ErrorMessage"              ) var ErrorMessage          : String?               = null,
-    @SerializedName("Status"                    ) var Status                : String?               = null,
-    @SerializedName("StatusCode"                ) var StatusCode            : String?               = null,
-    @SerializedName("RedirectUrl"               ) var RedirectUrl           : String?               = null,
-    @SerializedName("ValidationMessage"         ) var ValidationMessage     : ArrayList<String>     = arrayListOf(),
+
+    @SerializedName("products"          ) var products          : Products?         = Products(),
+    @SerializedName("ErrorMessage"      ) var ErrorMessage      : String?           = null,
+    @SerializedName("Status"            ) var Status            : String?           = null,
+    @SerializedName("StatusCode"        ) var StatusCode        : String?           = null,
+    @SerializedName("RedirectUrl"       ) var RedirectUrl       : String?           = null,
+    @SerializedName("ValidationMessage" ) var ValidationMessage : ArrayList<String> = arrayListOf(),
     @SerializedName("pipes"                     ) var pipes                 : ArrayList<Pipes>      = arrayListOf(),
+
 
     ){
 
@@ -34,8 +36,26 @@ data class GetDataByBarcodeResponse(
     )
 
     data class Products (
+        @SerializedName("LocationId"        ) var LocationId        : Int?                  = null,
+        @SerializedName("PipeId"            ) var PipeId            : Int?                  = null,
+        @SerializedName("Barcode"           ) var Barcode           : String?               = null,
+        @SerializedName("DesignName"        ) var DesignName        : String?               = null,
+        @SerializedName("WarehouseId"       ) var WarehouseId       : Int?                  = null,
+        @SerializedName("WarehouseRowNo"    ) var WarehouseRowNo    : String?               = null,
+        @SerializedName("WarehouseCellNo"   ) var WarehouseCellNo   : String?               = null,
+        @SerializedName("WarehouseInNotes"  ) var WarehouseInNotes  : String?               = null,
+        @SerializedName("WarehouseOutNotes" ) var WarehouseOutNotes : String?               = null,
+        @SerializedName("CreatedDate"       ) var CreatedDate       : String?               = null,
+        @SerializedName("WarehouseInTime"   ) var WarehouseInTime   : String?               = null,
+        @SerializedName("WarehouseOutTime"  ) var WarehouseOutTime  : String?               = null,
+        @SerializedName("FactoryName"       ) var FactoryName       : String?               = null,
+        @SerializedName("WarehouseName"     ) var WarehouseName     : String?               = null,
+        @SerializedName("Isdispatched"      ) var Isdispatched      : Int?                  = null,
+        @SerializedName("VendorName"        ) var VendorName        : String?               = null,
+        @SerializedName("VendorId"          ) var VendorId          : Int?                  = null,
+        @SerializedName("components"        ) var components        : ArrayList<Components> = arrayListOf(),
 
-        @SerializedName("Isdispatched"          ) var Isdispatched          : Int?                  = null,
+/*        @SerializedName("Isdispatched"          ) var Isdispatched          : Int?                  = null,
         @SerializedName("VendorName"            ) var VendorName            : String?               = null,
         @SerializedName("VendorId"              ) var VendorId              : Int?                  = null,
         @SerializedName("LocationId"            ) var LocationId            : Int?                  = null,
@@ -52,7 +72,7 @@ data class GetDataByBarcodeResponse(
         @SerializedName("WarehouseOutTime"      ) var WarehouseOutTime      : String?               = null,
         @SerializedName("FactoryName"           ) var FactoryName           : String?               = null,
         @SerializedName("WarehouseName"         ) var WarehouseName         : String?               = null,
-        @SerializedName("components"            ) var components            : ArrayList<Components> = arrayListOf()
+        @SerializedName("components"            ) var components            : ArrayList<Components> = arrayListOf()*/
 
     )
     data class Components (
