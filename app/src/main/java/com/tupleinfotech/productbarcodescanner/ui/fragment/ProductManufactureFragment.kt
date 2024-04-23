@@ -185,6 +185,7 @@ class ProductManufactureFragment : Fragment() {
             barcodetext = ""
             binding.etBoxBarcode.text?.clear()
             binding.etBoxDesignName.text?.clear()
+            binding.btnCancel.performClick()
             findNavController().currentBackStackEntry?.savedStateHandle?.remove<Bundle>("ScannedResult")
             findNavController().navigate(R.id.scannerFragment)
         }
@@ -232,7 +233,6 @@ class ProductManufactureFragment : Fragment() {
                         // Component name exists in componentData
                         DialogHelper.Alert_Selection(requireContext(), "Item Already Exists!!", "OK", "", onPositiveButtonClick = {
                             binding.inputLayoutComponent.text = "Components"
-                            binding.etBoxComponentQty.text?.clear()
                         })
                     }
                     else {
@@ -246,10 +246,9 @@ class ProductManufactureFragment : Fragment() {
                         componentData.add(component)
                         productManufactureItemAdapter?.updateList(componentData)
                         DialogHelper.Alert_Selection(requireContext(), "Item Added Successfully!!", "OK", "", onPositiveButtonClick = {
-                            binding.inputLayoutComponent.text = "Components"
-                            binding.etBoxComponentQty.text?.clear()
-                            binding.inputLayoutComponent.isEnabled = true
-                            binding.inputLayoutComponent.isClickable = true
+                            binding.inputLayoutComponent.text           = "Components"
+                            binding.inputLayoutComponent.isEnabled      = true
+                            binding.inputLayoutComponent.isClickable    = true
                         })
                         if (componentData.isEmpty()){
                             binding.recyclerviewDetails.root.visibility = GONE
@@ -282,11 +281,11 @@ class ProductManufactureFragment : Fragment() {
                             "",
                             onPositiveButtonClick = {
                                 binding.inputLayoutComponent.text = "Components"
-                                binding.etBoxComponentQty.text?.clear()
                                 binding.addBtn.text = "Add"
                                 binding.inputLayoutComponent.isEnabled      = true
                                 binding.inputLayoutComponent.isClickable    = true
-                            })
+                            }
+                        )
 
                         // Update UI visibility based on componentData list
                         if (componentData.isEmpty()) {
@@ -364,6 +363,7 @@ class ProductManufactureFragment : Fragment() {
                 binding.etBoxBarcode.setText(it.Barcode.toString())
                 binding.etBoxComponentQty.setText(it.ComponentsQty.toString())
                 binding.inputLayoutComponent.text = it.ComponentsName.toString()
+                binding.etBoxComponentQty.setSelection(binding.etBoxComponentQty.text.toString().trim().length)
 
                 binding.addBtn.text = "Update"
 
@@ -380,6 +380,8 @@ class ProductManufactureFragment : Fragment() {
                 binding.addBtn.text                 = "Add"
                 componentData.remove(it)
                 updateList(componentData)
+                binding.etBoxComponentQty.setSelection(binding.etBoxComponentQty.text.toString().trim().length)
+
                 if (componentData.isEmpty()){
                     binding.inputLayoutComponent.text = "Components"
                     binding.etBoxComponentQty.text?.clear()

@@ -32,8 +32,11 @@ import com.tupleinfotech.productbarcodescanner.util.Constants
 import com.tupleinfotech.productbarcodescanner.util.DialogHelper
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.clearValues
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.host
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.imageurl
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.ipAddress
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.password
+import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.port
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userfirstname
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userfullname
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userlastname
@@ -214,9 +217,20 @@ class MainActivity : AppCompatActivity() {
                         onPositiveButtonClick       =           {
                             val userId      = prefs.username
                             val password    = prefs.password
+                            val baseUrl     = Constants.BASE_URL
+                            val ipAddress   = prefs.ipAddress
+                            val ipPort      = prefs.port
+                            val ipHost      = prefs.host
+                            val imageUrl    = prefs.imageurl
+
                             prefs.clearValues
-                            prefs.username  = userId
-                            prefs.password  = password
+                            prefs.username      = userId
+                            prefs.password      = password
+                            Constants.BASE_URL  = baseUrl
+                            prefs.ipAddress     = ipAddress
+                            prefs.port          = ipPort
+                            prefs.host          = ipHost
+                            prefs.imageurl      = imageUrl
                             navController.navigate(R.id.loginFragment)
                             binding.drawerLayout.closeDrawers()
                             binding.bottomNavigationView.menu.clear()
