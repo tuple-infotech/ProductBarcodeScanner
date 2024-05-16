@@ -33,4 +33,15 @@
     <string name="profile_label">"Profile"</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+
+    <string name="scan_info">Scan information</string>
+    <string name="tvCountOfTags">number of tags</string>
+    <string name="tvTagCount">Total</string>
+    <string name="carry_tid">read tid</string>
+    <string name="btInventory">start</string>
+    <string name="btn_stop_Inventory">stop</string>
+    <string name="btn_save_Inventory">save</string>
+    <string name="btn_clear_Inventory">clear</string>
+    <string name="firmware">firmware:v</string>
+
 </resources>

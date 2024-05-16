@@ -122,6 +122,7 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
+    implementation files('libs/USDKLibrary-v2.3.0214.aar')
 
 /*
     implementation project(':ScanManager')

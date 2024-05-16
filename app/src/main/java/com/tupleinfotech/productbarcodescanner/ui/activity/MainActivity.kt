@@ -11,12 +11,14 @@ import android.view.View
 import android.view.View.GONE
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
@@ -27,6 +29,7 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tupleinfotech.productbarcodescanner.R
 import com.tupleinfotech.productbarcodescanner.databinding.ActivityMainBinding
+import com.tupleinfotech.productbarcodescanner.ui.fragment.RfidReaderFragment
 import com.tupleinfotech.productbarcodescanner.util.AlertMsgs
 import com.tupleinfotech.productbarcodescanner.util.Constants
 import com.tupleinfotech.productbarcodescanner.util.DialogHelper
@@ -42,6 +45,10 @@ import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userfullnam
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userlastname
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.username
 import com.tupleinfotech.productbarcodescanner.util.PreferenceHelper.userprofileimage
+import com.ubx.usdk.USDKManager
+import com.ubx.usdk.rfid.RfidManager
+import com.ubx.usdk.util.QueryMode
+import com.ubx.usdk.util.SoundTool
 import dagger.hilt.android.AndroidEntryPoint
 
 @Suppress("DEPRECATION")
@@ -55,6 +62,10 @@ class MainActivity : AppCompatActivity() {
     private val binding                     get()                                           =       _binding!!
     private lateinit var navController      : NavController
     private lateinit var prefs             : SharedPreferences
+    var RFID_INIT_STATUS: Boolean = false
+    var mRfidManager: RfidManager? = null
+    var readerType: Int = 0
+    private var fragments: List<Fragment> = listOf()
 
     //endregion VARIABLES
 
@@ -82,8 +93,34 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navigation_host_fragments) as NavHostFragment
         navController = navHostFragment.navController // Initialize navController
 
+        SoundTool.getInstance(this@MainActivity)
+        fragments = listOf(
+            RfidReaderFragment.newInstance(this@MainActivity),
+//            TagManageFragment.newInstance(this@MainActivity),
+//            SettingFragment.newInstance(this@MainActivity)
+        )
+        initRfid()
+
         init()
     }
+
+    /*    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+            if (event.keyCode == 523 && event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) {
+                //TODO set scanning functionality on system key event
+                println(event.keyCode)
+                println(event.action)
+
+                return true
+            }
+            else if (event.keyCode == 523 && event.action == KeyEvent.ACTION_UP && event.repeatCount == 0) {
+                //TODO set scanning functionality on system key event
+                println(event.keyCode)
+                println(event.action)
+
+                return true
+            }
+            return super.dispatchKeyEvent(event)
+        }*/
 
     //endregion OVERRIDE METHODS (LIFECYCLE)
 
@@ -92,12 +129,41 @@ class MainActivity : AppCompatActivity() {
     private fun init(){
         initSideMenu()
     }
+
     //endregion INIT METHOD
 
     //region BUTTON FUNCTIONALITY
     //endregion BUTTON FUNCTIONALITY
 
     //region ALL FUNCTIONS
+    fun initRfid() {
+
+        USDKManager.getInstance().init(this@MainActivity) { status ->
+            if (status == USDKManager.STATUS.SUCCESS) {
+                Log.d(TAG, "initRfid()  success.")
+                mRfidManager = USDKManager.getInstance().rfidManager
+                (fragments[0] as RfidReaderFragment).setCallback()
+                mRfidManager?.setOutputPower(10.toByte())
+
+                Log.d(TAG,"initRfid: getDeviceId() = " + mRfidManager?.deviceId)
+
+                readerType = mRfidManager?.readerType!!
+
+                runOnUiThread {
+                    Toast.makeText(this@MainActivity,"module：$readerType", Toast.LENGTH_LONG).show()
+                }
+                mRfidManager!!.queryMode = QueryMode.EPC_TID
+
+                Log.d(TAG,"initRfid: GetReaderType() = $readerType")
+            } else {
+                Log.d(TAG, "initRfid  fail.")
+            }
+        }
+    }
+
+    companion object {
+        const val TAG: String = "usdk"
+    }
 
     fun menuitemselection(navView: BottomNavigationView, id: Int, visibility: Boolean) {
 
@@ -203,6 +269,26 @@ class MainActivity : AppCompatActivity() {
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
                     true
                 }
+                R.id.side_rfid_reader                   ->      {
+                    val args = Bundle()
+                    args.putBoolean("isRFIDFinder",false)
+                    navController.navigate(R.id.rfidReaderFragment,args)
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                }
+                R.id.side_rfid_finder                   ->      {
+                    val args = Bundle()
+                    args.putBoolean("isRFIDFinder",true)
+                    navController.navigate(R.id.rfidReaderFragment,args)
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                }
+/*                R.id.side_rfid_reader                   ->      {
+                    val intent = Intent(this@MainActivity, RFIDScannerActivity::class.java)
+                    startActivity(intent)
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                }*/
                 R.id.side_production_report                 ->      {
                     navController.navigate(R.id.productionReportFragment)
                     binding.drawerLayout.closeDrawer(GravityCompat.START)

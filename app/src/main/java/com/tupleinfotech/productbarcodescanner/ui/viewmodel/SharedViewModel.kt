@@ -24,6 +24,7 @@ import com.tupleinfotech.productbarcodescanner.model.getProductWarehouseDataResp
 import com.tupleinfotech.productbarcodescanner.network.NetworkResult
 import com.tupleinfotech.productbarcodescanner.ui.activity.MainActivity
 import com.tupleinfotech.productbarcodescanner.ui.adapter.ComponentsListingAdapter
+import com.tupleinfotech.productbarcodescanner.ui.adapter.DesignNameListingAdapter
 import com.tupleinfotech.productbarcodescanner.ui.adapter.VendorListingAdapter
 import com.tupleinfotech.productbarcodescanner.ui.adapter.WarehouseListingAdapter
 import com.tupleinfotech.productbarcodescanner.ui.adapter.WorkshopListingAdapter
@@ -310,6 +311,57 @@ class SharedViewModel @Inject constructor (private val barcodeRepository: Barcod
         recyclerViewPaymentList.layoutManager           = layoutManager
         recyclerViewPaymentList.itemAnimator            = DefaultItemAnimator()
         val listingAdapter                     : ComponentsListingAdapter = ComponentsListingAdapter()
+        listingAdapter.updateItems(itemList)
+        listingAdapter.onItemClick = {
+            onListItemClick?.invoke(it)
+            alertDialog.dismiss()
+        }
+
+        recyclerViewPaymentList.adapter                 = listingAdapter
+
+        //region Dialog Show
+        alertDialog.show()
+        //endregion Dialog Show
+    }
+
+    fun showDesignNameListingDialog(
+        context: Context,
+        itemList: ArrayList<WorkshopListResponse.List>,
+        isSearchVisible : Boolean = false,
+        onListItemClick         : ((WorkshopListResponse.List) -> Unit)? =    {}
+    ) {
+        //region Dialog Creation
+
+        val _binding = DialogSelectListItemBinding.inflate(LayoutInflater.from(context))
+        val builder = android.app.AlertDialog.Builder(context)
+        builder.setView(_binding.root)
+
+        val alertDialog = builder.create()
+        /*
+                    val onListItemClick         : ((Pair<String,String>) -> Unit)? =    null
+        */
+
+        // Create and show the dialog
+        alertDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.setCanceledOnTouchOutside(false)
+        //endregion Dialog Creation
+
+        if (isSearchVisible) _binding.searchbox.visibility = View.VISIBLE else _binding.searchbox.visibility =
+            View.GONE
+
+        _binding.customActionBar.notificationBtn.setImageResource(R.drawable.ic_close_square)
+        _binding.customActionBar.notificationBtn.imageTintList = context.resources.getColorStateList(R.color.orange)
+        _binding.customActionBar.arrowBnt.visibility = View.GONE
+        _binding.customActionBar.setOurText.text = "Select Design Name"
+        _binding.customActionBar.notificationBtn.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        val layoutManager : RecyclerView.LayoutManager  = LinearLayoutManager(context)
+        val recyclerViewPaymentList                     = _binding.itemListingRv
+        recyclerViewPaymentList.layoutManager           = layoutManager
+        recyclerViewPaymentList.itemAnimator            = DefaultItemAnimator()
+        val listingAdapter                     : DesignNameListingAdapter = DesignNameListingAdapter()
         listingAdapter.updateItems(itemList)
         listingAdapter.onItemClick = {
             onListItemClick?.invoke(it)

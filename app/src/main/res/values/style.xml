@@ -120,6 +120,16 @@
         <item name="android:layout_width">150dp</item>
     </style>
 
+    //Button Red
+    <style name="ButtonStyle.Corner.Red">
+        <item name="android:textSize">18sp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:background">@drawable/style_btn_corner</item>
+        <item name="android:backgroundTint">@color/btn_red</item>
+        <item name="android:layout_width">150dp</item>
+    </style>
+
     //Button Green
     <style name="ButtonStyle.Green">
         <item name="android:textSize">18sp</item>

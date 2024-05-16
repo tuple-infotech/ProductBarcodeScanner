@@ -17,5 +17,6 @@ class UrlEndPoints {
         const val GET_PRODUCT_WAREHOUSE_DATA        = "v1/warehouseApi/getProductWarehouseData"
         const val GET_WAREHOUSE_BARCODE_DATA        = "v1/warehouseApi/getBarcodeDetails"
         const val GET_VENDOR_LIST        = "v1/warehouseApi/getVendorList"
+        const val GET_DESIGN_NAME_LIST        = "v1/designmaster/getdesignmaster"
     }
 }

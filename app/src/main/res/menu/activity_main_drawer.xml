@@ -25,6 +25,15 @@
             android:title="Product Details" />
 
         <item
+            android:id="@+id/side_rfid_reader"
+            android:icon="@drawable/icon_production"
+            android:title="RFID Reader" />
+        <item
+            android:id="@+id/side_rfid_finder"
+            android:icon="@drawable/icon_production"
+            android:title="RFID Finder" />
+
+        <item
             android:id="@+id/side_production_report"
             android:icon="@drawable/icon_terms"
             android:title="Production Report" />

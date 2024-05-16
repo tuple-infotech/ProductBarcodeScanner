@@ -50,5 +50,15 @@
         android:name="com.tupleinfotech.productbarcodescanner.ui.fragment.WarehouseEntryFragment"
         android:label="fragment_warehouse_entry"
         tools:layout="@layout/fragment_warehouse_entry" />
+    <activity
+        android:id="@+id/RFIDScannerActivity"
+        android:name="com.tupleinfotech.productbarcodescanner.ui.activity.RFIDScannerActivity"
+        android:label="activity_rfidscanner"
+        tools:layout="@layout/activity_rfidscanner" />
+    <fragment
+        android:id="@+id/rfidReaderFragment"
+        android:name="com.tupleinfotech.productbarcodescanner.ui.fragment.RfidReaderFragment"
+        android:label="fragment_rfid_reader"
+        tools:layout="@layout/fragment_rfid_reader" />
 
 </navigation>
